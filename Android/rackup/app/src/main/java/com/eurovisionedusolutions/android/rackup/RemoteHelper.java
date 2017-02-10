@@ -115,9 +115,30 @@ public class RemoteHelper {
         EVENT_DETAILS = this.context.getResources().getString(R.string.event_details);
         ADAPTIVE_TEST_PAGE=this.context.getResources().getString(R.string.adaptive_test_page);
     }
+    public void verifyLogin1(RemoteCallHandler caller1,RemoteCalls functionCalled,String image, String name, String contact, String address,
+                             String Sname,String dob, String Sclass,String Saddress)
+    {
+        String verifyLoginurl="http://14.192.16.145/celearn/laravel/public/test";
+        Map<String, String> params = new HashMap<String, String>();
+
+        params.put("image",image);
+        params.put("name",name);
+        params.put("contact",contact);
+        params.put("address",address);
+        params.put("Sname",Sname);
+        params.put("dob",dob);
+        params.put("Sclass",Sclass);
+        params.put("Saddress",Saddress);
+
+
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type","application/x-www-form-urlencoded");
+        new JSONParserAsync(verifyLoginurl,params,header,caller1,functionCalled);
+
+    }
     public void verifyLogin(RemoteCallHandler caller,RemoteCalls functionCalled,String email,String password)
     {
-        String verifyLoginurl=ServerAddress.getServerAddress(context)+GET_ACESS_TOKEN;
+        String verifyLoginurl="http://14.192.16.145/celearn/laravel/public/test";
         Map<String, String> params = new HashMap<String, String>();
         params.put("client_id",GlobalConstants.CLIENT_ID);
         params.put("client_secret",GlobalConstants.CLINET_SECRET);

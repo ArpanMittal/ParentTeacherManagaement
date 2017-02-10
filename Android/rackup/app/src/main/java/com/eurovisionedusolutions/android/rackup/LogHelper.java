@@ -1,12 +1,5 @@
 package com.eurovisionedusolutions.android.rackup;
 
-import java.security.NoSuchAlgorithmException;
-
-/**
- * Created by sushant on 2/2/2017.
- */
-
-
 import android.os.Environment;
 
 import java.io.File;
@@ -16,11 +9,12 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * Created by arpan on 7/11/2016.
+ * Created by sushant on 2/2/2017.
  */
+
+
 public class LogHelper {
-    public LogHelper(Exception e)
-    {
+    public LogHelper(Exception e) {
         Logger logger = Logger.getLogger("MyLog");
         FileHandler fh;
 
@@ -28,7 +22,7 @@ public class LogHelper {
             File root = Environment.getExternalStorageDirectory();
 
             // This block configure the logger with handler and formatter
-            fh = new FileHandler(root.getAbsolutePath()+"/E-SchoolContent/E-schoolLogFile.log");
+            fh = new FileHandler(root.getAbsolutePath() + "/E-SchoolContent/E-schoolLogFile.log");
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
@@ -42,6 +36,6 @@ public class LogHelper {
             e.printStackTrace();
         }
 
-        //logger.info("Hi How r u?");
+
     }
 }

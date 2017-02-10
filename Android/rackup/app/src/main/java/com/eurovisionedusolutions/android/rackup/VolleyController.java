@@ -13,19 +13,6 @@ import com.android.volley.toolbox.Volley;
 
 
 
-
-import android.app.Application;
-import android.text.TextUtils;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-
-
-/**
- * Created by Punit Chhajer on 11-07-2016.
- * This class is used to create single volley request queue for the application
- */
 public class VolleyController extends Application {
 
     public static final String TAG = VolleyController.class
@@ -39,10 +26,6 @@ public class VolleyController extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        FontsOverride.setDefaultFont(this, "DEFAULT", "TitilliumWeb-LightItalic.ttf");
-
-//        FontsOverride.setDefaultFont(this, "SERIF", "TitilliumWeb-LightItalic.ttf");
-//        FontsOverride.setDefaultFont(this, "SANS_SERIF", "TitilliumWeb-LightItalic.ttf");
         mInstance = this;
     }
 
