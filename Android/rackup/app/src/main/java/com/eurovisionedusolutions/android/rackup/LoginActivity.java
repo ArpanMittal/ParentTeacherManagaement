@@ -23,13 +23,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 
-/**
+/*
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements RemoteCallHandler {
@@ -50,18 +49,12 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     // UI references.
     private EditText mEmailView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
     private Button button;
     ProgressDialog pd;
     private Toolbar toolbar;
     private TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword;
-    private Button email_sign_in_button;
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         // Set up the login form.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        button = (Button) findViewById(R.id.button2);
         mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_Email);
@@ -78,27 +71,31 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailView.addTextChangedListener(new MyTextWatcher(mEmailView));
         mPasswordView.addTextChangedListener(new MyTextWatcher(mPasswordView));
+        /*
+        Log in button at the end of username and password
+         */
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-        button = (Button) findViewById(R.id.button2);
+        /*
+        forgot password button on click
+         */
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                Opentest(view);
+                forgotpassword(view);
             }
         });
 
     }
 
-
+/*
+check for validation of entered data, send data to remote helper
+ */
     private void attemptLogin() {
 
 
@@ -162,7 +159,9 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         }
     }
 
-
+/*
+for animations
+ */
     private class MyTextWatcher implements TextWatcher {
 
         private View view;
@@ -190,14 +189,12 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         }
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
+    /*
+    parse the JSon object response from server
      */
-
-
     @Override
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONObject response, Exception exception) {
-        String image = "nooo";
+        String image = "noo";
         pd.dismiss();
         if (isSuccessful) {
 
@@ -260,7 +257,9 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
 
 
     }
-
+/*
+check for internet network before proceding form login
+ */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -268,7 +267,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void Opentest(View view) {
+    public void forgotpassword(View view) {
 
         //forget password action
     }

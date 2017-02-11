@@ -49,13 +49,13 @@ public class JSONParserAsync implements RemoteCallHandler {
                         JSONParserAsync.this.isRemoteCallSuccessful = true;
                         try {
 
-                            //if(new SharedPrefrence().getAccessToken(VolleyController.getInstance())!=null) {
+
 
                             if (response.get("code").toString().equals(GlobalConstants.EXPIRED_TOKEN)) {
-                                // new RemoteHelper(VolleyController.getInstance()).verifyLogin(JSONParserAsync.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, new SharedPrefrence().getUserEmail(VolleyController.getInstance()), new SharedPrefrence().getUserPassword(VolleyController.getInstance()));
+
 
                             }
-                            //}
+
                             else {
                                 JSONParserAsync.this.listener.HandleRemoteCall(JSONParserAsync.this.isRemoteCallSuccessful, JSONParserAsync.this.callFor, response, JSONParserAsync.this.exception);
                             }
@@ -86,7 +86,7 @@ public class JSONParserAsync implements RemoteCallHandler {
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONObject response, Exception exception) {
         if (isSuccessful) {
             try {
-                // new SharedPrefrence().saveAccessToken(VolleyController.getInstance(), response.get("access_token").toString(), response.get("refresh_token").toString());
+
                 req.getParams().put("access_token", response.get("access_token").toString());
                 VolleyController.getInstance().addToRequestQueue(req, tag_json_obj);
                 //new RemoteHelper(getApplicationContext()).getUserDetails(this,RemoteCalls.GET_USER_DETAILS,response.get("access_token").toString());

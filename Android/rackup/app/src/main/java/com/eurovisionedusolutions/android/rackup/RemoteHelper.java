@@ -115,6 +115,9 @@ public class RemoteHelper {
         EVENT_DETAILS = this.context.getResources().getString(R.string.event_details);
         ADAPTIVE_TEST_PAGE=this.context.getResources().getString(R.string.adaptive_test_page);
     }
+    /*
+    For Edit_profile activity. send the user data to server
+     */
     public void verifyLogin1(RemoteCallHandler caller1,RemoteCalls functionCalled,String image, String name, String contact, String address,
                              String Sname,String dob, String Sclass,String Saddress)
     {
@@ -136,6 +139,9 @@ public class RemoteHelper {
         new JSONParserAsync(verifyLoginurl,params,header,caller1,functionCalled);
 
     }
+    /*
+    for login activity
+     */
     public void verifyLogin(RemoteCallHandler caller,RemoteCalls functionCalled,String email,String password)
     {
         String verifyLoginurl="http://14.192.16.145/celearn/laravel/public/test";
