@@ -78,6 +78,16 @@ class CreateForeignKeys extends Migration {
 						->onDelete('restrict')
 						->onUpdate('restrict');
 		});
+		Schema::table('grade_school', function(Blueprint $table) {
+			$table->foreign('grad_id')->references('id')->on('grades')
+						->onDelete('restrict')
+						->onUpdate('restrict');
+		});
+		Schema::table('grade_school', function(Blueprint $table) {
+			$table->foreign('school_id')->references('id')->on('schools')
+						->onDelete('restrict')
+						->onUpdate('restrict');
+		});
 	}
 
 	public function down()
@@ -123,6 +133,12 @@ class CreateForeignKeys extends Migration {
 		});
 		Schema::table('content_grade', function(Blueprint $table) {
 			$table->dropForeign('content_grade_content_id_foreign');
+		});
+		Schema::table('grade_school', function(Blueprint $table) {
+			$table->dropForeign('grade_school_grad_id_foreign');
+		});
+		Schema::table('grade_school', function(Blueprint $table) {
+			$table->dropForeign('grade_school_school_id_foreign');
 		});
 	}
 }
