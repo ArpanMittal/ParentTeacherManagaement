@@ -464,9 +464,17 @@
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:text="DONE"
+            android:text="DONE/submit"
             android:id="@+id/done">
         </Button>
+        <Button
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="DONE/press this one first (to fetch data)"
+            android:id="@+id/done11">
+        </Button>
+
 
     </LinearLayout>
 

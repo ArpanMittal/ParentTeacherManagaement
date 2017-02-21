@@ -50,13 +50,10 @@ public class JSONParserAsync implements RemoteCallHandler {
                         try {
 
 
-
                             if (response.get("code").toString().equals(GlobalConstants.EXPIRED_TOKEN)) {
 
 
-                            }
-
-                            else {
+                            } else {
                                 JSONParserAsync.this.listener.HandleRemoteCall(JSONParserAsync.this.isRemoteCallSuccessful, JSONParserAsync.this.callFor, response, JSONParserAsync.this.exception);
                             }
                         } catch (JSONException e) {
