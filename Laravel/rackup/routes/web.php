@@ -11,16 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
-Auth::routes();
+//Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Route::get('auth/login','HomeController@showLogin');
+Route::get('/login','HomeController@showLogin');
 
-Route::post('auth/login','HomeController@doLogin');
+Route::post('/login','HomeController@doLogin')->name('login');
 
-Route::get('logout','HomController@doLogout');
+Route::get('logout','HomeController@doLogout');

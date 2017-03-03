@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
+//use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
+//use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http;
@@ -20,10 +20,10 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+//    public function __construct()
+//    {
+//        $this->middleware('auth');
+//    }
 
     /**
      * Show the application dashboard.
@@ -36,16 +36,21 @@ class HomeController extends Controller
     }
     
     public function showLogin(){
+       // return "hello";
         return view('auth.login');
     }
     
     public function doLogin(Request $request)
     {
+
+
         $rules = array(
             'username'    => 'required|email',
-            'password' => 'required|alphaNum|min:8' 
+            //'password' => 'required|alphaNum|min:8'
         );
+
         $validator = Validator::make(Input::all(), $rules);
+        
         if ($validator->fails()) {
             return redirect('login')
                 ->withErrors($validator) 
@@ -55,6 +60,7 @@ class HomeController extends Controller
                 'username'     => Input::get('email'),
                 'password'  => Input::get('password')
             );
+            return var_export(Input::get('email'));
             $user = DB::table('users')
                 ->whereEmailAndPassword(Input::get('email'),Input::get('password'))
                 ->first();
@@ -68,6 +74,7 @@ class HomeController extends Controller
             }
         }
     }
+
     public function returnToken(Request $request){
 
         $user = DB::table('users')
