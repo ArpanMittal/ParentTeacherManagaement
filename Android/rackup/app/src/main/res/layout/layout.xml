@@ -163,8 +163,6 @@
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="0.5"
-            android:onClick="test"
-
             android:text="Forgot Password" />
 
         <Space

@@ -14,21 +14,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-
-
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import com.eurovisionedusolutions.android.rackup.LogHelper;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 /**
  * Created by punit on 19-01-2017.
  */
@@ -55,13 +40,13 @@ public class Image {
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
         this.directory = cw.getDir("image", Context.MODE_PRIVATE);
 
-        File f=new File(this.directory, name);
+        File f = new File(this.directory, name);
         this.image = BitmapFactory.decodeStream(new FileInputStream(f));
         save();
     }
 
     public void save() {
-        File mypath=new File(directory,name);
+        File mypath = new File(directory, name);
         try {
             FileOutputStream fos = new FileOutputStream(mypath);
             // Use the compress method on the BitMap object to write image to the OutputStream
@@ -76,16 +61,16 @@ public class Image {
         try {
             File file = new File(directory, name);
             file.delete();
-        }catch (Exception e){
+        } catch (Exception e) {
             new LogHelper(e);
         }
     }
 
-    public Bitmap getImage(){
+    public Bitmap getImage() {
         return this.image;
     }
 
-    public void setImage(Bitmap image){
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 }

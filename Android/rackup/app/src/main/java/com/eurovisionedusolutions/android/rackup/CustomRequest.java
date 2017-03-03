@@ -10,8 +10,10 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class CustomRequest extends Request<JSONObject> {
         this.params = params;
     }
 
-    public CustomRequest(int method, String url, Map<String, String> params,Map<String, String> header, Response.Listener<JSONObject> reponseListener, Response.ErrorListener errorListener) {
+    public CustomRequest(int method, String url, Map<String, String> params, Map<String, String> header, Response.Listener<JSONObject> reponseListener, Response.ErrorListener errorListener) {
         super(method, url, errorListener);
         this.listener = reponseListener;
         this.params = params;
@@ -44,7 +46,7 @@ public class CustomRequest extends Request<JSONObject> {
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        if (header==null){
+        if (header == null) {
             return super.getHeaders();
         }
         return header;
