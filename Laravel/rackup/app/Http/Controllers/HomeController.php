@@ -53,16 +53,16 @@ class HomeController extends Controller
         
         if ($validator->fails()) {
             return redirect('login')
-                ->withErrors($validator) 
-                ->withInput(Input::except('password')); 
+                ->withErrors($validator)
+                ->withInput(Input::except('password'));
         } else {
             $userdata = array(
                 'username'     => Input::get('email'),
                 'password'  => Input::get('password')
             );
             return var_export(Input::get('email'));
-            $user = DB::table('users')
-                ->whereEmailAndPassword(Input::get('email'),Input::get('password'))
+            $user = \DB::table('users')
+                ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
                 ->first();
             if ( !is_null($user) ){
                 $request->session()->put('id',$user->id);
@@ -73,6 +73,7 @@ class HomeController extends Controller
                     ->withInput(Input::except('password'));
             }
         }
+
     }
 
     public function returnToken(Request $request){
