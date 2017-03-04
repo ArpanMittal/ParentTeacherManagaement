@@ -23,4 +23,4 @@ Route::get('/login','HomeController@showLogin');
 
 Route::post('/login','HomeController@doLogin')->name('login');
 
-Route::get('logout','HomeController@doLogout');
+Route::get('/logout','HomeController@doLogout')->name('logout');
