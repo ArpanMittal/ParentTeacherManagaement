@@ -106,11 +106,12 @@ class HomeController extends Controller
         $user = \DB::table('users')
             ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
             ->first();
+
         if ( !is_null($user) ) {
             $token = JWTAuth::fromUser($user);
-            //return Response::json(compact('token'));
+            //return var_export($token);
             $user=JWTAuth::toUser($token);
-            return Response::json(['data'=>['email'=>$user->username]]);
+            return Response::json(['token'=>$token]);
         }
         else{
             echo 'User is null';
