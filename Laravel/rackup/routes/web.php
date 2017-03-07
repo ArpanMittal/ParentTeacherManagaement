@@ -17,10 +17,14 @@
 
 //Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->middleware('check.session');
 
 Route::get('/login','HomeController@showLogin');
 
 Route::post('/login','HomeController@doLogin')->name('login');
 
 Route::get('/logout','HomeController@doLogout')->name('logout');
+
+Route::get('/registerUser','AdminController@showRegister')->middleware('check.session');
+
+Route::post('/registerUser','AdminController@doRegister')->name('registerUser');

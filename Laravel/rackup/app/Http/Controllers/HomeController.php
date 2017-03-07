@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class HomeController extends Controller
 {
@@ -31,9 +32,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('home');
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
+        return view('home',$data);
     }
 
     //Shows the login form
@@ -113,10 +117,8 @@ class HomeController extends Controller
         }
     }
 
-    public function doLogout($request){
+    public function doLogout(Request $request){
         $request->session()->forget('id');
-        //Auth::logout();
-       // $this->auth->logout();
         return redirect('login');
     }
 }
