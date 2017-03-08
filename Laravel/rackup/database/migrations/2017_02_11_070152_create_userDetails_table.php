@@ -15,6 +15,7 @@ class CreateUserDetailsTable extends Migration {
 			$table->string('profilePhotoPath',50);
 			$table->string('gender', 1);
 			$table->string('address',50);
+			$table->integer('contact');
 		});
 	}
 

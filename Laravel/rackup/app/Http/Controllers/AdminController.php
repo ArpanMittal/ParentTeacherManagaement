@@ -26,11 +26,13 @@ class AdminController extends Controller
         //role_id of admin is 1
         if ($user->role_id == 1){
             $studentName  = Input::get('studentName');
-            $age = Input::get('age');
+            $dob = Input::get('dob');
+            $studentGender = Input::get('studentGender');
             $gradeId   = Input::get('gradeId');
             $parentName = Input::get('parentName');
-            $gender = Input::get('gender');
+            $parentGender = Input::get('parentGender');
             $address = Input::get('address');
+            $contact = Input::get('contact');
             $role = Input::get('role');
             $username = Input::get('username');
             $password = Input::get('password');
@@ -38,9 +40,9 @@ class AdminController extends Controller
             try {
                 \DB::beginTransaction();
                 $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => $role]);
-               \DB::table('userDetails')->insert(['name' => $parentName, 'gender' => $gender, 'address' => $address, 'user_id' => $userId]);
+               \DB::table('userDetails')->insert(['name' => $parentName, 'gender' => $parentGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId]);
                
-                \DB::table('students')->insert(['name' => $studentName, 'age' => $age, 'grade_id' => $gradeId, 'parent_id' => $userId]);
+                \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
                 
             }catch (Exception $e){
                 \DB::rollBack();

@@ -11,7 +11,8 @@ class CreateStudentsTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->string('name',50);
-			$table->integer('age');
+			$table->date('dob');
+			$table->string('gender',1);
 			$table->integer('grade_id')->unsigned();
 			$table->integer('parent_id')->unsigned();
 		});

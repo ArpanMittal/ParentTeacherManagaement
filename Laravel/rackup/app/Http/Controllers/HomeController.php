@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Student;
+use App\UserDetails;
 use Illuminate\Http\Request;
+use Psy\Exception\ErrorException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Input;
@@ -99,6 +102,10 @@ class HomeController extends Controller
         }
     }
 
+    public function doLogout(Request $request){
+        $request->session()->forget('id');
+        return redirect('login');
+    }
 
 
     public function returnToken(Request $request){
@@ -106,19 +113,37 @@ class HomeController extends Controller
         $user = \DB::table('users')
             ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
             ->first();
-        if ( !is_null($user) ) {
-            $token = JWTAuth::fromUser($user);
-            //return Response::json(compact('token'));
-            $user=JWTAuth::toUser($token);
-            return Response::json(['data'=>['email'=>$user->username]]);
-        }
-        else{
-            echo 'User is null';
-        }
-    }
 
-    public function doLogout(Request $request){
-        $request->session()->forget('id');
-        return redirect('login');
+       
+           if ( !is_null($user) ) {
+               try {
+                   $token = JWTAuth::fromUser($user);
+                   $user = JWTAuth::toUser($token);
+
+                   $userId = $user->id;
+                   $userDetails = UserDetails::where('user_id', $userId)->first();
+                   $studentDetails = Student::where('parent_id', $userId)->first();
+
+                   $userdata = array(
+                       'token' => $token,
+                       'username' => $user->username,
+                       'parent_name' => $userDetails->name,
+                       'contact' => $userDetails->contact,
+                       'address' => $userDetails->address,
+                       'studentName' => $studentDetails->name,
+                       'dob' => $studentDetails->dob,
+                   );
+
+                   return response()->json($userdata);
+                   //return Response::json(compact('token'));
+               } catch (ErrorException $e) {
+
+                   return response()->$e->getStatusCode();
+               }
+           }
+           else{
+               echo 'User is null';
+           }
+
     }
 }
