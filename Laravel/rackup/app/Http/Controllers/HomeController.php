@@ -18,6 +18,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+
 class HomeController extends Controller
 {
     /**
@@ -114,7 +115,7 @@ class HomeController extends Controller
             ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
             ->first();
 
-       
+
            if ( !is_null($user) ) {
                try {
                    $token = JWTAuth::fromUser($user);
@@ -131,18 +132,20 @@ class HomeController extends Controller
                        'contact' => $userDetails->contact,
                        'address' => $userDetails->address,
                        'studentName' => $studentDetails->name,
-                       'dob' => $studentDetails->dob,
-                   );
+                       'dob' => $studentDetails->dob
 
-                   return response()->json($userdata);
+                   );
+                   $STATUS_CODE =Response::json(HttpResponse::HTTP_OK);
+                   //return Response::json(HttpResponse::HTTP_OK);
+                   return response()->json([$userdata,$STATUS_CODE]);
                    //return Response::json(compact('token'));
                } catch (ErrorException $e) {
 
-                   return response()->$e->getStatusCode();
+                   return Response::json(['error'=>'Invalid credentials'],HttpResponse::HTTP_UNAUTHORIZED);
                }
            }
            else{
-               echo 'User is null';
+               return Response::json(['error'=>'Null User'],HttpResponse::HTTP_NO_CONTENT);
            }
 
     }

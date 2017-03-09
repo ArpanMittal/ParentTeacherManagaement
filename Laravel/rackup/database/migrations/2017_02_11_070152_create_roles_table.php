@@ -12,6 +12,13 @@ class CreateRolesTable extends Migration {
 			$table->timestamps();
 			$table->string('role_name',25)->unique();
 		});
+
+		DB::table('roles')->insert([
+			['role_name' => 'admin'],
+            ['role_name' => 'parent'],
+			['role_name' => 'principal'],
+			['role_name' => 'teacher']
+		]);
 	}
 
 	public function down()
