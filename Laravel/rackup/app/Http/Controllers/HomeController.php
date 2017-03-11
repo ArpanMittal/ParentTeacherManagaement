@@ -88,11 +88,13 @@ class HomeController extends Controller
             return var_export(Input::get('email'));*/
         $rules = array(
             'username'    => 'required|email',
-            'password' => 'required|alphaNum|min:8'
+            'password' => 'required|alphaNum'
         );
+
         $user =\DB::table('users')
             ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
             ->first();
+        
         if ( !is_null($user) ){
             $request->session()->put('id',$user->id);
             return redirect('home');
@@ -145,8 +147,14 @@ class HomeController extends Controller
                }
            }
            else{
-               return Response::json(['error'=>'Null User'],HttpResponse::HTTP_NO_CONTENT);
+               echo 'Null User or Incorrect credentials';
+               return Response::json(HttpResponse::HTTP_NO_CONTENT);
            }
+
+    }
+
+    public function editProfile(Request $request){
+
 
     }
 }

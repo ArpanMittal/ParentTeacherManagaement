@@ -25,6 +25,11 @@ Route::post('/login','HomeController@doLogin')->name('login');
 
 Route::get('/logout','HomeController@doLogout')->name('logout');
 
-Route::get('/registerUser','AdminController@showRegister')->middleware('check.session');
+Route::get('/registerParent','AdminController@showRegisterParent')->middleware('check.session');
 
-Route::post('/registerUser','AdminController@doRegister')->name('registerUser');
+Route::post('/registerParent','AdminController@doRegisterParent')->name('registerParent');
+
+Route::get('/registerTeacher','AdminController@showRegisterTeacher')->middleware('check.session');
+
+Route::post('/registerTeacher','AdminController@doRegisterTeacher')->name('registerTeacher');
+
