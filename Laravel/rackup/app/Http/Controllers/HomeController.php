@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Student;
+use App\UserDetails;
 use Illuminate\Http\Request;
+use Psy\Exception\ErrorException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Input;
@@ -14,6 +17,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 
 class HomeController extends Controller
 {
@@ -84,11 +88,13 @@ class HomeController extends Controller
             return var_export(Input::get('email'));*/
         $rules = array(
             'username'    => 'required|email',
-            'password' => 'required|alphaNum|min:8'
+            'password' => 'required|alphaNum'
         );
+
         $user =\DB::table('users')
             ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
             ->first();
+        
         if ( !is_null($user) ){
             $request->session()->put('id',$user->id);
             return redirect('home');
@@ -99,6 +105,10 @@ class HomeController extends Controller
         }
     }
 
+    public function doLogout(Request $request){
+        $request->session()->forget('id');
+        return redirect('login');
+    }
 
 
     public function returnToken(Request $request){
@@ -106,6 +116,7 @@ class HomeController extends Controller
         $user = \DB::table('users')
             ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
             ->first();
+
 
         if ( !is_null($user) ) {
             $token = JWTAuth::fromUser($user);
@@ -116,10 +127,47 @@ class HomeController extends Controller
         else{
             echo 'User is null';
         }
+
+
+
+           if ( !is_null($user) ) {
+               try {
+                   $token = JWTAuth::fromUser($user);
+                   $user = JWTAuth::toUser($token);
+
+                   $userId = $user->id;
+                   $userDetails = UserDetails::where('user_id', $userId)->first();
+                   $studentDetails = Student::where('parent_id', $userId)->first();
+
+                   $userdata = array(
+                       'token' => $token,
+                       'username' => $user->username,
+                       'parent_name' => $userDetails->name,
+                       'contact' => $userDetails->contact,
+                       'address' => $userDetails->address,
+                       'studentName' => $studentDetails->name,
+                       'dob' => $studentDetails->dob
+
+                   );
+                   $STATUS_CODE =Response::json(HttpResponse::HTTP_OK);
+                   //return Response::json(HttpResponse::HTTP_OK);
+                   return response()->json([$userdata,$STATUS_CODE]);
+                   //return Response::json(compact('token'));
+               } catch (ErrorException $e) {
+
+                   return Response::json(['error'=>'Invalid credentials'],HttpResponse::HTTP_UNAUTHORIZED);
+               }
+           }
+           else{
+               echo 'Null User or Incorrect credentials';
+               return Response::json(HttpResponse::HTTP_NO_CONTENT);
+           }
+
+
     }
 
-    public function doLogout(Request $request){
-        $request->session()->forget('id');
-        return redirect('login');
+    public function editProfile(Request $request){
+
+
     }
 }
