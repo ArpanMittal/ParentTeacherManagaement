@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
+
+class UploadController extends Controller
+{
+    public function showUpload(){
+        return view('upload.upload');
+    }
+    public function doUpload(Request $request)
+    {
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        //role_id of admin is 4
+        if ($user->role_id == 4) {
+            $files=$request->file('fileEntry');
+            //$files = Input::file('fileEntry');
+            $file_count = count($files);
+            //echo $file_count;
+            $uploadcount = 0;
+            foreach($files as $file){
+                $destinationPath = '';
+                $filename = $file->getClientOriginalName();
+                $fileExtension= $file->getClientOriginalExtension();
+                //echo $fileExtension;
+                if ($fileExtension !='pdf') {
+                    echo "PDF files only";
+                    //$request->session()->flash('status', 'PDF files only');
+                    //return redirect('upload');
+                }
+                else{
+                    $upload_success = $file->move($destinationPath, $filename);
+                    $uploadcount++;
+                    //echo $filename;
+                    //echo $uploadcount;
+                    if ($uploadcount == $file_count) {
+                        Session::flash('success', 'Upload successfully');
+                        return redirect('upload');
+                    } else {
+                        Session::flash('failure', 'Upload failed');
+                        return redirect('upload');
+                    }
+                }
+            }
+        }
+    }
+
+
+   /* public function store(Request $request)
+    {
+        $request->file('fileEntry');
+        if($request->hasFile('fileEntry')){
+
+        $request->fileEntry->path();
+        return $request->word->store('public');
+        return Storage::putFile('public',$request->file('fileEntry'));
+        }
+        else{
+         return 'No file selected';
+        }
+        }
+    }
+    public function show()
+    {
+        Storage::makeDirectory('public/make');
+        return Storage::allFiles('public');
+    }*/
+    
+
+}

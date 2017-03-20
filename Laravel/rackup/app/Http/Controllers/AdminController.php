@@ -35,7 +35,7 @@ class AdminController extends Controller
                 'address' => 'required',
                 'contact'=>'required|digits:10',
                 'role'=>'required',
-                'username'=>'required|email|distinct',
+                'username'=>'required|email|unique:users',
                 'password'=>'required|alphanum');
 
 
@@ -58,10 +58,10 @@ class AdminController extends Controller
             try {
                 \DB::beginTransaction();
                 $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => $role]);
-               \DB::table('userDetails')->insert(['name' => $parentName, 'gender' => $parentGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId]);
-               
+                \DB::table('userDetails')->insert(['name' => $parentName, 'gender' => $parentGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId]);
+
                 \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
-                
+
             }catch (Exception $e){
                 \DB::rollBack();
                 echo "insertion failed";
@@ -92,11 +92,11 @@ class AdminController extends Controller
                 'address' => 'required',
                 'contact'=>'required|digits:10',
                 'role'=>'required',
-                'username'=>'required|email|distinct',
+                'username'=>'required|email|unique:users',
                 'password'=>'required|alphanum');
-            
+
             $this->validate($request,$rules);
-            
+
             $teacherName = Input::get('teacherName');
             $teacherGender = Input::get('teacherGender');
             $address = Input::get('address');
@@ -104,7 +104,7 @@ class AdminController extends Controller
             $role = Input::get('role');
             $username = Input::get('username');
             $password = Input::get('password');
-            
+
             try {
                 \DB::beginTransaction();
                 $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => $role]);

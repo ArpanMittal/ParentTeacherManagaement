@@ -12,7 +12,7 @@
 */
 
 //Route::get('/', function () {
-//    return view('welcome');
+  //  return view('welcome');
 //});
 
 //Auth::routes();
@@ -32,4 +32,9 @@ Route::post('/registerParent','AdminController@doRegisterParent')->name('registe
 Route::get('/registerTeacher','AdminController@showRegisterTeacher')->middleware('check.session');
 
 Route::post('/registerTeacher','AdminController@doRegisterTeacher')->name('registerTeacher');
+
+Route::get('/upload','UploadController@showUpload')->middleware('check.session');
+
+Route::post('/upload','UploadController@doUpload')->name('upload');
+
 
