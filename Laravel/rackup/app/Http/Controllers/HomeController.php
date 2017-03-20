@@ -118,6 +118,18 @@ class HomeController extends Controller
             ->first();
 
 
+        if ( !is_null($user) ) {
+            $token = JWTAuth::fromUser($user);
+            //return var_export($token);
+            $user=JWTAuth::toUser($token);
+            return Response::json(['token'=>$token]);
+        }
+        else{
+            echo 'User is null';
+        }
+
+
+
            if ( !is_null($user) ) {
                try {
                    $token = JWTAuth::fromUser($user);
@@ -150,6 +162,7 @@ class HomeController extends Controller
                echo 'Null User or Incorrect credentials';
                return Response::json(HttpResponse::HTTP_NO_CONTENT);
            }
+
 
     }
 
