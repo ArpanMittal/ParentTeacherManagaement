@@ -47,8 +47,8 @@
                         <div class="form-group {{$errors->has('studentGender')?'has-error':''}}">
                             <label for="studentGender"  class="col-md-4 control-label">Gender</label>
                             <div class="col-md-6">
-                                <input type="radio" name="studentGender"value="F"/>Female</br>
-                                <input type="radio" name="studentGender"value="M"/>Male</br>
+                                <input type="radio" name="studentGender"value="F"/>Female
+                                <input type="radio" name="studentGender"value="M"/>Male
                                 @if ($errors->has('studentGender'))
                                     <span class="help-block">
                                             <strong>{{ $errors->first('studentGender') }}</strong>
@@ -62,13 +62,13 @@
                         <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
                             <label for="gradeId"  class="col-md-4 control-label">Grade</label>
                             <div class="col-md-6">
-                                <input type="radio" name="gradeId"value="1"/>Playgroup</br>
-                                <input type="radio" name="gradeId"value="2"/>Nursery</br>
-                                <input type="radio" name="gradeId"value="3"/>J.K.G.</br>
-                                <input type="radio" name="gradeId"value="4"/>S.K.G.</br>
+                                <input type="radio" name="gradeId"value="1"/>Playgroup
+                                <input type="radio" name="gradeId"value="2"/>Nursery
+                                <input type="radio" name="gradeId"value="3"/>J.K.G.
+                                <input type="radio" name="gradeId"value="4"/>S.K.G.
                                 @if ($errors->has('gradeId'))
                                     <span class="help-block">
-                                            <strong>{{ $errors->first('gradeId') }}</strong>
+                                            <strong>{{ $errors->first('gradeId')}}</strong>
                                         </span>
                                 @endif
                             </div>
@@ -94,8 +94,8 @@
                         <div class="form-group {{$errors->has('parentGender')?'has-error':''}}">
                             <label for="parentGender"  class="col-md-4 control-label">Gender</label>
                             <div class="col-md-6">
-                                <input type="radio" name="parentGender"value="F"/>Female</br>
-                                <input type="radio" name="parentGender"value="M"/>Male</br>
+                                <input type="radio" name="parentGender"value="F"/>Female
+                                <input type="radio" name="parentGender"value="M"/>Male
                                 @if ($errors->has('parentGender'))
                                     <span class="help-block">
                                             <strong>{{ $errors->first('parentGender') }}</strong>
@@ -138,9 +138,9 @@
                         <div class="form-group {{$errors->has('role')?'has-error':''}}">
                             <label for="role"  class="col-md-4 control-label">Role</label>
                             <div class="col-md-6">
-                                <input type="radio" name="role"value="2"/>Parent</br>
-                                <input type="radio" name="role"value="3"/>Principal</br>
-                                <input type="radio" name="role"value="4"/>Teacher</br>
+                                <input type="radio" name="role"value="2"/>Parent
+                                <input type="radio" name="role"value="3"/>Principal
+                                <input type="radio" name="role"value="4"/>Teacher
                                 @if ($errors->has('role'))
                                     <span class="help-block">
                                             <strong>{{ $errors->first('role') }}</strong>

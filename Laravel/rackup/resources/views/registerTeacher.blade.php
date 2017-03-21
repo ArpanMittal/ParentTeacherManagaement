@@ -32,8 +32,8 @@
                         <div class="form-group {{$errors->has('teacherGender')?'has-error':''}}">
                             <label for="teacherGender"  class="col-md-4 control-label">Gender</label>
                             <div class="col-md-6">
-                                <input type="radio" name="teacherGender"value="F"/>Female</br>
-                                <input type="radio" name="teacherGender"value="M"/>Male</br>
+                                <input type="radio" name="teacherGender"value="F"/>Female
+                                <input type="radio" name="teacherGender"value="M"/>Male
                                 @if ($errors->has('teacherGender'))
                                     <span class="help-block">
                                             <strong>{{ $errors->first('teacherGender') }}</strong>
@@ -76,9 +76,9 @@
                         <div class="form-group {{$errors->has('role')?'has-error':''}}">
                             <label for="role"  class="col-md-4 control-label">Role</label>
                             <div class="col-md-6">
-                                <input type="radio" name="role"value="2"/>Parent</br>
-                                <input type="radio" name="role"value="3"/>Principal</br>
-                                <input type="radio" name="role"value="4"/>Teacher</br>
+                                <input type="radio" name="role"value="2"/>Parent
+                                <input type="radio" name="role"value="3"/>Principal
+                                <input type="radio" name="role"value="4"/>Teacher
                                 @if ($errors->has('role'))
                                     <span class="help-block">
                                             <strong>{{ $errors->first('role') }}</strong>

@@ -6,5 +6,6 @@
         @endif
         @if($user->role_id==4)
             <li><a href="{{ route('upload')}}">Upload File</a></li>
+            <li><a href="{{ route('uploadLink')}}">Upload Link</a></li>
         @endif
     @endif

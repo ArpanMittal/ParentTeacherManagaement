@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Http;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UploadController extends Controller
 {
@@ -16,7 +21,7 @@ class UploadController extends Controller
     {
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
-        //role_id of admin is 4
+        //role_id of teacher is 4
         if ($user->role_id == 4) {
             $files=$request->file('fileEntry');
             //$files = Input::file('fileEntry');
@@ -49,6 +54,51 @@ class UploadController extends Controller
             }
         }
     }
+
+    public function showUploadLink(){
+        return view('upload.uploadLink');
+    }
+
+    public function doUploadLink(Request $request){
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        //role_id of teacher is 4
+        if ($user->role_id == 4) {
+
+            $rules = array(
+                'gradeId' =>'required',
+                'contentName'=>'required',
+                'categoryName'=>'required',
+                'categoryUrl'=>'required|url'
+            );
+
+            $this->validate($request,$rules);
+
+            $gradeId = Input::get('gradeId');
+            $contentName = Input::get('contentName');
+            $categoryName = Input::get('categoryName');
+            $categoryUrl = Input::get('categoryUrl');
+
+            try {
+                \DB::beginTransaction();
+                $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
+                \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl]);
+                \DB::table('content_grade')->insert(['grade_id' => $gradeId, 'content_id'=> $contentId]);
+
+            } catch (Exception $e) {
+                \DB::rollBack();
+                echo "insertion failed";
+            }
+            \DB::commit();
+            $STATUS_CODE =Response::json(HttpResponse::HTTP_OK);
+            return response()->json([$categoryUrl,$STATUS_CODE]);
+        }
+        else{
+            echo "Permission Denied";
+        }
+    }
+
+
 
 
    /* public function store(Request $request)
