@@ -10,8 +10,8 @@ class CreateUsersTable extends Migration {
 		Schema::create('users', function(Blueprint $table) {
 			$table->increments('id');
 			$table->timestamps();
-			$table->string('username',25)->unique();
-			$table->string('password',25)->unique();
+			$table->string('username',100)->unique();
+			$table->string('password',10)->unique();
 			$table->boolean('active')->default(true);
 			$table->integer('role_id')->unsigned();
 		});

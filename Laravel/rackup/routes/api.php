@@ -18,3 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/login','HomeController@returnToken');
+Route::post('/getContent','UploadController@getContent')->name('getContent');
+
+//Route::post('/uploadLink','UploadController@returnUploadLink');

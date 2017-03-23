@@ -11,10 +11,10 @@ class CreateUserDetailsTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->integer('user_id')->unsigned();
-			$table->string('name',50);
-			$table->string('profilePhotoPath',50);
+			$table->string('name',100);
+			$table->string('profilePhotoPath',100);
 			$table->string('gender', 1);
-			$table->string('address',50);
+			$table->string('address',100);
 			$table->integer('contact');
 		});
 	}

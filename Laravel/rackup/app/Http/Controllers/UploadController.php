@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Student;
+use App\ContentGrade;
+use App\Content;
+use App\Category;
+
 
 class UploadController extends Controller
 {
@@ -82,7 +87,7 @@ class UploadController extends Controller
             try {
                 \DB::beginTransaction();
                 $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
-                \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl]);
+                \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl,'content_id'=>$contentId]);
                 \DB::table('content_grade')->insert(['grade_id' => $gradeId, 'content_id'=> $contentId]);
 
             } catch (Exception $e) {
@@ -92,6 +97,56 @@ class UploadController extends Controller
             \DB::commit();
             $STATUS_CODE =Response::json(HttpResponse::HTTP_OK);
             return response()->json([$categoryUrl,$STATUS_CODE]);
+        }
+        else{
+            echo "Permission Denied";
+        }
+    }
+    
+    public function getContent(Request $request){
+        //$id = $request->session()->get('id');
+       $token = $request->get('token');
+         //$token = Input::get('token');
+        $user=JWTAuth::toUser($token);
+        $userId = $user->id ;
+
+        if ($user->role_id == 2) {
+            $studentDetails= Student::where('parent_id',$userId)->first();
+            $gradeId = $studentDetails->grade_id;
+            $contentGradeDetails = ContentGrade::all()->where('grade_id',$gradeId);
+            $contentGradeDetails_count = count($contentGradeDetails);
+            $flag=0;
+            $i=0;
+            $j=0;
+            foreach ($contentGradeDetails as $contentGradeDetail) {
+                $contentId = $contentGradeDetail->content_id;
+                $contentDetails = Content::where('id', $contentId)->first();
+                $contentName = $contentDetails->name;
+                $categoryDetails = Category::all()->where('content_id',$contentId);
+
+                foreach ($categoryDetails as $categoryDetail){
+                   $categoryName = $categoryDetail->name;
+                    $url = $categoryDetail->url;
+                    $categoryData[$i] = array(
+                        'categoryName'=> $categoryName,
+                        'url'=> $url
+                    );
+                    $i++;
+                }
+                $contentData[$j]=array(
+                    'gradeId'=>$gradeId,
+                    'contentId'=>$contentId,
+                    'contentName'=>$contentName,
+                    'categoryData'=>$categoryData[($i-1)]
+                );
+                $j++;
+                $flag++;
+                if($flag==$contentGradeDetails_count) {
+                    $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
+                    return response()->json([$contentData,$STATUS_CODE]);
+                }
+
+            }
         }
         else{
             echo "Permission Denied";

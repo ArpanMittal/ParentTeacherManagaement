@@ -10,12 +10,11 @@ class CreateRolesTable extends Migration {
 		Schema::create('roles', function(Blueprint $table) {
 			$table->increments('id');
 			$table->timestamps();
-			$table->string('role_name',25)->unique();
+			$table->string('role_name',50)->unique();
 		});
-
 		DB::table('roles')->insert([
 			['role_name' => 'admin'],
-            ['role_name' => 'parent'],
+			['role_name' => 'parent'],
 			['role_name' => 'principal'],
 			['role_name' => 'teacher']
 		]);

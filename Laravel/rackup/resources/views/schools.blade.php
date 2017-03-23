@@ -5,12 +5,12 @@
 			{!! Form::text('name') !!}
 		</li>
 		<li>
-			{!! Form::label('url', 'Url:') !!}
-			{!! Form::text('url') !!}
+			{!! Form::label('city', 'City:') !!}
+			{!! Form::text('city') !!}
 		</li>
 		<li>
-			{!! Form::label('content_id', 'Content_id:') !!}
-			{!! Form::text('content_id') !!}
+			{!! Form::label('board', 'Board:') !!}
+			{!! Form::text('board') !!}
 		</li>
 		<li>
 			{!! Form::submit() !!}

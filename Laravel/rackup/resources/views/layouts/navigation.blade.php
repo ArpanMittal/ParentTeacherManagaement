@@ -8,4 +8,7 @@
             <li><a href="{{ route('upload')}}">Upload File</a></li>
             <li><a href="{{ route('uploadLink')}}">Upload Link</a></li>
         @endif
+        @if($user->role_id==2)
+            <li><a href="{{ route('getContent')}}">Contents</a></li>
+        @endif
     @endif

@@ -11,7 +11,8 @@ class CreateCategoriesTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->string('name',50);
-			$table->string('url',50);
+			$table->string('url',100);
+			$table->integer('content_id')->unsigned();
 		});
 	}
 

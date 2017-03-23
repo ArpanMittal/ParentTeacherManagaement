@@ -68,6 +68,11 @@ class CreateForeignKeys extends Migration {
 						->onDelete('cascade')
 						->onUpdate('cascade');
 		});
+		Schema::table('categories', function(Blueprint $table) {
+			$table->foreign('content_id')->references('id')->on('contents')
+						->onDelete('restrict')
+						->onUpdate('restrict');
+		});
 		Schema::table('content_grade', function(Blueprint $table) {
 			$table->foreign('grade_id')->references('id')->on('grades')
 						->onDelete('restrict')
@@ -127,6 +132,9 @@ class CreateForeignKeys extends Migration {
 		});
 		Schema::table('teacherAppointmentsSlots', function(Blueprint $table) {
 			$table->dropForeign('teacherAppointmentsSlots_teacher_id_foreign');
+		});
+		Schema::table('categories', function(Blueprint $table) {
+			$table->dropForeign('categories_content_id_foreign');
 		});
 		Schema::table('content_grade', function(Blueprint $table) {
 			$table->dropForeign('content_grade_grade_id_foreign');
