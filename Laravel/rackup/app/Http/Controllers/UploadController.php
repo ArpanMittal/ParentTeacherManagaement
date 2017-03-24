@@ -115,39 +115,42 @@ class UploadController extends Controller
             $contentGradeDetails = ContentGrade::all()->where('grade_id',$gradeId);
             $contentGradeDetails_count = count($contentGradeDetails);
             $flag=0;
-            $i=0;
+            //$i=0;
             $j=0;
             foreach ($contentGradeDetails as $contentGradeDetail) {
                 $contentId = $contentGradeDetail->content_id;
                 $contentDetails = Content::where('id', $contentId)->first();
                 $contentName = $contentDetails->name;
-                $categoryDetails = Category::all()->where('content_id',$contentId);
+                $categoryDetails = Category::all()->where('content_id', $contentId);
                 //$categoryDetails_count = count($categoryDetails);
                 //echo $categoryDetails_count;
-                foreach ($categoryDetails as $categoryDetail){
-                   $categoryName = $categoryDetail->name;
+                $i = 0;
+                foreach ($categoryDetails as $categoryDetail) {
+                    $categoryName = $categoryDetail->name;
                     $url = $categoryDetail->url;
-                    $categoryData[$i] = array(
-                        'categoryName'=> $categoryName,
-                        'url'=> $url
+                    $categoryData[$i++] = array(
+                        'categoryName' => $categoryName,
+                        'url' => $url
                     );
-                    $contentData[$j]=array(
-                        'gradeId'=>$gradeId,
-                        'contentId'=>$contentId,
-                        'contentName'=>$contentName,
-                        'categoryData'=>$categoryData[($i)]
-                    );
-                    $i++;
-                    $j++;
+//                    $contentData[$j]=array(
+//                        'gradeId'=>$gradeId,
+//                        'contentId'=>$contentId,
+//                        'contentName'=>$contentName,
+//                        'categoryData'=>$categoryData[($i)]
+//                    );
+//                    $i++;
+//                    $j++;
                     //var_dump($contentData);
                 }
-                $flag++;
-                if($flag==$contentGradeDetails_count) {
-                    $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
-                    return response()->json([$contentData,$STATUS_CODE]);
-                }
-
+                $sendContent[$j++] = array('gradeId' => $gradeId, 'contentId' => $contentId, 'contentName' => $contentName, 'categoryData' => $categoryData);
             }
+//                $flag++;
+//                if($flag==$contentGradeDetails_count) {
+                    $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
+                    return response()->json([$sendContent,$STATUS_CODE]);
+//                }
+
+
         }
         else{
             echo "Permission Denied";
