@@ -104,7 +104,6 @@ class UploadController extends Controller
     }
     
     public function getContent(Request $request){
-        //$id = $request->session()->get('id');
        $token = $request->get('token');
          //$token = Input::get('token');
         $user=JWTAuth::toUser($token);
@@ -123,7 +122,8 @@ class UploadController extends Controller
                 $contentDetails = Content::where('id', $contentId)->first();
                 $contentName = $contentDetails->name;
                 $categoryDetails = Category::all()->where('content_id',$contentId);
-
+                //$categoryDetails_count = count($categoryDetails);
+                //echo $categoryDetails_count;
                 foreach ($categoryDetails as $categoryDetail){
                    $categoryName = $categoryDetail->name;
                     $url = $categoryDetail->url;
@@ -131,15 +131,16 @@ class UploadController extends Controller
                         'categoryName'=> $categoryName,
                         'url'=> $url
                     );
+                    $contentData[$j]=array(
+                        'gradeId'=>$gradeId,
+                        'contentId'=>$contentId,
+                        'contentName'=>$contentName,
+                        'categoryData'=>$categoryData[($i)]
+                    );
                     $i++;
+                    $j++;
+                    //var_dump($contentData);
                 }
-                $contentData[$j]=array(
-                    'gradeId'=>$gradeId,
-                    'contentId'=>$contentId,
-                    'contentName'=>$contentName,
-                    'categoryData'=>$categoryData[($i-1)]
-                );
-                $j++;
                 $flag++;
                 if($flag==$contentGradeDetails_count) {
                     $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
