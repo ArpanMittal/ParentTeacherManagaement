@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Mockery\CountValidator\Exception;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Student;
@@ -104,19 +107,24 @@ class UploadController extends Controller
     }
     
     public function getContent(Request $request){
-       $token = $request->get('token');
-         //$token = Input::get('token');
-        $user=JWTAuth::toUser($token);
-        $userId = $user->id ;
-
+        try {
+            $token = $request->get('token');
+            $user = JWTAuth::toUser($token);
+            $userId = $user->id;
+        }catch (TokenExpiredException $e){
+            return Response::json (['Token expired'],498);
+        }catch (TokenInvalidException $e){
+            return Response::json (['Token invalid']);
+        }
         if ($user->role_id == 2) {
-            $studentDetails= Student::where('parent_id',$userId)->first();
+            $studentDetails = Student::where('parent_id', $userId)->first();
             $gradeId = $studentDetails->grade_id;
-            $contentGradeDetails = ContentGrade::all()->where('grade_id',$gradeId);
+            $contentGradeDetails = ContentGrade::all()->where('grade_id', $gradeId);
             $contentGradeDetails_count = count($contentGradeDetails);
-            $flag=0;
-            //$i=0;
-            $j=0;
+            //echo $contentGradeDetails_count;
+            $flag = 0;
+            $j = 0;
+            global $categoryData;
             foreach ($contentGradeDetails as $contentGradeDetail) {
                 $contentId = $contentGradeDetail->content_id;
                 $contentDetails = Content::where('id', $contentId)->first();
@@ -125,6 +133,7 @@ class UploadController extends Controller
                 //$categoryDetails_count = count($categoryDetails);
                 //echo $categoryDetails_count;
                 $i = 0;
+                $categoryData=array();
                 foreach ($categoryDetails as $categoryDetail) {
                     $categoryName = $categoryDetail->name;
                     $url = $categoryDetail->url;
@@ -132,28 +141,19 @@ class UploadController extends Controller
                         'categoryName' => $categoryName,
                         'url' => $url
                     );
-//                    $contentData[$j]=array(
-//                        'gradeId'=>$gradeId,
-//                        'contentId'=>$contentId,
-//                        'contentName'=>$contentName,
-//                        'categoryData'=>$categoryData[($i)]
-//                    );
-//                    $i++;
-//                    $j++;
-                    //var_dump($contentData);
+                  //  $sendContent[$j++] = array('gradeId' => $gradeId, 'contentId' => $contentId, 'contentName' => $contentName, 'categoryData' => $categoryData[$i-1]);
                 }
-                $sendContent[$j++] = array('gradeId' => $gradeId, 'contentId' => $contentId, 'contentName' => $contentName, 'categoryData' => $categoryData);
+                $flag++;
+               $sendContent[$j++] = array('gradeId' => $gradeId, 'contentId' => $contentId, 'contentName' => $contentName, 'categoryData' => $categoryData);
             }
-//                $flag++;
-//                if($flag==$contentGradeDetails_count) {
-                    $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
-                    return response()->json([$sendContent,$STATUS_CODE]);
-//                }
-
-
-        }
-        else{
-            echo "Permission Denied";
+            if ($flag == $contentGradeDetails_count) {
+                return Response::json([$sendContent, HttpResponse::HTTP_OK]);
+           } else {
+             return Response::json(['No content', HttpResponse::HTTP_NO_CONTENT]);
+           }
+        } else {
+            return Response::json(['Unauthorized User', HttpResponse::HTTP_UNAUTHORIZED]);
+            //echo "Permission Denied";
         }
     }
 
