@@ -2,6 +2,9 @@
     <string name="app_name">rackup</string>
     <!-- Strings related to msg -->
     <string name="loadingmsg">loading, please wait</string>
+    <string name="item_1">Item 1</string>
+    <string name="item_2">Item 2</string>
+    <string name="item_3">Item 3</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -469,7 +472,7 @@
     </string>
     <string name="date_selected" />
     <string name="title_activity_test">testing purpose</string>
-    <string name="loginurl">http://portal.kwiklearn.in/test</string>
+    <string name="loginurl">http://web.rackupcambridge.com/api/login</string>
 
     <string name="title_activity_initializer">initializer</string>
     <string name="dummy_button">Dummy Button</string>
@@ -526,4 +529,7 @@
 
     <string name="error_thumbnail_view">There was an error initializing the YouTubeThumbnailView (%1$s)</string>
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="err_msg_contact_notValid">Enter a valid 10 digit contact</string>
+    <string name="err_msg_email_Not_valid">Enter a valid email</string>
+    <string name="VideoAPIUrl">http://web.rackupcambridge.com/api/getContent</string>
 </resources>

@@ -124,14 +124,26 @@ public class RemoteHelper {
     public void verifyLogin(RemoteCallHandler caller, RemoteCalls functionCalled, String email, String password) {
         //  verifyLoginurl=R.string.loginurl;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("client_id", GlobalConstants.CLIENT_ID);
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
         params.put("client_secret", GlobalConstants.CLINET_SECRET);
-        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);
-        params.put("username", email);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("email", email);
         params.put("password", password);
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/x-www-form-urlencoded");
         new JSONParserAsync(this.context.getResources().getString(R.string.loginurl), params, header, caller, functionCalled);
+
+    }
+    public void VideoData(RemoteCallHandler caller, RemoteCalls functionCalled, String token) {
+        //  verifyLoginurl=R.string.loginurl;
+        Map<String, String> params = new HashMap<String, String>();
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
+        params.put("client_secret", GlobalConstants.CLINET_SECRET);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("token", token);
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.VideoAPIUrl), params, header, caller, functionCalled);
 
     }
 }

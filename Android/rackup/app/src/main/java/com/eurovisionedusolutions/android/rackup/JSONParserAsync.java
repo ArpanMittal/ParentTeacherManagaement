@@ -5,6 +5,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,22 +43,26 @@ public class JSONParserAsync implements RemoteCallHandler {
         req = new CustomRequest(Request.Method.POST, url,
                 this.params,
                 this.header,
-                new Response.Listener<JSONObject>() {
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         // response
                         JSONParserAsync.this.isRemoteCallSuccessful = true;
                         try {
 
 
-                            if (response.get("code").toString().equals(GlobalConstants.EXPIRED_TOKEN)) {
+                            if (response.getJSONObject(1).toString().equals(GlobalConstants.EXPIRED_TOKEN)) {
 
 
                             } else {
                                 JSONParserAsync.this.listener.HandleRemoteCall(JSONParserAsync.this.isRemoteCallSuccessful, JSONParserAsync.this.callFor, response, JSONParserAsync.this.exception);
                             }
                         } catch (JSONException e) {
-                            JSONParserAsync.this.listener.HandleRemoteCall(JSONParserAsync.this.isRemoteCallSuccessful, JSONParserAsync.this.callFor, response, JSONParserAsync.this.exception);
+                            try {
+                                JSONParserAsync.this.listener.HandleRemoteCall(JSONParserAsync.this.isRemoteCallSuccessful, JSONParserAsync.this.callFor, response, JSONParserAsync.this.exception);
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
                             //e.printStackTrace();
                         }
                     }
@@ -68,7 +73,11 @@ public class JSONParserAsync implements RemoteCallHandler {
                     public void onErrorResponse(VolleyError error) {
                         JSONParserAsync.this.isRemoteCallSuccessful = false;
                         JSONParserAsync.this.exception = error;
-                        JSONParserAsync.this.listener.HandleRemoteCall(JSONParserAsync.this.isRemoteCallSuccessful, JSONParserAsync.this.callFor, null, JSONParserAsync.this.exception);
+                        try {
+                            JSONParserAsync.this.listener.HandleRemoteCall(JSONParserAsync.this.isRemoteCallSuccessful, JSONParserAsync.this.callFor, null, JSONParserAsync.this.exception);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
         //setting time out and retries
@@ -79,12 +88,13 @@ public class JSONParserAsync implements RemoteCallHandler {
 
 //
 
-    @Override
-    public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONObject response, Exception exception) {
+  /*  @Override*/
+    public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
         if (isSuccessful) {
             try {
 
-                req.getParams().put("access_token", response.get("access_token").toString());
+                /*req.getParams().put("access_token", response.get("access_token").toString());*/
+                req.getParams().put("access_token", response.getJSONObject(5).toString());
                 VolleyController.getInstance().addToRequestQueue(req, tag_json_obj);
                 //new RemoteHelper(getApplicationContext()).getUserDetails(this,RemoteCalls.GET_USER_DETAILS,response.get("access_token").toString());
 

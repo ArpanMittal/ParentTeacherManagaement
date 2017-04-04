@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     private int flag = 0;
     private Button button;
     DBHelper mydb;
+    private int count=0;
     ProgressDialog pd;
     private Toolbar toolbar;
     private TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword;
@@ -62,6 +65,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailView.addTextChangedListener(new MyTextWatcher(mEmailView));
         mPasswordView.addTextChangedListener(new MyTextWatcher(mPasswordView));
+         Splash_Screen.fa.finish();
+
 
 
         /*
@@ -92,6 +97,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
 
 
         if (!validateEmail()) {
+            inputLayoutEmail.setErrorEnabled(true);
+            inputLayoutEmail.setError(getString(R.string.err_msg_email_Not_valid));
             return;
         }
 
@@ -100,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         }
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+
         if (isNetworkAvailable() == true) {
 
             Toast.makeText(getApplicationContext(), "Thank You!", Toast.LENGTH_SHORT).show();
@@ -114,25 +122,43 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
 
     private boolean validateEmail() {
         String email = mEmailView.getText().toString().trim();
-
-        if (email.isEmpty() || !isValidEmail(email)) {
-            inputLayoutEmail.setError(getString(R.string.err_msg_email));
+         inputLayoutEmail.setErrorEnabled(false);
+        if (email.isEmpty()) {
+           // inputLayoutEmail.setError(getString(R.string.err_msg_email));
+            mEmailView.setTextColor(Color.RED);
             requestFocus(mEmailView);
             return false;
-        } else {
-            inputLayoutEmail.setErrorEnabled(false);
+        }
+        else if(!isValidEmail(email)){
+           // inputLayoutEmail.setError(getString(R.string.err_msg_email_Not_valid));
+            mEmailView.setTextColor(Color.RED);
+            requestFocus(mEmailView);
+            return false;
+        }
+        else {
+            mEmailView.setTextColor(Color.GREEN);
+          //  inputLayoutEmail.setErrorEnabled(false);
         }
 
         return true;
     }
 
     private boolean validatePassword() {
-        if (mPasswordView.getText().toString().trim().isEmpty()) {
-            inputLayoutPassword.setError(getString(R.string.err_msg_password));
+        String password=mPasswordView.getText().toString().trim();
+        inputLayoutPassword.setErrorEnabled(false);
+        if (password.isEmpty()) {
+         //   inputLayoutPassword.setError(getString(R.string.err_msg_password));
+            mPasswordView.setTextColor(Color.RED);
             requestFocus(mPasswordView);
             return false;
-        } else {
-            inputLayoutPassword.setErrorEnabled(false);
+        } else if (password.length()<8){
+            //inputLayoutPassword.setError(getString(R.string.err_msg_password_Lenth_not_8));
+            mPasswordView.setTextColor(Color.RED);
+            requestFocus(mPasswordView);
+            return false;
+        }else {
+           // inputLayoutPassword.setErrorEnabled(false);
+            mPasswordView.setTextColor(Color.GREEN);
         }
 
         return true;
@@ -183,19 +209,21 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     parse the JSon object response from server
      */
     @Override
-    public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONObject response, Exception exception) {
-
+    public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
+           int status=0;
         pd.dismiss();
         if (isSuccessful) {
 
-            Intent intent = new Intent(this, Edit_profile.class);
-            startActivity(intent);
-
-
             try {
-                email = response.getString("username");
-                password = response.getString("password");
+                status=response.getJSONObject(1).getInt("original");
+                email = response.getJSONObject(0).getString("username");
+               password=response.getJSONObject(0).getString("parent_name");
                 update(email, password);
+                if(status==200){
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();}
+                else {Toast.makeText(getApplicationContext(), email, Toast.LENGTH_LONG).show();}
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -212,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     /*
     check for internet network before proceding form login
      */
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -222,8 +250,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     public void forgotpassword() {
 
         //forget password action
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=vjusPisr5SM")));
-        Log.i("Video", "Video Playing....");
+        Intent intent5=new Intent(this,Tab_fragment.class);
+        startActivity(intent5);
     }
 
 
@@ -242,7 +270,14 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         Toast.makeText(getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
         mydb.close();
     }
+    public void onBackPressed() {
+        count++;
+        if(count==1)
+        { Toast.makeText(getApplicationContext(), "Press Again to exit", Toast.LENGTH_LONG).show();}
 
+        if(count>=2){
+            finish();}
+    }
 
 }
 
