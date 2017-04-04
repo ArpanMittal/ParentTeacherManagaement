@@ -5,8 +5,12 @@
 			{!! Form::text('name') !!}
 		</li>
 		<li>
-			{!! Form::label('age', 'Age:') !!}
-			{!! Form::text('age') !!}
+			{!! Form::label('dob', 'Dob:') !!}
+			{!! Form::text('dob') !!}
+		</li>
+		<li>
+			{!! Form::label('gender', 'Gender:') !!}
+			{!! Form::text('gender') !!}
 		</li>
 		<li>
 			{!! Form::label('grade_id', 'Grade_id:') !!}

@@ -9,6 +9,10 @@
 			{!! Form::text('url') !!}
 		</li>
 		<li>
+			{!! Form::label('content_id', 'Content_id:') !!}
+			{!! Form::text('content_id') !!}
+		</li>
+		<li>
 			{!! Form::submit() !!}
 		</li>
 	</ul>

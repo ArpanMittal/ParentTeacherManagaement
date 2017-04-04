@@ -21,6 +21,10 @@
 			{!! Form::text('address') !!}
 		</li>
 		<li>
+			{!! Form::label('contact', 'Contact:') !!}
+			{!! Form::text('contact') !!}
+		</li>
+		<li>
 			{!! Form::submit() !!}
 		</li>
 	</ul>

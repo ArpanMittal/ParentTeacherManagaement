@@ -11,6 +11,34 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+  //  return view('welcome');
+//});
+
+//Auth::routes();
+
+Route::get('/home', 'HomeController@index')->middleware('check.session');
+
+Route::get('/login','HomeController@showLogin');
+
+Route::post('/login','HomeController@doLogin')->name('login');
+
+Route::get('/logout','HomeController@doLogout')->name('logout');
+
+Route::get('/registerParent','AdminController@showRegisterParent')->middleware('check.session');
+
+Route::post('/registerParent','AdminController@doRegisterParent')->name('registerParent');
+
+Route::get('/registerTeacher','AdminController@showRegisterTeacher')->middleware('check.session');
+
+Route::post('/registerTeacher','AdminController@doRegisterTeacher')->name('registerTeacher');
+
+Route::get('/upload','UploadController@showUpload')->middleware('check.session');
+
+Route::post('/upload','UploadController@doUpload')->name('upload');
+
+Route::get('/uploadLink','UploadController@showUploadLink')->middleware('check.session');
+
+Route::post('/uploadLink','UploadController@doUploadLink')->name('uploadLink');
+
+
