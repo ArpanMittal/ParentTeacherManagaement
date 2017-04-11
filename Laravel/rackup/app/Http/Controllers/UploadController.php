@@ -64,7 +64,8 @@ class UploadController extends Controller
     }
 
     public function showUploadLink(){
-        return view('upload.uploadLink');
+        $categories= array('Games','Moral Stories','Rhymes','Yoga');
+        return view('upload.uploadLink',compact('categories'));
     }
 
     public function doUploadLink(Request $request){
@@ -76,7 +77,6 @@ class UploadController extends Controller
             $rules = array(
                 'gradeId' =>'required',
                 'contentName'=>'required',
-                'categoryName'=>'required',
                 'categoryUrl'=>'required|url'
             );
 
@@ -89,14 +89,22 @@ class UploadController extends Controller
 
             try {
                 \DB::beginTransaction();
-                $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
+
+                $content = Content::where('name', '=', Input::get('contentName'))->first();
+                if ($content === null) {
+                    $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
+                }
+                else{
+                    $contents = Content::where ('name',$contentName)->first();
+                    $contentId = $contents->id;
+                }
                 \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl,'content_id'=>$contentId]);
                 \DB::table('content_grade')->insert(['grade_id' => $gradeId, 'content_id'=> $contentId]);
 
             } catch (Exception $e) {
                 \DB::rollBack();
                 echo "insertion failed";
-            }
+            };
             \DB::commit();
             $STATUS_CODE =Response::json(HttpResponse::HTTP_OK);
             return response()->json([$categoryUrl,$STATUS_CODE]);
@@ -144,7 +152,11 @@ class UploadController extends Controller
                   //  $sendContent[$j++] = array('gradeId' => $gradeId, 'contentId' => $contentId, 'contentName' => $contentName, 'categoryData' => $categoryData[$i-1]);
                 }
                 $flag++;
-               $sendContent[$j++] = array('gradeId' => $gradeId, 'contentId' => $contentId, 'contentName' => $contentName, 'categoryData' => $categoryData);
+               $sendContent[$j++] = array(
+                   'gradeId' => $gradeId,
+                   'contentId' => $contentId,
+                   'contentName' => $contentName,
+                   'categoryData' => $categoryData);
             }
             if ($flag == $contentGradeDetails_count) {
                 return Response::json([$sendContent, HttpResponse::HTTP_OK]);

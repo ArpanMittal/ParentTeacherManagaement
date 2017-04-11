@@ -11,9 +11,9 @@
 |
 */
 
-//Route::get('/', function () {
-  //  return view('welcome');
-//});
+Route::get('/', function () {
+  return view('login');
+});
 
 //Auth::routes();
 
@@ -41,4 +41,17 @@ Route::get('/uploadLink','UploadController@showUploadLink')->middleware('check.s
 
 Route::post('/uploadLink','UploadController@doUploadLink')->name('uploadLink');
 
+Route::get('/showAppointmentDetails','AppointmentController@getAppointmentDetails');//->middleware('check.session');
+
+Route::post('/showAppointmentDetails','AppointmentController@showAppointmentDetails')->name('showAppointmentDetails');
+
+Route::get('/teacherAppointments','AppointmentController@getTeacherAppointments');
+
+Route::post('/teacherAppointments','AppointmentController@confirmAppointments')->name('teacherAppointments');
+
+Route::get('/insertAppointmentsSlots','AppointmentController@getAppointmentsSlots');
+
+Route::post('/insertAppointmentsSlots','AppointmentController@postAppointmentsSlots')->name('insertAppointmentsSlots');
+
+Route::get('/notifications','NotificationController@sendDownstreamMessage');
 

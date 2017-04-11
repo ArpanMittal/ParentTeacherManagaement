@@ -50,13 +50,12 @@
                         <div class="form-group {{$errors->has('categoryName')?'has-error':''}}">
                             <label for="categoryName"  class="col-md-4 control-label">Category</label>
                             <div class="col-md-6">
-                                <select name="categoryName" onchange='enterCategory(this.value);'>
-                                    <option value="yoga">Yoga</option>
-                                    <option value="moralStories">Moral Stories</option>
-                                    <option value="rhymes">Rhymes</option>
-                                    <option value="other">Other</option>
+                                <select  id="categoryName"name="categoryName" class="form-control">
+                                    @foreach($categories as $category)
+                                        <option value = "{{$category}}" >{{$category}}</option>
+                                    @endforeach
                                 </select>
-                                <input type="text" name="categoryName" id="categoryName" style='display:none;' placeholder="Enter category"/>
+
                                 @if ($errors->has('categoryName'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('categoryName') }}</strong>
@@ -97,7 +96,7 @@
 
 <script type="text/javascript">
     function enterCategory(val){
-        var element=document.getElementById('categoryName');
+        var element=document.getElementById('otherCategory');
         if(val=='other')
             element.style.display='block';
         else
