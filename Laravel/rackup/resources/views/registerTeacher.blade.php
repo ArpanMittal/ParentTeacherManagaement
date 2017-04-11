@@ -1,3 +1,4 @@
+@extends('layouts.app')
 <html>
 <head>
     <title>Register User</title>
