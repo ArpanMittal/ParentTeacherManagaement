@@ -36,6 +36,8 @@
     <table class="table table-bordered">
         <thead>
         <tr>
+            <th>Teacher Id</th>
+            <th>Teacher Name</th>
             <th>Date</th>
             <th>Day</th>
             <th>Duration</th>
