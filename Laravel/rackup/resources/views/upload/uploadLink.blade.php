@@ -42,18 +42,18 @@
 
                         <div class="col-md-12"></div>
 
-                        <div class="form-group {{$errors->has('categoryName')?'has-error':''}}">
-                            <label for="categoryName"  class="col-md-4 control-label">Category</label>
+                        <div class="form-group {{$errors->has('contentName')?'has-error':''}}">
+                            <label for="contentName"  class="col-md-4 control-label">Category</label>
                             <div class="col-md-6">
-                                <select  id="categoryName"name="categoryName" class="form-control">
-                                    @foreach($categories as $category)
-                                        <option value = "{{$category}}" >{{$category}}</option>
+                                <select  id="contentName"name="contentName" class="form-control">
+                                    @foreach($contents as $content)
+                                        <option value = "{{$content}}" >{{$content}}</option>
                                     @endforeach
                                 </select>
 
-                                @if ($errors->has('categoryName'))
+                                @if ($errors->has('contentName'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('categoryName') }}</strong>
+                                        <strong>{{ $errors->first('contentName') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -61,13 +61,13 @@
 
                         <div class="col-md-12"></div>
 
-                        <div class="form-group {{$errors->has('contentName')?'has-error':''}}">
-                            <label for="contentName"  class="col-md-4 control-label">Video Name</label>
+                        <div class="form-group {{$errors->has('categoryName')?'has-error':''}}">
+                            <label for="categoryName"  class="col-md-4 control-label">Video Name</label>
                             <div class="col-md-6">
-                                <input type="text" name="contentName" id="contentName" value="{{ Input::old('contentName') }}" required autofocus>
-                                @if ($errors->has('contentName'))
+                                <input type="text" name="categoryName" id="categoryName" value="{{ Input::old('categoryName') }}" required autofocus>
+                                @if ($errors->has('categoryName'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('contentName') }}</strong>
+                                        <strong>{{ $errors->first('categoryName') }}</strong>
                                     </span>
                                 @endif
                             </div>

@@ -70,8 +70,8 @@ class UploadController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-        $categories= array('Games','Moral Stories','Rhymes','Yoga');
-        return view('upload.uploadLink',compact('categories'),$data);
+        $contents= array('Games','Moral Stories','Rhymes','Yoga');
+        return view('upload.uploadLink',compact('contents'),$data);
     }
 
     public function doUploadLink(Request $request){
@@ -101,10 +101,10 @@ class UploadController extends Controller
                     $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
                 }
                 else{
-                    $contents = Content::where ('name',$categoryName)->first();
+                    $contents = Content::where ('name',$contentName)->first();
                     $contentId = $contents->id;
                 }
-                \DB::table('categories')->insert(['name' => $contentName, 'url'=>$categoryUrl,'content_id'=>$contentId]);
+                \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl,'content_id'=>$contentId]);
                 \DB::table('content_grade')->insert(['grade_id' => $gradeId, 'content_id'=> $contentId]);
 
             } catch (Exception $e) {
