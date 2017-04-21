@@ -7,7 +7,7 @@ manageData();
 
 /* manage data*/
 function manageData() {
-    alert("manage data");
+    //alert("manage data");
     $.ajax({
         dataType: 'json',
         url: url,
@@ -41,7 +41,7 @@ $.ajaxSetup({
 
 /* Get Page Data*/
 function getPageData() {
-    alert("get page data");
+    //alert("get page data");
     $.ajax({
         dataType: 'json',
         url: url,
@@ -52,13 +52,13 @@ function getPageData() {
 }
 /* Add new rows */
 function manageRow(data) {
-    alert("manage rows");
+    //alert("manage rows");
     var	rows = '';
     $.each( data, function( key, value ) {
         rows = rows + '<tr>';
         rows = rows + '<td>'+value.id+'</td>';
         rows = rows + '<td>'+value.name+'</td>';
-        rows = rows + '<td>'+value.date+'</td>';
+        rows = rows + '<td>'+value.dates+'</td>';
         rows = rows + '<td>'+value.day+'</td>';
         rows = rows + '<td>'+value.duration+'</td>';
         rows = rows + '<td>'+value.booked+'</td>';
@@ -70,11 +70,11 @@ function manageRow(data) {
 
 /* Get appointments */
 $(".crud-submit").click(function(e){
-    alert("get-appointments");
+    //alert("get-appointments");
     e.preventDefault();
     var form_action = $("#get-appointments").find("form").attr("action");
     var teacherName = $("#teacherName").val();
-    alert(teacherName);
+    //alert(teacherName);
     $.ajax({
         dataType: 'json',
         type:'POST',
@@ -85,11 +85,11 @@ $(".crud-submit").click(function(e){
             manageRow(data);
             $(".modal").modal('hide');
             toastr.success('Appointments', 'Success Alert', {timeOut: 5000});
-           alert(JSON.stringify(data));
+           //alert(JSON.stringify(data));
     },
         error: function(data) {
             console.log(JSON.stringify(data));
-            alert('error');
+            //alert('error');
         }
     });
 });

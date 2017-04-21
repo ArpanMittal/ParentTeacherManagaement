@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
@@ -64,7 +65,6 @@
     var url = "<?php echo route('showAppointmentDetails')?>";
 </script>
 <script src="/js/appointments-ajax.js"></script>
-
-
 </body>
 </html>
+@endsection

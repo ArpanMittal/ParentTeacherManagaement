@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
@@ -47,3 +48,4 @@
 <script src="/js/teacherAppointments-ajax.js"></script>
 </body>
 </html>
+@endsection

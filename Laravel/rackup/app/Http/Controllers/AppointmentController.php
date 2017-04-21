@@ -25,8 +25,11 @@ use Illuminate\Validation\Rules\In;
 
 class AppointmentController extends Controller
 {
-    public function getAppointmentDetails()
+    public function getAppointmentDetails(Request $request)
     {
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
         $teacherUsers = User::all()->where('role_id', 4);
         $i = 0;
         foreach ($teacherUsers as $teacherUser) {
@@ -39,7 +42,7 @@ class AppointmentController extends Controller
             );
         }
         //var_dump($teacherData);
-        return view('appointments.teacherAppointmentDetails', compact('teacherData'));
+        return view('appointments.teacherAppointmentDetails', compact('teacherData'),$data);
     }
 
 
@@ -60,7 +63,7 @@ class AppointmentController extends Controller
             $teacherAppointmentData = array(
                 'id' => $teacherId,
                 'name' => $teacherName,
-                'date' => $teacherAppointmentDetails->date,
+                'date' => $teacherAppointmentDetails->dates,
                 'day' => $teacherAppointmentDetails->day,
                 'duration' => $teacherAppointmentDetails->duration,
                 'booked' => $teacherAppointmentDetails->isBooked
@@ -76,6 +79,7 @@ class AppointmentController extends Controller
     {
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
         //role_id of teacher is 4
         if ($user->role_id == 4) {
             $teacherDetails = UserDetails::where('user_id', $id)->first();
@@ -85,14 +89,14 @@ class AppointmentController extends Controller
             foreach ($teacherAppointmentDetails as $teacherAppointmentDetail){
                 $teacherAppointmentData[$i++] = array(
                     'id'=>$teacherAppointmentDetail->id,
-                    'date' => $teacherAppointmentDetail->date,
+                    'date' => $teacherAppointmentDetail->dates,
                     'day' => $teacherAppointmentDetail->day,
                     'duration' => $teacherAppointmentDetail->duration,
                     'booked' => $teacherAppointmentDetail->isBooked
                 );
             }
             //var_dump($teacherAppointmentData);
-           return view('appointments.showAppointments',compact('teacherAppointmentData'));
+           return view('appointments.showAppointments',compact('teacherAppointmentData'),$data);
         }
         else{
               return Response::json(["Permission Denied", HttpResponse::HTTP_UNAUTHORIZED]);
@@ -112,7 +116,7 @@ class AppointmentController extends Controller
 
             $teacherAppointmentData = array(
                 'id'=>$appointmentDetails->id,
-                'date' => $appointmentDetails->date,
+                'date' => $appointmentDetails->dates,
                 'day' => $appointmentDetails->day,
                 'duration' => $appointmentDetails->duration,
                 'booked' => $appointmentDetails->isBooked
@@ -125,7 +129,10 @@ class AppointmentController extends Controller
     }
     
     public function getAppointmentsSlots(Request $request){
-        
+
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
         $teacherUsers = User::all()->where('role_id', 4);
         $i = 0;
         foreach ($teacherUsers as $teacherUser) {
@@ -141,7 +148,7 @@ class AppointmentController extends Controller
         $days = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
         $durations = array(15,30,45,60);
         //var_dump($teacherData);
-        return view('appointments.insertAppointmentsSlots', compact('teacherData','days','durations'));
+        return view('appointments.insertAppointmentsSlots', compact('teacherData','days','durations'),$data);
     }
     
     public function postAppointmentsSlots(Request $request){
@@ -226,11 +233,56 @@ class AppointmentController extends Controller
             }
             $sendData[$j++] = array(
                 'teacherId'=>$teacherId,
-                'teacherName'=>$teacherName,
                 'appointmentData'=>$appointmentData
             );
         }
         return Response::json([$sendData, HttpResponse::HTTP_OK]);
+    }
+
+    public function bookAppointments(Request $request){
+        try {
+            $token = $request->get('token');
+            $parent = JWTAuth::toUser($token);
+            $parentId= $parent->id;
+        }catch (TokenExpiredException $e){
+            return Response::json (['Token expired'],498);
+        }
+        catch (TokenInvalidException $e){
+            return Response::json (['Token invalid']);
+        }
+        $teacherId = $request->get('teacherId');
+        $date = $request->get('date');
+        $time = $request->get('time');
+        $time = $request->get('time');
+        $duration = $request->get('duration');
+        $dayofweek = date('w', strtotime($date));
+        global $day;
+        switch ($dayofweek){
+            case 0: $day ="Sunday";
+                break;
+            case 1: $day = "Monday";
+                break;
+            case 2: $day = "Tuesday";
+                break;
+            case 3: $day ="Wednesday";
+                break;
+            case 4: $day = "Thursday";
+                break;
+            case 5: $day = "Friday";
+                break;
+            case 6: $day = "Saturday";
+                break;
+        }
+        try {
+            \DB::beginTransaction();
+            \DB::table('appointmentRequests')->insert(['parent_id' => $parentId, 'teacher_id' => $teacherId, 'isApproved' => 0,'isCancel'=>0]);
+        }catch (Exception $e){
+            \DB::rollBack();
+            return Response::json(HttpResponse::HTTP_PARTIAL_CONTENT);
+        }
+        \DB::commit();
+        
+        return Response::json([$day, HttpResponse::HTTP_OK]);
     }
 
 }

@@ -113,11 +113,9 @@ class HomeController extends Controller
 
     public function returnToken(Request $request)
     {
-
         $user = \DB::table('users')
             ->whereUsernameAndPassword(Input::get('email'), Input::get('password'))
             ->first();
-
 
         if (!is_null($user)) {
             try {
@@ -135,7 +133,7 @@ class HomeController extends Controller
                     'contact' => $userDetails->contact,
                     'address' => $userDetails->address,
                     'studentName' => $studentDetails->name,
-                    'dob' => $studentDetails->dob
+                   'dob' => $studentDetails->dob
 
                 );
                 $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
@@ -149,6 +147,22 @@ class HomeController extends Controller
         } else {
             return Response::json(['error' => 'Null User'], HttpResponse::HTTP_NO_CONTENT);
         }
+    }
+
+    public function editProfile(Request $request){
+        $token = $request->get('token');
+        $user=JWTAuth::toUser($token);
+        if (!is_null($user)){
+            $userId = $user->id ;
+            $teacherName = Input::get('teacherName');
+            $teacherGender = Input::get('teacherGender');
+            $address = Input::get('address');
+            $contact = Input::get('contact');
+            $role = Input::get('role');
+            $username = Input::get('username');
+            $password = Input::get('password');
+        }
+
 
     }
 }

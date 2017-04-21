@@ -19,5 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/login','HomeController@returnToken');
 Route::post('/getContent','UploadController@getContent')->name('getContent');
-
+Route::post('/getTeacherDetails','AppointmentController@getTeacherDetails')->name('getTeacherDetails');
+Route::post('/bookAppointments','AppointmentController@bookAppointments')->name('bookAppointments');
 //Route::post('/uploadLink','UploadController@returnUploadLink');

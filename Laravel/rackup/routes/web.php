@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 //Auth::routes();
 
-Route::get('/home', 'HomeController@index')->middleware('check.session');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('check.session');
 
 Route::get('/login','HomeController@showLogin');
 
@@ -41,17 +41,21 @@ Route::get('/uploadLink','UploadController@showUploadLink')->middleware('check.s
 
 Route::post('/uploadLink','UploadController@doUploadLink')->name('uploadLink');
 
-Route::get('/showAppointmentDetails','AppointmentController@getAppointmentDetails');//->middleware('check.session');
+Route::get('/showAppointmentDetails','AppointmentController@getAppointmentDetails')->middleware('check.session');
 
 Route::post('/showAppointmentDetails','AppointmentController@showAppointmentDetails')->name('showAppointmentDetails');
 
-Route::get('/teacherAppointments','AppointmentController@getTeacherAppointments');
+Route::get('/teacherAppointments','AppointmentController@getTeacherAppointments')->name('teacherAppointments')->middleware('check.session');;
 
-Route::post('/teacherAppointments','AppointmentController@confirmAppointments')->name('teacherAppointments');
+Route::post('/teacherAppointments','AppointmentController@confirmAppointments');
 
-Route::get('/insertAppointmentsSlots','AppointmentController@getAppointmentsSlots');
+Route::get('/insertAppointmentsSlots','AppointmentController@getAppointmentsSlots')->middleware('check.session');;
 
 Route::post('/insertAppointmentsSlots','AppointmentController@postAppointmentsSlots')->name('insertAppointmentsSlots');
+
+Route::get('/teachersList','AdminController@getTeachersList')->name('teachersList')->middleware('check.session');;
+
+Route::get('/parentsList','AdminController@getParentsList')->name('parentsList')->middleware('check.session');;
 
 Route::get('/notifications','NotificationController@sendDownstreamMessage');
 

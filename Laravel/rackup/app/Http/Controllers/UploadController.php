@@ -22,8 +22,11 @@ use App\Category;
 
 class UploadController extends Controller
 {
-    public function showUpload(){
-        return view('upload.upload');
+    public function showUpload(Request $request){
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
+        return view('upload.upload',$data);
     }
     public function doUpload(Request $request)
     {
@@ -63,9 +66,12 @@ class UploadController extends Controller
         }
     }
 
-    public function showUploadLink(){
+    public function showUploadLink(Request $request){
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
         $categories= array('Games','Moral Stories','Rhymes','Yoga');
-        return view('upload.uploadLink',compact('categories'));
+        return view('upload.uploadLink',compact('categories'),$data);
     }
 
     public function doUploadLink(Request $request){
@@ -95,10 +101,10 @@ class UploadController extends Controller
                     $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
                 }
                 else{
-                    $contents = Content::where ('name',$contentName)->first();
+                    $contents = Content::where ('name',$categoryName)->first();
                     $contentId = $contents->id;
                 }
-                \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl,'content_id'=>$contentId]);
+                \DB::table('categories')->insert(['name' => $contentName, 'url'=>$categoryUrl,'content_id'=>$contentId]);
                 \DB::table('content_grade')->insert(['grade_id' => $gradeId, 'content_id'=> $contentId]);
 
             } catch (Exception $e) {
@@ -106,8 +112,7 @@ class UploadController extends Controller
                 echo "insertion failed";
             };
             \DB::commit();
-            $STATUS_CODE =Response::json(HttpResponse::HTTP_OK);
-            return response()->json([$categoryUrl,$STATUS_CODE]);
+            return redirect('home');
         }
         else{
             echo "Permission Denied";
@@ -172,21 +177,19 @@ class UploadController extends Controller
 
 
 
-   /* public function store(Request $request)
+    public function store(Request $request)
     {
         $request->file('fileEntry');
         if($request->hasFile('fileEntry')){
-
         $request->fileEntry->path();
-        return $request->word->store('public');
-        return Storage::putFile('public',$request->file('fileEntry'));
+        return $request->word->store('contents');
+        return Storage::putFile('contents',$request->file('fileEntry'));
         }
         else{
          return 'No file selected';
         }
-        }
     }
-    public function show()
+    /*public function show()
     {
         Storage::makeDirectory('public/make');
         return Storage::allFiles('public');

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
@@ -9,6 +10,13 @@
 </head>
 
 <body>
+
+<!--<div class="container">
+    <ul class="pager">
+        <li class="previous"><a href="#">Previous</a></li>
+    </ul>
+</div>-->
+
 <div class="container">
     <div class="row">
         <div class="col-md-12 ">
@@ -18,7 +26,7 @@
                     <form id="uploadLink" method="post" role="form" action="/uploadLink" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
-                            <label for="gradeId"  class="col-md-4 control-label">Grade</label>
+                            <label for="gradeId"  class="col-md-4 control-label ">Grade</label>
                             <div class="col-md-6">
                                 <input type="radio" name="gradeId"value="1"/>Playgroup
                                 <input type="radio" name="gradeId"value="2"/>Nursery
@@ -27,20 +35,6 @@
                                 @if ($errors->has('gradeId'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('gradeId') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-md-12"></div>
-
-                        <div class="form-group {{$errors->has('contentName')?'has-error':''}}">
-                            <label for="contentName"  class="col-md-4 control-label">Content</label>
-                            <div class="col-md-6">
-                                <input type="text" name="contentName" id="contentName" value="{{ Input::old('contentName') }}" required autofocus>
-                                @if ($errors->has('contentName'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('contentName') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -67,6 +61,21 @@
 
                         <div class="col-md-12"></div>
 
+                        <div class="form-group {{$errors->has('contentName')?'has-error':''}}">
+                            <label for="contentName"  class="col-md-4 control-label">Video Name</label>
+                            <div class="col-md-6">
+                                <input type="text" name="contentName" id="contentName" value="{{ Input::old('contentName') }}" required autofocus>
+                                @if ($errors->has('contentName'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('contentName') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12"></div>
+
                         <div class="form-group {{$errors->has('categoryUrl')?'has-error':''}}">
                             <label for="categoryUrl"  class="col-md-4 control-label">URL</label>
                             <div class="col-md-6">
@@ -88,6 +97,9 @@
                                 </button>
                             </div>
                         </div>
+
+
+
                     </form>
                 </div>
             </div>
@@ -104,6 +116,6 @@
             element.style.display='none';
     }
 </script>
-
 </body>
 </html>
+@endsection

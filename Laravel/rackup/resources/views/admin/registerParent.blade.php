@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 <html>
 <head>
     <title>Register User</title>
@@ -133,23 +134,6 @@
                             </div>
                         </div>
 
-
-                        <div class="col-md-12"></div>
-
-                        <div class="form-group {{$errors->has('role')?'has-error':''}}">
-                            <label for="role"  class="col-md-4 control-label">Role</label>
-                            <div class="col-md-6">
-                                <input type="radio" name="role"value="2"/>Parent
-                                <input type="radio" name="role"value="3"/>Principal
-                                <input type="radio" name="role"value="4"/>Teacher
-                                @if ($errors->has('role'))
-                                    <span class="help-block">
-                                            <strong>{{ $errors->first('role') }}</strong>
-                                        </span>
-                                @endif
-                            </div>
-                        </div>
-
                         <div class="col-md-12"></div>
 
                         <div class="form-group {{$errors->has('username')?'has-error':''}}">
@@ -195,3 +179,4 @@
 </div>
 </body>
 </html>
+@endsection
