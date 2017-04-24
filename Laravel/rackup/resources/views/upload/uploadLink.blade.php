@@ -18,6 +18,71 @@
 </div>-->
 
 <div class="container">
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#newContent">Create New Category</button>
+</div>
+<!-- Modal -->
+<div id="newContent" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">New Category</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div>
+                            <form id="uploadLink" method="post" role="form" action="createCategory" >
+                                {{csrf_field()}}
+                                <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
+                                    <label for="gradeId"  class="control-label ">Grade</label>
+                                    <div >
+                                        <input type="radio" id="grade" name="grade" value="1"/>Playgroup
+                                        <input type="radio" id="grade" name="grade" value="2"/>Nursery
+                                        <input type="radio" id="grade" name="grade" value="3"/>J.K.G.
+                                        <input type="radio" id="grade" name="grade" value="4"/>S.K.G.
+                                        @if ($errors->has('gradeId'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('gradeId') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group {{$errors->has('contentName')?'has-error':''}}">
+                                    <label for="contentName"  class="control-label">New Category</label>
+                                    <div>
+                                        <input type="text" name="contentName" id="contentName" value="{{ Input::old('contentName') }}" required autofocus>
+                                        @if ($errors->has('contentName'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('contentName') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" id="create-category" class="btn crud-submit btn-success">Submit</button>
+                                </div>
+
+                                <div class="col-md-6 col-md-offset-4">
+                                    @if (session('status'))
+                                        <div class="alert alert-warning">
+                                            {{ session('status') }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
     <div class="row">
         <div class="col-md-12 ">
             <div class="panel panel-default">
@@ -28,10 +93,12 @@
                         <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
                             <label for="gradeId"  class="col-md-4 control-label ">Grade</label>
                             <div class="col-md-6">
-                                <input type="radio" name="gradeId"value="1"/>Playgroup
-                                <input type="radio" name="gradeId"value="2"/>Nursery
-                                <input type="radio" name="gradeId"value="3"/>J.K.G.
-                                <input type="radio" name="gradeId"value="4"/>S.K.G.
+                                <select  id="gradeId"name="gradeId" class="form-control">
+                                    <option>Select grade</option>
+                                    @foreach($grades as $grade)
+                                        <option value = "{{$grade['id']}}">{{$grade['name']}}</option>
+                                    @endforeach
+                                </select>
                                 @if ($errors->has('gradeId'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('gradeId') }}</strong>
@@ -42,13 +109,11 @@
 
                         <div class="col-md-12"></div>
 
-                        <div class="form-group {{$errors->has('contentName')?'has-error':''}}">
+                        <div id="contents" class="form-group {{$errors->has('contentName')?'has-error':''}}" style="display:none;">
                             <label for="contentName"  class="col-md-4 control-label">Category</label>
                             <div class="col-md-6">
                                 <select  id="contentName"name="contentName" class="form-control">
-                                    @foreach($contents as $content)
-                                        <option value = "{{$content}}" >{{$content}}</option>
-                                    @endforeach
+
                                 </select>
 
                                 @if ($errors->has('contentName'))
@@ -98,8 +163,17 @@
                             </div>
                         </div>
 
-
-
+                        <div class="col-md-6 col-md-offset-4">
+                            @if (session('status'))
+                                <div class="alert alert-danger">
+                                    {{ session('status') }}
+                                </div>
+                            @elseif(session('status1'))
+                                <div class="alert alert-success">
+                                    {{ session('status1') }}
+                                </div>
+                            @endif
+                        </div>
                     </form>
                 </div>
             </div>
@@ -107,14 +181,44 @@
     </div>
 </div>
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.3.1/jquery.twbsPagination.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+
 <script type="text/javascript">
-    function enterCategory(val){
-        var element=document.getElementById('otherCategory');
-        if(val=='other')
-            element.style.display='block';
-        else
-            element.style.display='none';
-    }
+    var url = "<?php echo route('createCategory')?>";
+</script>
+<script src="/js/uploadCategory-ajax.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('select[name="gradeId"]').on('change', function() {
+            var gradeID = $(this).val();
+            if(gradeID) {
+                $.ajax({
+                    url: 'category'+gradeID,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        document.getElementById('contents').style.display='block';
+                        $('select[name="contentName"]').empty();
+                        var contents = $.makeArray(data);
+                        //alert(contents);
+                        $.each(contents, function(index,content) {
+
+                            $('select[name="contentName"]').append('<option value="'+content.name +'">'+content.name +'</option>');
+                        });
+
+                    }
+                });
+            }else{
+                $('select[name="contentName"]').empty();
+            }
+        });
+    });
 </script>
 </body>
 </html>

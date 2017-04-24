@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Grade;
+use App\UserDetails;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http;
@@ -70,8 +72,67 @@ class UploadController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-        $contents= array('Games','Moral Stories','Rhymes','Yoga');
-        return view('upload.uploadLink',compact('contents'),$data);
+        $gradeDetails = Grade::all();
+        $i=0;
+        $grades =  array();
+        foreach ($gradeDetails as $gradeDetail){
+            $gradeId = $gradeDetail->id;
+            $gradeName = $gradeDetail->grade_name;
+            $grades[$i++] = array(
+                'id'=>$gradeId,
+                'name'=>$gradeName
+            );
+        }
+        return view('upload.uploadLink',compact('grades'),$data);
+    }
+
+    public function createCategory(Request $request)
+    {
+        $gradeId = $request->get('grade');
+        $contentName =$request->get('contentName');
+        try {
+            \DB::beginTransaction();
+            $content = Content::where('name', '=',$contentName)->first();
+            if ($content == null) {
+                $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
+                $contentGradeId = \DB::table('content_grade')->insertgetId(['grade_id' => $gradeId, 'content_id' => $contentId]);
+            }
+            else{
+                $contentId=$content->id;
+                $contentGrade = \DB::table('content_grade')
+                    ->where('grade_id', '=',$gradeId)
+                    ->where('content_id','=',$contentId)
+                    ->first();
+                if($contentGrade==null){
+                    \DB::table('content_grade')->insert(['grade_id' => $gradeId,'content_id'=>$contentId]);
+                }
+                else{
+                    return redirect('uploadLink')->with('status','Category already exists');
+                }
+            }
+        } catch (Exception $e) {
+                \DB::rollBack();
+                echo "insertion failed";
+        };
+        \DB::commit();
+        return Response::json(HttpResponse::HTTP_OK);
+    }
+
+
+    public function getDropdownContent($id){
+        $contentGrades = ContentGrade::all()->where('grade_id',$id);
+        $i=0;
+        $contents = array();
+        foreach ($contentGrades as $contentGrade){
+            $contentId = $contentGrade->content_id;
+            $contentDetail = Content::where('id',$contentId)->first();
+            $contentName = $contentDetail->name;
+            $contents[$i++]=array(
+                'id'=>$contentId,
+                'name'=>$contentName
+            );
+        }
+        return Response::json($contents);
     }
 
     public function doUploadLink(Request $request){
@@ -79,10 +140,13 @@ class UploadController extends Controller
         $user = \DB::table('users')->whereId($id)->first();
         //role_id of teacher is 4
         if ($user->role_id == 4) {
-
+            
+            $teacherId = $user->id;
+            $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
+            $teacherName = $teacherDetails->name;
             $rules = array(
                 'gradeId' =>'required',
-                'contentName'=>'required',
+                'categoryName'=>'required',
                 'categoryUrl'=>'required|url'
             );
 
@@ -93,26 +157,36 @@ class UploadController extends Controller
             $categoryName = Input::get('categoryName');
             $categoryUrl = Input::get('categoryUrl');
 
-            try {
-                \DB::beginTransaction();
-
-                $content = Content::where('name', '=', Input::get('contentName'))->first();
-                if ($content === null) {
-                    $contentId = \DB::table('contents')->insertgetId(['name' => $contentName]);
+            if(str_contains($categoryUrl,"youtu.be")||str_contains($categoryUrl,"v=")){
+                $content = Content::where ('name',$contentName)->first();
+                $contentId = $content->id;
+                $contentGrade = \DB::table('content_grade')
+                    ->where('grade_id', '=',$gradeId)
+                    ->where('content_id','=',$contentId)
+                    ->first();
+                if ($contentGrade == null){
+                    return redirect('uploadLink')->with('status', 'Category for this class does not exist. Please create new Category');
                 }
                 else{
-                    $contents = Content::where ('name',$contentName)->first();
-                    $contentId = $contents->id;
-                }
-                \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl,'content_id'=>$contentId]);
-                \DB::table('content_grade')->insert(['grade_id' => $gradeId, 'content_id'=> $contentId]);
+                    $contentGradeId = $contentGrade->id;
+                    try {
+                        \DB::beginTransaction();
+                        \DB::table('categories')->insert(['name' => $categoryName, 'url'=>$categoryUrl,'contentGradeId'=>$contentGradeId,'teacherName'=>$teacherName]);
 
-            } catch (Exception $e) {
-                \DB::rollBack();
-                echo "insertion failed";
-            };
-            \DB::commit();
-            return redirect('home');
+                    } catch (Exception $e) {
+                        \DB::rollBack();
+                        echo "insertion failed";
+                    };
+                    \DB::commit();
+                    return redirect('uploadLink')->with('status1','Successfully Uploaded Video');
+                }
+
+            }//youtu.be and v=
+
+            else{
+                return redirect('uploadLink')->with('status','Incorrect URL type');
+            }
+
         }
         else{
             echo "Permission Denied";
@@ -132,42 +206,49 @@ class UploadController extends Controller
         if ($user->role_id == 2) {
             $studentDetails = Student::where('parent_id', $userId)->first();
             $gradeId = $studentDetails->grade_id;
-            $contentGradeDetails = ContentGrade::all()->where('grade_id', $gradeId);
-            $contentGradeDetails_count = count($contentGradeDetails);
-            //echo $contentGradeDetails_count;
+            $contentGrades = ContentGrade::all()->where('grade_id', $gradeId);
+            $i=0;
+            $contentDetails = array();
+            foreach ($contentGrades as $contentGrade){
+                $contentGradeId = $contentGrade->id;
+                $contentId = $contentGrade->content_id;
+                $content = Content::where('id',$contentId)->first();
+                $contentGradeName = $content->name;
+                $contentDetails[$i++] = array(
+                    'contentGradeId'=>$contentGradeId,
+                    'contentName'=>$contentGradeName,
+                    );
+            }
             $flag = 0;
             $j = 0;
             global $categoryData;
-            foreach ($contentGradeDetails as $contentGradeDetail) {
-                $contentId = $contentGradeDetail->content_id;
-                $contentDetails = Content::where('id', $contentId)->first();
-                $contentName = $contentDetails->name;
-                $categoryDetails = Category::all()->where('content_id', $contentId);
+            foreach ($contentDetails as $contentDetail) {
+                $contentGradeId = $contentDetail['contentGradeId'];
+                $contentName = $contentDetail['contentName'];
+                $categoryDetails = Category::all()->where('contentGradeId', $contentGradeId);
                 //$categoryDetails_count = count($categoryDetails);
                 //echo $categoryDetails_count;
-                $i = 0;
+                $k = 0;
                 $categoryData=array();
                 foreach ($categoryDetails as $categoryDetail) {
                     $categoryName = $categoryDetail->name;
                     $url = $categoryDetail->url;
-                    $categoryData[$i++] = array(
+                    $teacherName = $categoryDetail->teacherName;
+                    $categoryData[$k++] = array(
                         'categoryName' => $categoryName,
-                        'url' => $url
+                        'url' => $url,
+                        'teacherName'=>$teacherName
                     );
                   //  $sendContent[$j++] = array('gradeId' => $gradeId, 'contentId' => $contentId, 'contentName' => $contentName, 'categoryData' => $categoryData[$i-1]);
                 }
                 $flag++;
                $sendContent[$j++] = array(
                    'gradeId' => $gradeId,
-                   'contentId' => $contentId,
                    'contentName' => $contentName,
                    'categoryData' => $categoryData);
+
             }
-            if ($flag == $contentGradeDetails_count) {
-                return Response::json([$sendContent, HttpResponse::HTTP_OK]);
-           } else {
-             return Response::json(['No content', HttpResponse::HTTP_NO_CONTENT]);
-           }
+            return Response::json([$sendContent, HttpResponse::HTTP_OK]);
         } else {
             return Response::json(['Unauthorized User', HttpResponse::HTTP_UNAUTHORIZED]);
             //echo "Permission Denied";

@@ -14,7 +14,7 @@ class AddDatesToTeacherAppointmentsSlotsTable extends Migration
     public function up()
     {
         Schema::table('teacherAppointmentsSlots', function (Blueprint $table) {
-            $table->date('dates');
+            $table->date('date');
         });
     }
 
@@ -26,7 +26,7 @@ class AddDatesToTeacherAppointmentsSlotsTable extends Migration
     public function down()
     {
         Schema::table('teacherAppointmentsSlots', function (Blueprint $table) {
-            //
+           $table->dropColumn('date');
         });
     }
 }

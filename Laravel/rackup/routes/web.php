@@ -57,3 +57,6 @@ Route::get('/parentsList','AdminController@getParentsList')->name('parentsList')
 
 Route::get('/notifications','NotificationController@sendDownstreamMessage');
 
+Route::post('createCategory','UploadController@createCategory')->name('createCategory');
+
+Route::get('category{id}','UploadController@getDropdownContent');
