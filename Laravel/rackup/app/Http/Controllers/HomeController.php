@@ -90,11 +90,17 @@ class HomeController extends Controller
             'username'    => 'required|email',
             'password' => 'required|alphaNum'
         );
+        $username = $request->input('email');
+        $password = $request->input('password');
 
         $user =\DB::table('users')
-            ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
+            ->where('username','=',$username,'AND','password','=',$password)
             ->first();
-        
+
+//        $user =\DB::table('users')
+//        ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
+//        ->first();
+
         if ( !is_null($user) ){
             $request->session()->put('id',$user->id);
             return redirect('home');
@@ -150,19 +156,27 @@ class HomeController extends Controller
     }
 
     public function editProfile(Request $request){
-        $token = $request->get('token');
-        $user=JWTAuth::toUser($token);
-        if (!is_null($user)){
-            $userId = $user->id ;
-            $teacherName = Input::get('teacherName');
-            $teacherGender = Input::get('teacherGender');
-            $address = Input::get('address');
-            $contact = Input::get('contact');
-            $role = Input::get('role');
-            $username = Input::get('username');
-            $password = Input::get('password');
+        try {
+            $token = $request->get('token');
+            $user = JWTAuth::toUser($token);
+            $userId = $user->id;
+        }catch (TokenExpiredException $e){
+            return Response::json (['Token expired'],498);
+        }catch (TokenInvalidException $e){
+            return Response::json (['Token invalid']);
         }
+        $parentName = $request->input('parentName');
+        $contact = $request->input('contact');
+        $address = $request->input('address');
+        $studentName  =$request->input('studentName');
+        $dob = $request->input('dob');
 
-
+        \DB::table('userDetails')
+            ->where('user_id',$userId)
+            ->update([
+                    'contact' => $contact,
+                    'address'=>$address
+                ]
+            );
     }
 }

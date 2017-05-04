@@ -181,7 +181,7 @@ class UploadController extends Controller
                     return redirect('uploadLink')->with('status1','Successfully Uploaded Video');
                 }
 
-            }//youtu.be and v=
+            }
 
             else{
                 return redirect('uploadLink')->with('status','Incorrect URL type');

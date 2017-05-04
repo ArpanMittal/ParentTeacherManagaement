@@ -43,20 +43,34 @@ Route::get('/showAppointmentDetails','AppointmentController@getAppointmentDetail
 
 Route::post('/showAppointmentDetails','AppointmentController@showAppointmentDetails')->name('showAppointmentDetails');
 
-Route::get('/teacherAppointments','AppointmentController@getTeacherAppointments')->name('teacherAppointments')->middleware('check.session');;
+Route::get('/teacherAppointments','AppointmentController@getTeacherAppointments')->name('teacherAppointments')->middleware('check.session');
 
 Route::post('/teacherAppointments','AppointmentController@confirmAppointments');
 
-Route::get('/insertAppointmentsSlots','AppointmentController@getAppointmentsSlots')->middleware('check.session');;
+Route::get('/insertAppointmentsSlots','AppointmentController@getAppointmentsSlots')->middleware('check.session');
 
 Route::post('/insertAppointmentsSlots','AppointmentController@postAppointmentsSlots')->name('insertAppointmentsSlots');
 
-Route::get('/teachersList','AdminController@getTeachersList')->name('teachersList')->middleware('check.session');;
+Route::get('/teachersList','AdminController@getTeachersList')->name('teachersList')->middleware('check.session');
 
-Route::get('/parentsList','AdminController@getParentsList')->name('parentsList')->middleware('check.session');;
-
-Route::get('/notifications','NotificationController@sendDownstreamMessage');
+Route::get('/parentsList','AdminController@getParentsList')->name('parentsList')->middleware('check.session');
 
 Route::post('createCategory','UploadController@createCategory')->name('createCategory');
 
 Route::get('category{id}','UploadController@getDropdownContent');
+
+Route::get('/calendar', ['uses' => 'EventController@calendar'])->name('calendar')->middleware('check.session');
+Route::put('calendar_events/{teacherId}/{id}','CalendarEventController@edit1');
+Route::resource('calendar_events', 'CalendarEventController');
+
+Route::get('/teacherCalendar', ['uses' => 'EventController@teacherCalendar'])->name('teacherCalendar')->middleware('check.session');
+Route::resource('appointments','AppointmentController');//->middleware('check.session');
+Route::get('getConfirm{id}','AppointmentController@getConfirm')->name('getConfirm');
+Route::post('postConfirm{id}','AppointmentController@postConfirm')->name('postConfirm');
+Route::post('changeContactNumber{id}','AppointmentController@changeContactNumber')->name('changeContactNumber');
+
+
+Route::get('getCancel{id}','AppointmentController@getCancel')->name('getCancel');
+Route::post('postCancel{id}','AppointmentController@postCancel')->name('postCancel');
+
+Route::post('editProfile','HomeController@editProfile')->name('editProfile');
