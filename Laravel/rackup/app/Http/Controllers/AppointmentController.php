@@ -41,6 +41,7 @@ class AppointmentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+
         $appointmentRequests = AppointmentRequest::all()->where('teacher_id',$id);
         $i=0;
         $appointmentDetails = array();
@@ -103,7 +104,6 @@ class AppointmentController extends Controller
      */
     public function show($id,Request $request)
     {
-
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
@@ -249,7 +249,7 @@ class AppointmentController extends Controller
 
     }
     /*Cancel appointments*/
-    public function getCancel($id,Request $request)
+    public function getCancel($id, Request $request)
     {
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();

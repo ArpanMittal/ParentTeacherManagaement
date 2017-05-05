@@ -10,7 +10,7 @@
                     {{--<li><a href="{{ route('insertAppointmentsSlots')}}">Insert Slots</a></li>--}}
                     <li><a href="{{ route('teachersList')}}">Teachers  List</a></li>
                     <li><a href="{{ route('parentsList')}}">Parents List</a></li>
-                    <li><a href="{{ route('calendar_events.index')}}">Appointment Slots</a></li>
+                    <li><a href="{{ route('calendar')}}">Slots and School Events</a></li>
                 </ul>
             </div>
         @endif
