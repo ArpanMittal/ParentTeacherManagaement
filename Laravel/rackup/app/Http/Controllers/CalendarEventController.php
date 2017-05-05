@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\AppointmentRequest;
 use App\CalendarEvent;
 use App\User;
 use App\UserDetails;
 use App\TeacherAppointmentSlots;
 use Carbon\Carbon;
-use Cron\HoursField;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rules\In;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -318,6 +319,7 @@ class CalendarEventController extends Controller
     {
         $calendarEvent = CalendarEvent::where('id',$id)->first();
         $startDateTime = $calendarEvent->start;
+        $editDay = date('w',strtotime($startDateTime));
         $startDateTime = date_time_set($startDateTime,0,0,0);
         $startTime =Input::get("start");
         $startTime=Carbon::parse($startTime);
@@ -336,15 +338,37 @@ class CalendarEventController extends Controller
         $teacherSlots = TeacherAppointmentSlots::all()
             ->where('teacher_id','=',$teacherId)
             ->where('calendarEventsId','>=',$id);
-        foreach ($teacherSlots as $teacherSlot){
-            $calendarEventId = $teacherSlot->calendarEventsId;
-            $calendarEvent = CalendarEvent::where('id',$calendarEventId)->first();
-            $calendarEvent->start=$startDateTime;
-            $calendarEvent->end= $endDateTime;
-            $calendarEvent->save();
-            $startDateTime->addDays(7);
-            $endDateTime->addDays(7);
+        try {
+            \DB::beginTransaction();
+            foreach ($teacherSlots as $teacherSlot) {
+                $teacherSlotId = $teacherSlot->id;
+                $calendarEventId = $teacherSlot->calendarEventsId;
+                $calendarEvent = CalendarEvent::where('id', $calendarEventId)->first();
+                $start= $calendarEvent->start;
+                $day = date('w',strtotime($start));
+                if ($day == $editDay){
+                    $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id', $teacherSlotId)->first();
+                    if (is_null($appointmentRequest)) {
+                        $calendarEvent->start = $startDateTime;
+                        $calendarEvent->end = $endDateTime;
+                        $calendarEvent->save();
+                        $startDateTime->addDays(7);
+                        $endDateTime->addDays(7);
+                    }
+                    else{
+                        \DB::rollback();
+                        return redirect(route('calendar_events.index'))->with('message1', 'Cannot Update Slot due to appointment request.');
+                    }
+                }
+                else{
+                    $startDateTime->addDays(7);
+                    $endDateTime->addDays(7);
+                }
+            }
+        }catch (Exception $e){
+            \DB::rollback();
         }
+        \DB::commit();
         return redirect(route('calendar_events.index'))->with('message', 'Slot updated successfully.');
     }
 
@@ -356,12 +380,42 @@ class CalendarEventController extends Controller
      */
     public function destroy($id)
     {
-        $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
-        $appointmentSlot->delete();
-        $calendar_event = CalendarEvent::findOrFail($id);
-        $calendar_event->delete();
-
-        return redirect(route('calendar_events.index'))->with('message', 'Item deleted successfully.');
+        $calendarEvent = CalendarEvent::where('id',$id)->first();
+        $startDateTime = $calendarEvent->start;
+        $deleteDay = date('w',strtotime($startDateTime));
+        $endDateTime = $calendarEvent->end;
+        $teacherSlots = TeacherAppointmentSlots::where('calendarEventsId','>=',$id)->get();
+        try {
+            \DB::beginTransaction();
+            foreach ($teacherSlots as $teacherSlot) {
+                $teacherSlotId = $teacherSlot->id;
+                $calendarEventId = $teacherSlot->calendarEventsId;
+                $calendarEvent = CalendarEvent::where('id', $calendarEventId)->first();
+                $start = $calendarEvent->start;
+                $day = date('w',strtotime($start));
+                if ($deleteDay == $day){
+                    $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id', $teacherSlotId)->first();
+                    if (is_null($appointmentRequest)) {
+                        $teacherSlot->delete();
+                        $calendarEvent->delete();
+                        $startDateTime->addDays(7);
+                        $endDateTime->addDays(7);
+                    }
+                    else{
+                        \DB::rollback();
+                        return redirect(route('calendar_events.index'))->with('message1', 'Cannot Delete Slot due to appointment request.');
+                    }
+                }
+                else{
+                    $startDateTime->addDays(7);
+                    $endDateTime->addDays(7);
+                }
+            }
+        }catch (Exception $e){
+            \DB::rollback();
+        }
+        \DB::commit();
+        return redirect(route('calendar_events.index'))->with('message', 'Slot deleted successfully.');
     }
 
 }
