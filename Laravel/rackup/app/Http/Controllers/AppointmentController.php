@@ -41,6 +41,7 @@ class AppointmentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+
         $appointmentRequests = AppointmentRequest::all()->where('teacher_id',$id);
         $i=0;
         $appointmentDetails = array();
@@ -101,8 +102,12 @@ class AppointmentController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
+        $data['user'] = $user;
+
         $appointmentRequest = AppointmentRequest::where('id',$id)->first();
         $appointmentRequestId=$appointmentRequest->id;
         $parentId = $appointmentRequest->parent_id;
@@ -154,11 +159,15 @@ class AppointmentController extends Controller
             'status'=>$status
         );
 
-        return view('appointments.show', compact('appointmentDetails'));
+        return view('appointments.show', compact('appointmentDetails'),$data);
     }
     /*Confirm appointments*/
-    public function getConfirm($id)
+    public function getConfirm($id,Request $request)
     {
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
+        $data['user'] = $user;
+
         $appointmentRequest = AppointmentRequest::where('id',$id)->first();
         $appointmentRequestId=$appointmentRequest->id;
         $parentId = $appointmentRequest->parent_id;
@@ -198,7 +207,7 @@ class AppointmentController extends Controller
             'teacherId'=>$teacherId
         );
         //return var_export($appointmentDetails);
-        return view('appointments.confirm',compact('appointmentDetails'));
+        return view('appointments.confirm',compact('appointmentDetails'),$data);
 
     }
 
@@ -240,8 +249,12 @@ class AppointmentController extends Controller
 
     }
     /*Cancel appointments*/
-    public function getCancel($id)
+    public function getCancel($id, Request $request)
     {
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
+        $data['user'] = $user;
+
         $appointmentRequest = AppointmentRequest::where('id',$id)->first();
         $appointmentRequestId=$appointmentRequest->id;
         $parentId = $appointmentRequest->parent_id;
@@ -272,7 +285,7 @@ class AppointmentController extends Controller
             'end'=>$end,
         );
         //return var_export($appointmentDetails);
-        return view('appointments.cancel',compact('appointmentDetails'));
+        return view('appointments.cancel',compact('appointmentDetails'),$data);
     }
     public function postCancel($id){
         $appointmentDetail = AppointmentRequest::where('id',$id)->first();

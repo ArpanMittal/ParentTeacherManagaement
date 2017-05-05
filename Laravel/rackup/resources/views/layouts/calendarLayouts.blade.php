@@ -37,7 +37,8 @@
                 @if(isset($user))
                     @if($user->role_id==1)
                         <li><a href="/calendar">Show Calendar</a></li>
-                        <li><a href="/calendar_events">Slots</a></li>
+                        <li><a href="/calendar_events">Appointment Slots</a></li>
+                        <li><a href="/school_events">School Events</a></li>
                     @endif
                     @if($user->role_id==4)
                         <li><a href="/teacherCalendar">Show Calendar</a></li>
