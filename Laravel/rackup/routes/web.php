@@ -68,9 +68,9 @@ Route::resource('appointments','AppointmentController');//->middleware('check.se
 Route::get('getConfirm{id}','AppointmentController@getConfirm')->name('getConfirm');
 Route::post('postConfirm{id}','AppointmentController@postConfirm')->name('postConfirm');
 Route::post('changeContactNumber{id}','AppointmentController@changeContactNumber')->name('changeContactNumber');
+
+
 Route::get('getCancel{id}','AppointmentController@getCancel')->name('getCancel');
 Route::post('postCancel{id}','AppointmentController@postCancel')->name('postCancel');
-
-Route::resource('school_events','SchoolEventController');
 
 Route::post('editProfile','HomeController@editProfile')->name('editProfile');

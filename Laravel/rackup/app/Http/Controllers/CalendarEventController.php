@@ -58,15 +58,12 @@ class CalendarEventController extends Controller
         $i = 0;
         $calendar_events = array();
         while($dayCount!=6) {
-            $calendarEvents = \DB::table('calendar_events')
-                ->whereDATE('start',$weekday)
-                ->where('eventType','Appointment')
-                ->get();
+            $calendarEvents = CalendarEvent::whereDATE(('start'),$weekday)->get();
             foreach ($calendarEvents as $calendarEvent)
             {
                 $calendarEventId = $calendarEvent->id;
                 $title = $calendarEvent->title;
-                $start = Carbon::parse($calendarEvent->start);
+                $start = $calendarEvent->start;
                 $startDay = date('w', strtotime($start));
                 global $day;
                 switch ($startDay) {
@@ -93,7 +90,7 @@ class CalendarEventController extends Controller
                         break;
                 }
                 $startTime = $start->toTimeString();
-                $end = Carbon::parse($calendarEvent->end);
+                $end = $calendarEvent->end;
                 $endTime = $end->toTimeString();
                 $teacherSlot = TeacherAppointmentSlots::where('calendarEventsId', $calendarEventId)->first();
                 $teacherId = $teacherSlot->teacher_id;
@@ -120,12 +117,8 @@ class CalendarEventController extends Controller
      *
      * @return Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        $id = $request->session()->get('id');
-        $user = \DB::table('users')->whereId($id)->first();
-        $data['user'] = $user;
-
         $teacherUsers = User::all()->where('role_id', 4);
         $i = 0;
         foreach ($teacherUsers as $teacherUser) {
@@ -138,7 +131,7 @@ class CalendarEventController extends Controller
             );
         }
         $days = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
-        return view('calendar_events.create',compact('teacherData','days'),$data);
+        return view('calendar_events.create',compact('teacherData','days'));
     }
 
 
@@ -224,12 +217,8 @@ class CalendarEventController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function show($id,Request $request)
+    public function show($id)
     {
-        $user_id = $request->session()->get('id');
-        $user = \DB::table('users')->whereId($user_id)->first();
-        $data['user'] = $user;
-
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
         $i = 0;
         $teacherId = $appointmentSlot->teacher_id;
@@ -268,7 +257,7 @@ class CalendarEventController extends Controller
             'endTime'=>$endTime
             );
 
-        return view('calendar_events.show', compact('calendar_event'),$data);
+        return view('calendar_events.show', compact('calendar_event'));
     }
 
     /**
@@ -277,12 +266,8 @@ class CalendarEventController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function edit($id,Request $request)
+    public function edit($id)
     {
-        $user_id = $request->session()->get('id');
-        $user = \DB::table('users')->whereId($user_id)->first();
-        $data['user'] = $user;
-
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
         $i = 0;
         $teacherId = $appointmentSlot->teacher_id;
@@ -320,7 +305,7 @@ class CalendarEventController extends Controller
             'startTime'=>$startTime,
             'endTime'=>$endTime
         );
-        return view('calendar_events.edit', compact('calendar_event'),$data);
+        return view('calendar_events.edit', compact('calendar_event'));
     }
 
     /**
