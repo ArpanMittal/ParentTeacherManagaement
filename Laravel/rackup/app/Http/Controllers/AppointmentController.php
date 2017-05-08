@@ -188,8 +188,8 @@ class AppointmentController extends Controller
         $start=$event->start;
         $end=$event->end;
         $teacherId = $appointmentRequest->teacher_id;
-        $teacherDetail = UserDetails::where('user_id',$teacherId)->first();
-        $contactNo = $teacherDetail->contact;
+//        $teacherDetail = UserDetails::where('user_id',$teacherId)->first();
+        $contactNo = $appointmentRequest->contactNo;
         $message = "A whatsapp video call has been scheduled on the number ".$contactNo;
         $appointmentDetails= array(
             'requestId' => $appointmentRequestId,
@@ -228,7 +228,25 @@ class AppointmentController extends Controller
 
     public function postConfirm($id){
         $appointmentDetail = AppointmentRequest::where('id',$id)->first();
+        $contactNo = $appointmentDetail->contactNo;
+        $parentId = $appointmentDetail->parent_id;
+        $parentDetails = UserDetails::where('user_id',$parentId)->first();
+        $gcmRegistrationId = $parentDetails->gcmRegistrationId;
         $slotId = $appointmentDetail->teacherAppointmentsSlot_id;
+        $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
+        $teacherId = $slot->teacher_id;
+        $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
+        $teacherName = $teacherDetails->name;
+        $eventId = $slot->calendarEventsId;
+        $event = CalendarEvent::where('id',$eventId)->first();
+        $start = Carbon::parse($event->start);
+        $startDate = $start->toDateString();
+        $startTime = $start->toTimeString();
+        $end = Carbon::parse($event->end);
+        $endTime = $end->toTimeString();
+        $message = "Your appointment with $teacherName on $startDate from $startTime to $endTime has been confirmed. 
+        Whatsapp Video Call Number : $contactNo";
+        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         try {
             DB::beginTransaction();
             DB::table('appointmentRequests')
@@ -248,6 +266,38 @@ class AppointmentController extends Controller
         return redirect(route('appointments.index'));
 
     }
+    //generic php function to send GCM push notification
+    function sendPushNotificationToGCM($registatoin_ids, $message) {
+        //Google cloud messaging GCM-API url
+        $url='https://gcm-http.googleapis.com/gcm/send';
+
+        //$url = 'fcm.googleapis.com/fcm/';
+        $fields = array(
+            'registration_ids' => $registatoin_ids,
+            'data' => $message,
+        );
+        // Google Cloud Messaging GCM API Key
+        define("GOOGLE_API_KEY", "AIzaSyBKPQ6hSnmIQtZf2SpyI2gTJzuCMB2ocEI");
+        $headers = array(
+            'Authorization: key=' . GOOGLE_API_KEY,
+            'Content-Type: application/json'
+        );
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result = curl_exec($ch);
+        if ($result === FALSE) {
+            die('Curl failed: ' . curl_error($ch));
+        }
+        curl_close($ch);
+        return $result;
+    }
+
     /*Cancel appointments*/
     public function getCancel($id, Request $request)
     {
@@ -495,7 +545,7 @@ class AppointmentController extends Controller
         return Response::json([$calendar_events, HttpResponse::HTTP_OK]);
     }
 
-    public function scheduleAppointments(Request $request){
+    public function bookAppointments(Request $request){
         try {
             $token = $request->get('token');
             $parent = JWTAuth::toUser($token);
@@ -509,6 +559,8 @@ class AppointmentController extends Controller
         $teacherId = $request->get('teacherId');
         $eventId = $request->get('eventId');
         $reasonOfAppointment = $request->get('reasonOfAppointment');
+        $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
+        $contactNo = $teacherDetails->contact;
         $teacherSlots = \DB::table('teacherAppointmentsSlots')
             ->where('teacher_id',$teacherId)
             ->where('calendarEventsId',$eventId)
@@ -523,7 +575,9 @@ class AppointmentController extends Controller
                 'reasonOfAppointment'=>$reasonOfAppointment,
                 'isAwaited'=>1, 
                 'isApproved' => 0,
-                'isCancel'=>0]);
+                'isCancel'=>0,
+                'contactNo'=>$contactNo
+            ]);
         }catch (Exception $e){
             \DB::rollBack();
             return Response::json(HttpResponse::HTTP_PARTIAL_CONTENT);
