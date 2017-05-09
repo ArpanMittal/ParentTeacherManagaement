@@ -48,50 +48,56 @@ class AppointmentController extends Controller
         foreach ($appointmentRequests as $appointmentRequest){
             $appointmentRequestId=$appointmentRequest->id;
             $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
-            $parentId = $appointmentRequest->parent_id;
-            $parentDetails = UserDetails::where('user_id',$parentId)->first();
-            $parentName = $parentDetails->name;
-            $studentDetails = Student::where('parent_id',$parentId)->first();
-            $studentId = $studentDetails->id;
-            $studentName = $studentDetails->name;
-            $gradeId = $studentDetails->grade_id;
-            $gradeDetails = Grade::where('id',$gradeId)->first();
-            $gradeName = $gradeDetails->grade_name;
-            $reasonOfAppointment = $appointmentRequest->reasonOfAppointment;
-            $cancellationReason = $appointmentRequest->cancellationReason;
             $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
-            $booked= $slot->isBooked;
-            $awaited = $appointmentRequest->isAwaited;
-            $confirmed = $appointmentRequest->isApproved;
-            $cancelled = $appointmentRequest->isCancel;
-            if ($booked==0 && $awaited==1 && $confirmed==0 && $cancelled==0){
-                $status = "Awaited";
-            }
-            elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
-                $status = "Confirmed";
-            }
-            elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
-                $status="Cancelled";
-            }
-            else{
-                $status = "Invalid Status";
-            }
             $eventId = $slot->calendarEventsId;
             $event = CalendarEvent::where('id',$eventId)->first();
-            $appointmentDetails[$i++] = array(
-                'requestId' => $appointmentRequestId,
-                'parentName'=>$parentName,
-                'studentId'=>$studentId,
-                'studentName'=>$studentName,
-                'grade'=>$gradeName,
-                'eventId'=>$eventId,
-                'title'=>$event->title,
-                'reasonOfAppointment'=>$reasonOfAppointment,
-                'cancellationReason'=>$cancellationReason,
-                'start'=>$event->start,
-                'end'=>$event->end,
-                'status'=>$status
-            );
+            $eventType = $event->eventType;
+            if ($eventType == 'Teacher Appointment'){
+                $booked= $slot->isBooked;
+                $parentId = $appointmentRequest->parent_id;
+                $parentDetails = UserDetails::where('user_id',$parentId)->first();
+                $parentName = $parentDetails->name;
+                $parentContact = $appointmentRequest->parentContact;
+                $studentDetails = Student::where('parent_id',$parentId)->first();
+                $studentId = $studentDetails->id;
+                $studentName = $studentDetails->name;
+                $gradeId = $studentDetails->grade_id;
+                $gradeDetails = Grade::where('id',$gradeId)->first();
+                $gradeName = $gradeDetails->grade_name;
+                $reasonOfAppointment = $appointmentRequest->reasonOfAppointment;
+                $cancellationReason = $appointmentRequest->cancellationReason;
+                $awaited = $appointmentRequest->isAwaited;
+                $confirmed = $appointmentRequest->isApproved;
+                $cancelled = $appointmentRequest->isCancel;
+                if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
+                    $status = "Awaited";
+                }
+                elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
+                    $status = "Confirmed";
+                }
+                elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+                    $status="Cancelled";
+                }
+                else{
+                    $status = "Invalid Status";
+                }
+                $appointmentDetails[$i++] = array(
+                    'requestId' => $appointmentRequestId,
+                    'parentName'=>$parentName,
+                    'parentContact'=>$parentContact,
+                    'studentId'=>$studentId,
+                    'studentName'=>$studentName,
+                    'grade'=>$gradeName,
+                    'eventId'=>$eventId,
+                    'title'=>$event->title,
+                    'reasonOfAppointment'=>$reasonOfAppointment,
+                    'cancellationReason'=>$cancellationReason,
+                    'start'=>$event->start,
+                    'end'=>$event->end,
+                    'status'=>$status
+                );
+            }
+
         }
 
         return view('appointments.index', compact('appointmentDetails'),$data);
@@ -113,6 +119,7 @@ class AppointmentController extends Controller
         $parentId = $appointmentRequest->parent_id;
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
         $parentName = $parentDetails->name;
+        $parentContact = $appointmentRequest->parentContact;
         $studentDetails = Student::where('parent_id',$parentId)->first();
         $studentId = $studentDetails->id;
         $studentName = $studentDetails->name;
@@ -127,7 +134,7 @@ class AppointmentController extends Controller
         $awaited = $appointmentRequest->isAwaited;
         $confirmed = $appointmentRequest->isApproved;
         $cancelled = $appointmentRequest->isCancel;
-        if ($booked==0 && $awaited==1 && $confirmed==0 && $cancelled==0){
+        if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
             $status = "Awaited";
         }
         elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
@@ -147,6 +154,7 @@ class AppointmentController extends Controller
         $appointmentDetails= array(
             'requestId' => $appointmentRequestId,
             'parentName'=>$parentName,
+            'parentContact'=>$parentContact,
             'studentId'=>$studentId,
             'studentName'=>$studentName,
             'grade'=>$gradeName,
@@ -173,6 +181,7 @@ class AppointmentController extends Controller
         $parentId = $appointmentRequest->parent_id;
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
         $parentName = $parentDetails->name;
+        $parentContact = $appointmentRequest->parentContact;
         $studentDetails = Student::where('parent_id',$parentId)->first();
         $studentId = $studentDetails->id;
         $studentName = $studentDetails->name;
@@ -190,10 +199,11 @@ class AppointmentController extends Controller
         $teacherId = $appointmentRequest->teacher_id;
 //        $teacherDetail = UserDetails::where('user_id',$teacherId)->first();
         $contactNo = $appointmentRequest->contactNo;
-        $message = "A whatsapp video call has been scheduled on the number ".$contactNo;
+//        $message = "A whatsapp video call has been scheduled on the number ".$contactNo;
         $appointmentDetails= array(
             'requestId' => $appointmentRequestId,
             'parentName'=>$parentName,
+            'parentContact'=>$parentContact,
             'studentId'=>$studentId,
             'studentName'=>$studentName,
             'grade'=>$gradeName,
@@ -203,7 +213,6 @@ class AppointmentController extends Controller
             'start'=>$start,
             'end'=>$end,
             'contact'=>$contactNo,
-            'message'=>$message,
             'teacherId'=>$teacherId
         );
         //return var_export($appointmentDetails);
@@ -244,9 +253,9 @@ class AppointmentController extends Controller
         $startTime = $start->toTimeString();
         $end = Carbon::parse($event->end);
         $endTime = $end->toTimeString();
-        $message = "Your appointment with $teacherName on $startDate from $startTime to $endTime has been confirmed. 
-        Whatsapp Video Call Number : $contactNo";
-        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+//        $message = "Your appointment with $teacherName on $startDate from $startTime to $endTime has been confirmed.
+//        Whatsapp Video Call Number : $contactNo";
+//        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         try {
             DB::beginTransaction();
             DB::table('appointmentRequests')
@@ -255,9 +264,6 @@ class AppointmentController extends Controller
                     ['isApproved' => 1,
                     'isCancel' => 0,
                     'isAwaited' => 0]);
-            DB::table('teacherAppointmentsSlots')
-                ->where('id', $slotId)
-                ->update(['isBooked' => 1]);
         }catch (Exception $e){
             DB::rollback();
             return Response::json("Insertion failed",HttpResponse::HTTP_PARTIAL_CONTENT);
@@ -310,6 +316,7 @@ class AppointmentController extends Controller
         $parentId = $appointmentRequest->parent_id;
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
         $parentName = $parentDetails->name;
+        $parentContact = $appointmentRequest->parentContact;
         $studentDetails = Student::where('parent_id',$parentId)->first();
         $studentId = $studentDetails->id;
         $studentName = $studentDetails->name;
@@ -326,6 +333,7 @@ class AppointmentController extends Controller
         $appointmentDetails= array(
             'requestId' => $appointmentRequestId,
             'parentName'=>$parentName,
+            'parentContact'=>$parentContact,
             'studentId'=>$studentId,
             'studentName'=>$studentName,
             'grade'=>$gradeName,
@@ -340,7 +348,25 @@ class AppointmentController extends Controller
     public function postCancel($id){
         $appointmentDetail = AppointmentRequest::where('id',$id)->first();
         $slotId = $appointmentDetail->teacherAppointmentsSlot_id;
+        $parentId = $appointmentDetail->parent_id;
+        $parentDetails = UserDetails::where('user_id',$parentId)->first();
+        $gcmRegistrationId = $parentDetails->gcmRegistrationId;
+        $teacherId = $appointmentDetail->teacher_id;
+        $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
+        $teacherName = $teacherDetails->name;
         $cancellationReason = Input::get('cancellationReason');
+        $slotDetails = TeacherAppointmentSlots::where('id',$slotId)->first();
+        $calendarEventId = $slotDetails->calendarEventsId;
+        $calendarEventDetails = CalendarEvent::where('id',$calendarEventId)->first();
+        $start = $calendarEventDetails->start;
+        $start=Carbon::parse($start);
+        $startDate = $start->toDateString();
+        $startTime = $start->toTimeString();
+        $end = $calendarEventDetails->end;
+        $end = Carbon::parse($end);
+        $endTime = $end->toTimeString();
+//        $message = "Your appointment with $teacherName on $startDate from $startTime to $endTime has been cancelled due to $cancellationReason";
+//        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         try {
             DB::beginTransaction();
             DB::table('appointmentRequests')
@@ -362,44 +388,156 @@ class AppointmentController extends Controller
         return redirect(route('appointments.index'));
 
     }
-//    /**
-//     * Show the form for creating a new resource.
-//     *
-//     * @return Response
-//     */
-//    public function create()
-//    {
-//        return view('appointments.create');
-//    }
-//
-//
-//    /**
-//     * Store a newly created resource in storage.
-//     *
-//     * @param Request $request
-//     * @return Response
-//     */
-//    public function store(Request $request)
-//    {
-//        $calendar_event = new CalendarEvent();
-//
-//        $calendar_event->title            = $request->input("title");
-//        $calendar_event->start            = $request->input("start");
-//        $calendar_event->end              = $request->input("end");
-//
-//        $calendar_event->save();
-//
-////        \DB::table('calendar_events')->insert(
-////            ['title' => $calendar_event->title,
-////                'start' => $calendar_event->start,
-////                'end'=>$calendar_event->end,
-////                'is_all_day'=>$calendar_event->is_all_day,
-////                'background_color'=>$calendar_event->background_color
-////            ]
-////        );
-//
-//        return redirect(route('appointments.index'))->with('message', 'Item created successfully.');
-//    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create(Request $request)
+    {
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
+
+        $userDetails = UserDetails::where('user_id',$id)->first();
+        $contactNo = $userDetails->contact;
+
+        $parentUsers = User::all()->where('role_id', 2);
+        $i = 0;
+        foreach ($parentUsers as $parentUser) {
+            $parentId = $parentUser->id;
+            $parentDetails = UserDetails::where('user_id', $parentId)->first();
+            $parentName = $parentDetails->name;
+            $parentData[$i++] = array(
+                'id' => $parentId,
+                'name' => $parentName
+            );
+        }
+        return view('appointments.create',compact('parentData','contactNo'),$data);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $data['user'] = $user;
+        $teacherDetails = UserDetails::where('user_id',$id)->first();
+        $teacherName = $teacherDetails->name;
+        $parentId = Input::get('parentId');
+        $parentDetails = UserDetails::where('user_id',$parentId)->first();
+        $gcmRegistrationId = $parentDetails->gcmRegistrationId;
+        $title = Input::get('title');
+        $appointmentReason = Input::get('appointmentReason');
+        $contactNo = Input::get("contactNo");
+        $startDate = Carbon::parse(Input::get('startDate'));
+        $startTime =Input::get('startTime');
+        $startTime = Carbon::parse($startTime);
+        $hours = (double)$startTime->format('H');
+        $minutes = (double)$startTime->format('i');
+        $seconds = (double)$startTime->format('s');
+        $startDateTime = date_time_set($startDate,$hours,$minutes,$seconds);
+        $endDate = Carbon::parse(Input::get('endDate'));
+        $endTime =Input::get("endTime");
+        $endTime = Carbon::parse($endTime);
+        $hours = (double)$endTime->format('H');
+        $minutes = (double)$endTime->format('i');
+        $seconds = (double)$endTime->format('s');
+        $endDateTime = date_time_set($endDate,$hours,$minutes,$seconds);
+        $teacherSlots = TeacherAppointmentSlots::all()->where('teacher_id',$id);
+        $flag = 0;
+        foreach ($teacherSlots as $teacherSlot){
+            $slotId = $teacherSlot->id;
+            $calendarEventId = $teacherSlot->calendarEventsId;
+            $calendarEvent = CalendarEvent::where('id',$calendarEventId)->first();
+            $slotStart = $calendarEvent->start;
+            $slotEnd = $calendarEvent->end;
+            if(($startDateTime==$slotStart)|| ($endDateTime==$slotEnd)||
+               ($startDateTime>$slotStart && $startDateTime<$slotEnd)||
+               ($endDateTime<$slotEnd && $endDateTime>$slotStart)){
+                if($teacherSlot->isBooked == 0){
+                    $flag=1;
+//                    $message = "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
+//                     Whatsapp Video Call Number : $contactNo";
+//                    $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                    try{
+                        \DB::beginTransaction();
+                        \DB::table('teacherAppointmentsSlots')
+                            ->where('id', $slotId)
+                            ->update(['isBooked' => 1]);
+                        $calendarEvent = new CalendarEvent();
+                        $calendarEvent->title = "Parent Appointment";
+                        $calendarEvent->start = $startDateTime;
+                        $calendarEvent->end = $endDateTime;
+                        $calendarEvent->eventType = "Parent Appointment";
+                        $calendarEvent->save();
+                        $slot = new TeacherAppointmentSlots();
+                        $slot->teacher_id = $id;
+                        $slot->isBooked = 1;
+                        $slot->calendarEventsId=$calendarEvent->id;
+                        $slot->save();
+                        $apppointmentRequest = new AppointmentRequest();
+                        $apppointmentRequest->parent_id = $parentId;
+                        $apppointmentRequest->teacher_id = $id;
+                        $apppointmentRequest->teacherAppointmentsSlot_id = $slot->id;
+                        $apppointmentRequest->reasonOfAppointment = $appointmentReason;
+                        $apppointmentRequest->contactNo = $contactNo;
+                        $apppointmentRequest->isAwaited = 1;
+                        $apppointmentRequest->save();
+                    }catch (Exception $e){
+                        \DB::rollback();
+                        return redirect(route('appointments.index'))->with('message', 'Could not send appointment request. Please try again');
+                    }
+                    \DB::commit();
+                }
+                else{
+                    return redirect(route('appointments.index'))->with('message','Slot is already booked');
+                }
+            }
+        }
+        if ($flag == 1){
+            return redirect(route('appointments.index'))->with('message', 'Appointment Request Sent Successfully');
+        }
+        else{
+//            $message = "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
+//                     Whatsapp Video Call Number : $contactNo";
+//            $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+            try{
+                \DB::beginTransaction();
+                $calendarEvent = new CalendarEvent();
+                $calendarEvent->title = "Parent Appointment";
+                $calendarEvent->start = $startDateTime;
+                $calendarEvent->end = $endDateTime;
+                $calendarEvent->eventType = "Parent Appointment";
+                $calendarEvent->save();
+                $slot = new TeacherAppointmentSlots();
+                $slot->teacher_id = $id;
+                $slot->isBooked = 1;
+                $slot->calendarEventsId=$calendarEvent->id;
+                $slot->save();
+                $apppointmentRequest = new AppointmentRequest();
+                $apppointmentRequest->parent_id = Input::get('parentId');
+                $apppointmentRequest->teacher_id = $id;
+                $apppointmentRequest->teacherAppointmentsSlot_id = $slot->id;
+                $apppointmentRequest->reasonOfAppointment = Input::get('appointmentReason');
+                $apppointmentRequest->contactNo = Input::get('contactNo');
+                $apppointmentRequest->isAwaited = 1;
+                $apppointmentRequest->save();
+            }catch (Exception $e){
+                \DB::rollback();
+                return redirect(route('appointments.index'))->with('message', 'Could not send appointment request. Please try again');
+            }
+            \DB::commit();
+            return redirect(route('appointments.index'))->with('message', 'Appointment Request Sent Successfully');
+        }
+
+    }
 //
 //    /**
 //     * Show the form for editing the specified resource.
@@ -413,7 +551,6 @@ class AppointmentController extends Controller
 //
 //        return view('calendar_events.edit', compact('calendar_event'));
 //    }
-//
 //    /**
 //     * Update the specified resource in storage.
 //     *
@@ -428,7 +565,7 @@ class AppointmentController extends Controller
 //        $calendar_event->title            = $request->input("title");
 //        $calendar_event->start            = $request->input("start");
 //        $calendar_event->end              = $request->input("end");
-//        $calendar_event->save();
+//        $calendar_event->save();k
 //
 ////        \DB::table('calendar_events')
 ////            ->where('id',$id)
@@ -510,7 +647,9 @@ class AppointmentController extends Controller
             $calendarEvents = \DB::table('grade_user')
                 ->join('teacherAppointmentsSlots','grade_user.user_id','=','teacherAppointmentsSlots.teacher_id')
                 ->join('calendar_events','teacherAppointmentsSlots.calendarEventsId','calendar_events.id')
+                ->where('teacherAppointmentsSlots.isBooked',0)
                 ->where('grade_user.grade_id',$gradeId)
+                ->where('calendar_events.eventType','Teacher Appointment')
                 ->whereDate('calendar_events.start',$date)
                 ->get();
             foreach ($calendarEvents as $calendarEvent)
@@ -542,12 +681,64 @@ class AppointmentController extends Controller
             $dateCount++;
             $date++;
         }
-        return Response::json([$calendar_events, HttpResponse::HTTP_OK]);
+        $appointmentData=array();
+        $j=0;
+        $appointmentRequests = AppointmentRequest::all()->where('parent_id',$userId);
+        foreach ($appointmentRequests as $appointmentRequest){
+            $slotId = $appointmentRequest->teacherAppointmentsSlot_id;
+            $teacher_id = $appointmentRequest->teacher_id;
+            $teacherDetails = UserDetails::where('user_id',$teacher_id)->first();
+            $teacher_name = $teacherDetails->name;
+            $slotDetails = TeacherAppointmentSlots::where('id',$slotId)->first();
+            $event_id = $slotDetails->calendarEventsId;
+            $calendar_event = CalendarEvent::where('id',$event_id)->first();
+            $start = $calendar_event->start;
+            $startDateTime = Carbon::parse($start);
+            $startDate = $startDateTime->toDateString();
+            $startTime = $startDateTime->toTimeString();
+            $end = $calendar_event->end;
+            $endDateTime = Carbon::parse($end);
+            $endDate = $startDateTime->toDateString();
+            $endTime = $endDateTime->toTimeString();
+            $booked = $slotDetails->isBooked;
+            $cancelled = $appointmentRequest->isCancel;
+            $awaited = $appointmentRequest->isAwaited;
+            $confirmed = $appointmentRequest->isApproved;
+            if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
+                $status = "Awaited";
+            }
+            elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
+                $status = "Confirmed";
+            }
+            elseif($booked==1 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+                $status="Cancelled";
+            }
+            else{
+                $status = "Invalid Status";
+            }
+            $appointmentData[$j++]=array(
+                'id' => $event_id,
+                'teacherId' => $teacher_id,
+                'teacherName' => $teacher_name,
+                'title' => $status,
+                'startDate'=>$startDate,
+                'endDate'=>$endDate,
+                'startTime' => $startTime,
+                'endTime' => $endTime
+            );
+        }
+        
+        return Response::json([$calendar_events,$appointmentData, HttpResponse::HTTP_OK]);
     }
 
     public function bookAppointments(Request $request){
         try {
             $token = $request->get('token');
+            $teacherId = $request->get('teacherId');
+            $eventId = $request->get('eventId');
+            $reasonOfAppointment = $request->get('reasonOfAppointment');
+            $parentContact = $request->get('parentContact');
+
             $parent = JWTAuth::toUser($token);
             $parentId= $parent->id;
         }catch (TokenExpiredException $e){
@@ -556,32 +747,38 @@ class AppointmentController extends Controller
         catch (TokenInvalidException $e){
             return Response::json (['Token invalid']);
         }
-        $teacherId = $request->get('teacherId');
-        $eventId = $request->get('eventId');
-        $reasonOfAppointment = $request->get('reasonOfAppointment');
+
         $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
         $contactNo = $teacherDetails->contact;
-        $teacherSlots = \DB::table('teacherAppointmentsSlots')
+        $teacherSlot = \DB::table('teacherAppointmentsSlots')
             ->where('teacher_id',$teacherId)
             ->where('calendarEventsId',$eventId)
             ->first();
-        $slotId = $teacherSlots->id;
+        $slotId = $teacherSlot->id;
         try {
             \DB::beginTransaction();
-            \DB::table('appointmentRequests')->insert([
-                'parent_id' => $parentId,
-                'teacher_id' => $teacherId,
-                'teacherAppointmentsSlot_id'=>$slotId,
-                'reasonOfAppointment'=>$reasonOfAppointment,
-                'isAwaited'=>1, 
-                'isApproved' => 0,
-                'isCancel'=>0,
-                'contactNo'=>$contactNo
-            ]);
+            \DB::table('teacherAppointmentsSlots')
+                ->where('id', $slotId)
+                ->update(['isBooked' => 1]);
+            \DB::table('calendar_events')
+                ->where('id', $eventId)
+                ->update(['eventType' => 'Teacher Appointment']);
+            $appointmentRequest = new AppointmentRequest();
+            $appointmentRequest->parent_id = $parentId;
+            $appointmentRequest->teacher_id = $teacherId;
+            $appointmentRequest->teacherAppointmentsSlot_id = $slotId;
+            $appointmentRequest->reasonOfAppointment= $reasonOfAppointment;
+            $appointmentRequest->isAwaited=1;
+            $appointmentRequest->isApproved=0;
+            $appointmentRequest->isCancel=0;
+            $appointmentRequest->contactNo=$contactNo;
+            $appointmentRequest->parentContact = $parentContact;
+            $appointmentRequest->save();
         }catch (Exception $e){
             \DB::rollBack();
             return Response::json(HttpResponse::HTTP_PARTIAL_CONTENT);
         }
         \DB::commit();
+        return Response::json(HttpResponse::HTTP_OK);
     }
 }

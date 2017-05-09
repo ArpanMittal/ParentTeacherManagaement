@@ -60,7 +60,7 @@ class CalendarEventController extends Controller
         while($dayCount!=6) {
             $calendarEvents = \DB::table('calendar_events')
                 ->whereDATE('start',$weekday)
-                ->where('eventType','Appointment')
+                ->where('eventType','Teacher Appointment')
                 ->get();
             foreach ($calendarEvents as $calendarEvent)
             {
@@ -110,7 +110,6 @@ class CalendarEventController extends Controller
                 );
             }
             $weekday++;
-
             $dayCount++;
         }
         return view('calendar_events.index', compact('calendar_events'),$data);
@@ -177,28 +176,33 @@ class CalendarEventController extends Controller
             }
         }
         else
-            $addDay=$diffDays;
+            $addDay=7;
 //        $slotDate = $startDate->addDays($addDay);
         $startTime = Input::get('start');
-        $startDateTime = $startDate
-            ->addDays($addDay)
-            ->addHours($startTime);
+        $startTime = Carbon::parse($startTime);
+        $hours = (double)$startTime->format('H');
+        $minutes = (double)$startTime->format('i');
+        $seconds = (double)$startTime->format('s');
+        $startDateTime = $startDate->addDays($addDay);
+        $startDateTime = date_time_set($startDateTime,$hours,$minutes,$seconds);
         $endTime = Input::get('end');
-        //return $endTime;
-        $endDateTime = $endDate
-            ->addDays($addDay)
-            ->addHours($endTime);
+        $endTime = Carbon::parse($endTime);
+        $hours = (double)$endTime->format('H');
+        $minutes = (double)$endTime->format('i');
+        $seconds = (double)$endTime->format('s');
+        $endDateTime = $endDate->addDays($addDay);
+        $endDateTime = date_time_set($endDateTime,$hours,$minutes,$seconds);
         $i = 0;
        while ($i!=52){
             try{
                 \DB::beginTransaction();
                 $calendar_event = new CalendarEvent();
-                $calendar_event->title= $request->input("title");
+                $calendar_event->title= "FreeSlot";
                 $calendar_event->start= $startDateTime;
                 $calendar_event->end= $endDateTime;
                 $calendar_event->is_all_day = 0;
                 $calendar_event->background_color = "blue";
-                $calendar_event->eventType = "Appointment";
+                $calendar_event->eventType = "Teacher Appointment";
                 $calendar_event->save();
                 $teacherSlots = new TeacherAppointmentSlots();
                 $teacherSlots->teacher_id = $request->input("teacherId");
