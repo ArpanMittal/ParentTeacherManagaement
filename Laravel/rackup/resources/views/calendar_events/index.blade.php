@@ -46,7 +46,9 @@
                         <td>{{$calendar_event['id']}}</td>
                         <td>{{$calendar_event['teacherId']}}</td>
                         <td>{{$calendar_event['teacherName']}}</td>
-                        <td>{{$calendar_event['title']}}</td>
+                        @if($calendar_event['title']==5)
+                        <td>Free Slot</td>
+                        @endif
                         <td>{{$calendar_event['day']}}</td>
                         <td>{{$calendar_event['startTime']}}</td>
                         <td>{{$calendar_event['endTime']}}</td>

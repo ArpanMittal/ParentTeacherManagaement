@@ -28,6 +28,7 @@
                     <th>START</th>
                     <th>END</th>
                     <th>REQUESTED BY</th>
+                    <th>PARENT CONTACT</th>
                     <th>STATUS</th>
                     <th class="text-right">OPTIONS</th>
                 </tr>
@@ -50,6 +51,7 @@
                         <td>{{$appointmentDetail['start']}}</td>
                         <td>{{$appointmentDetail['end']}}</td>
                         <td>{{$appointmentDetail['requestedBy']}}</td>
+                        <td>{{$appointmentDetail['parentContact']}}</td>
                         <td>{{$appointmentDetail['status']}}</td>
                         <td class="text-right">
                             <a class="btn btn-primary" href="{{ route('appointments.show', $appointmentDetail['requestId']) }}">View</a>

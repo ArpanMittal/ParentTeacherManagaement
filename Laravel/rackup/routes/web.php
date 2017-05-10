@@ -68,6 +68,7 @@ Route::get('/parentsList','AdminController@getParentsList')->name('parentsList')
 Route::get('/calendar', ['uses' => 'EventController@calendar'])->name('calendar')->middleware('check.session');
 Route::put('calendar_events/{teacherId}/{id}','CalendarEventController@edit1');
 Route::resource('calendar_events', 'CalendarEventController');
+Route::get('showAppointments{id}','CalendarEventController@showAppointments')->name('showAppointments');
 
 Route::get('/teacherCalendar', ['uses' => 'EventController@teacherCalendar'])->name('teacherCalendar')->middleware('check.session');
 Route::resource('appointments','AppointmentController');//->middleware('check.session');
@@ -76,6 +77,6 @@ Route::post('postConfirm{id}','AppointmentController@postConfirm')->name('postCo
 Route::post('changeContactNumber{id}','AppointmentController@changeContactNumber')->name('changeContactNumber');
 Route::get('getCancel{id}','AppointmentController@getCancel')->name('getCancel');
 Route::post('postCancel{id}','AppointmentController@postCancel')->name('postCancel');
-
+Route::get('showFreeSlots{id}','AppointmentController@showFreeSlots')->name('showFreeSlots');
 
 Route::resource('school_events','SchoolEventController');

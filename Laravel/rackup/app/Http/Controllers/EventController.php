@@ -29,14 +29,16 @@ class EventController extends Controller
     //Admin Calendar
     public function calendar(Request $request)
     {
-        $id = $request->session()->get('id');
-        $user = \DB::table('users')->whereId($id)->first();
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
         $databaseEvents = $this->calendarEvent->all();
         $slots = array();
         $schoolEvents = array();
+        $appointments = array();
         $i = 0;
         $j=0;
+        $k = 0;
         $today = Carbon::today();
         foreach ($databaseEvents as $databaseEvent){
             $id = $databaseEvent->getId();
@@ -76,8 +78,20 @@ class EventController extends Controller
                         $color ="Blue";
                         $status="Free Slot";
                     }
+                    $slots[$i++] = Calendar::event(
+                        $title.$teacherName.$status,
+                        $isallDay,
+                        $start,
+                        $end,
+                        $id,
+                        [
+                            'color'=>$color,
+                            'url'=>'calendar_events/'.$id,
+                        ]
+                    );
                 }
                 else{
+                    $appointmentRequestId = $appointmentRequest->id;
                     $awaited = $appointmentRequest->isAwaited;
                     $confirmed = $appointmentRequest->isApproved;
                     $cancelled = $appointmentRequest->isCancel;
@@ -101,24 +115,26 @@ class EventController extends Controller
                         $color ="Grey";
                         $status="Invalid";
                     }
+                    $appointments[$k++] = Calendar::event(
+                        $status.$teacherName.$eventType,
+                        $isallDay,
+                        $start,
+                        $end,
+                        $id,
+                        [
+                            'color'=>$color,
+                            'url'=>' showAppointments'.$appointmentRequestId,
+                        ]
+                    );
                 }
-                $slots[$i++] = Calendar::event(
-                    $title.$teacherName.$status.$eventType,
-                    $isallDay,
-                    $start,
-                    $end,
-                    $id,
-                    [
-                        'color'=>$color,
-                        'url'=>'calendar_events/'.$id,
-                    ]
-                );
+
             }
         }
 //        return var_export($schoolEvents);
         //return var_export($events);
         $calendar = Calendar::addEvents($slots);
         $calendar = Calendar::addEvents($schoolEvents);
+        $calendar = Calendar::addEvents($appointments);
         return view('calendar_events.calendar', compact('calendar'),$data);
         }
 
@@ -166,7 +182,7 @@ class EventController extends Controller
                     $id,
                     [
                         'color'=>$color,
-                        'url'=>'calendar_events/'.$id
+                        'url'=>'showFreeSlots'.$id
                     ]
                 );
             }

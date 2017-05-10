@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\AppointmentRequest;
 use App\CalendarEvent;
+use App\Grade;
+use App\Student;
 use App\User;
 use App\UserDetails;
 use App\TeacherAppointmentSlots;
@@ -450,6 +452,68 @@ class CalendarEventController extends Controller
         }
         \DB::commit();
         return redirect(route('calendar_events.index'))->with('message', 'Slot deleted successfully.');
+    }
+    
+    public function showAppointments($id,Request $request){
+        
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
+        $data['user'] = $user;
+
+        $appointmentRequest = AppointmentRequest::where('id',$id)->first();
+        $appointmentRequestId=$appointmentRequest->id;
+        $parentId = $appointmentRequest->parent_id;
+        $parentDetails = UserDetails::where('user_id',$parentId)->first();
+        $parentName = $parentDetails->name;
+        $parentContact = $appointmentRequest->parentContact;
+        $studentDetails = Student::where('parent_id',$parentId)->first();
+        $studentId = $studentDetails->id;
+        $studentName = $studentDetails->name;
+        $gradeId = $studentDetails->grade_id;
+        $gradeDetails = Grade::where('id',$gradeId)->first();
+        $gradeName = $gradeDetails->grade_name;
+        $reasonOfAppointment = $appointmentRequest->reasonOfAppointment;
+        $cancellationReason = $appointmentRequest->cancellationReason;
+        $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
+        $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
+        $booked= $slot->isBooked;
+        $awaited = $appointmentRequest->isAwaited;
+        $confirmed = $appointmentRequest->isApproved;
+        $cancelled = $appointmentRequest->isCancel;
+        if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
+            $status = "Awaited";
+        }
+        elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
+            $status = "Confirmed";
+        }
+        elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+            $status="Cancelled";
+        }
+        else{
+            $status = "Invalid Status";
+        }
+        $eventId = $slot->calendarEventsId;
+        $event = CalendarEvent::where('id',$eventId)->first();
+        $title=$event->title;
+        $start=$event->start;
+        $end=$event->end;
+        $appointmentDetails= array(
+            'requestId' => $appointmentRequestId,
+            'parentName'=>$parentName,
+            'parentContact'=>$parentContact,
+            'studentId'=>$studentId,
+            'studentName'=>$studentName,
+            'grade'=>$gradeName,
+            'eventId'=>$eventId,
+            'title'=>$title,
+            'reasonOfAppointment'=>$reasonOfAppointment,
+            'cancellationReason'=>$cancellationReason,
+            'start'=>$start,
+            'end'=>$end,
+            'status'=>$status
+        );
+
+        return view('calendar_events.showAppointments', compact('appointmentDetails'),$data);
     }
 
 }

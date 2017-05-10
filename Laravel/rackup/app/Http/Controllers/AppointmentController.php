@@ -739,16 +739,16 @@ class AppointmentController extends Controller
             $confirmed = $appointmentRequest->isApproved;
             $requestType = $appointmentRequest->requestType;
             if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
-                $status = "Awaited";
+                $status = 1;
             }
             elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
-                $status = "Confirmed";
+                $status = 2;
             }
             elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
-                $status="Cancelled";
+                $status=3;
             }
             else{
-                $status = "Invalid Status";
+                $status = 4;
             }
             $appointmentData[$j++]=array(
                 'id' => $event_id,
@@ -943,7 +943,7 @@ class AppointmentController extends Controller
         }
     }
     
-    public function showFreeSlots ($id,Request $request){
+    public function showFreeSlots($id,Request $request){
 
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
