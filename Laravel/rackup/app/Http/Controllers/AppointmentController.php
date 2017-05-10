@@ -557,12 +557,15 @@ class AppointmentController extends Controller
                 $slot->calendarEventsId=$calendarEvent->id;
                 $slot->save();
                 $apppointmentRequest = new AppointmentRequest();
-                $apppointmentRequest->parent_id = Input::get('parentId');
+                $apppointmentRequest->parent_id = $parentId;
                 $apppointmentRequest->teacher_id = $id;
                 $apppointmentRequest->teacherAppointmentsSlot_id = $slot->id;
-                $apppointmentRequest->reasonOfAppointment = Input::get('appointmentReason');
-                $apppointmentRequest->contactNo = Input::get('contactNo');
+                $apppointmentRequest->reasonOfAppointment = $appointmentReason;
+                $apppointmentRequest->contactNo = $contactNo;
                 $apppointmentRequest->isAwaited = 1;
+                $apppointmentRequest->isCancel = 0;
+                $apppointmentRequest->isApproved = 0;
+                $apppointmentRequest->requestType = "Teacher Request";
                 $apppointmentRequest->save();
             }catch (Exception $e){
                 \DB::rollback();
