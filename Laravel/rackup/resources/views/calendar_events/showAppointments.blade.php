@@ -14,6 +14,14 @@
                     <p class="form-control-static">{{$appointmentDetails['requestId']}}</p>
                 </div>
                 <div class="form-group">
+                    <label for="teacherId">TEACHER ID</label>
+                    <p class="form-control-static">{{$appointmentDetails['teacherId']}}</p>
+                </div>
+                <div class="form-group">
+                    <label for="teacherName">TEACHER NAME</label>
+                    <p class="form-control-static">{{$appointmentDetails['teacherName']}}</p>
+                </div>
+                <div class="form-group">
                     <label for="parentName">PARENT NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['parentName']}}</p>
                 </div>
