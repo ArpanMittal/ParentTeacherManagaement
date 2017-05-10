@@ -169,7 +169,7 @@ class HomeController extends Controller
         try{
             \DB::beginTransaction();
             DB::table('userDetails')
-                ->where('id', $userId)
+                ->where('user_id', $userId)
                 ->update([
                     'gcmRegistrationId'=>$gcmRegistrationId,
                 ]);
