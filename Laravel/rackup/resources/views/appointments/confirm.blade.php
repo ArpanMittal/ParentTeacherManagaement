@@ -64,7 +64,7 @@
                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeContact">Enter New Contact Number</button>
                 </div>
                 <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
-                <button class="btn btn-success" type="submit" id="confirm-appointment">Confirm</button>
+                <button class="btn btn-success" type="submit" id="confirm-appointment">Confirm Appointment</button>
             </form>
          </div>
      </div>
