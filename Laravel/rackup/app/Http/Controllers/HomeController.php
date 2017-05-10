@@ -114,7 +114,7 @@ class HomeController extends Controller
 
         if (!is_null($user)) {
             $userId = $user->id;
-            $gcmRegistrationId = $request->get('gcmId');
+            $gcmRegistrationId = $request->get('gcmRegistrationId');
             try{
                 \DB::beginTransaction();
                 \DB::table('userDetails')
