@@ -206,7 +206,7 @@ class CalendarEventController extends Controller
             try{
                 \DB::beginTransaction();
                 $calendar_event = new CalendarEvent();
-                $calendar_event->title= "FreeSlot";
+                $calendar_event->title= 5;
                 $calendar_event->start= $startDateTime;
                 $calendar_event->end= $endDateTime;
                 $calendar_event->is_all_day = 0;

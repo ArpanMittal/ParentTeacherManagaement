@@ -841,16 +841,20 @@ class AppointmentController extends Controller
         $awaited = $appointmentRequest->isAwaited;
         $confirmed = $appointmentRequest->isApproved;
         if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
-            $status = "Awaited";
+           //awaited
+            $status = 1;
         }
         elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
-            $status = "Confirmed";
+            //confirmed
+            $status = 2;
         }
         elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
-            $status="Cancelled";
+            //cancelled
+            $status=3;
         }
         else{
-            $status = "Invalid Status";
+            //invalid
+            $status = 4;
         }
         $event = CalendarEvent::where('id',$eventId)->first();
         $start = $event->start;
@@ -879,7 +883,7 @@ class AppointmentController extends Controller
 
     public function updateEvent (Request $request){
         try {
-            $token = $request->get('token');;
+            $token = $request->get('token');
             $user = JWTAuth::toUser($token);
             $userId = $user->id;
         }catch (TokenExpiredException $e){
@@ -894,7 +898,8 @@ class AppointmentController extends Controller
         $appointmentSlotId = $appointmentSlot->id;
         $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$appointmentSlotId)->first();
         $appointmentRequestId = $appointmentRequest->id;
-        if($status =="confirmed"){
+        //confirmed
+        if($status ==2){
             try {
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
@@ -910,7 +915,8 @@ class AppointmentController extends Controller
             DB::commit();
             return Response::json(HttpResponse::HTTP_OK);
         }
-        elseif ($status=="cancelled"){
+        //cancelled
+        elseif ($status==3){
             try {
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
