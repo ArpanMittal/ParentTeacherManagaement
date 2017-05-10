@@ -812,10 +812,12 @@ class AppointmentController extends Controller
             $appointmentRequest->save();
         }catch (Exception $e){
             \DB::rollBack();
-            return Response::json(HttpResponse::HTTP_PARTIAL_CONTENT);
+            $httpStatus = HttpResponse::HTTP_PARTIAL_CONTENT;
+            return Response::json(["Partial Content",$httpStatus]);
         }
         \DB::commit();
-        return Response::json(HttpResponse::HTTP_OK);
+        $httpStatus = HttpResponse::HTTP_OK;
+        return Response::json(["Success",$httpStatus]);
     }
 
     public function sendEvent(Request $request){
@@ -910,10 +912,12 @@ class AppointmentController extends Controller
                             'isAwaited' => 0]);
             }catch (Exception $e){
                 DB::rollback();
-                return Response::json(HttpResponse::HTTP_CONFLICT);
+                $httpStatus = HttpResponse::HTTP_CONFLICT;
+                return Response::json([$httpStatus]);
             }
             DB::commit();
-            return Response::json(HttpResponse::HTTP_OK);
+            $httpStatus = HttpResponse::HTTP_OK;
+            return Response::json([$httpStatus]);
         }
         //cancelled
         elseif ($status==3){
@@ -927,15 +931,63 @@ class AppointmentController extends Controller
                             'isAwaited' => 0]);
             }catch (Exception $e){
                 DB::rollback();
-                return Response::json(HttpResponse::HTTP_CONFLICT);
+                $httpStatus = HttpResponse::HTTP_CONFLICT;
+                return Response::json([$httpStatus]);
             }
             DB::commit();
-            return Response::json(HttpResponse::HTTP_OK);
+            $httpStatus = HttpResponse::HTTP_OK;
+            return Response::json([$httpStatus]);
         }
         else{
-           return Response::json("invalid status"); 
+           return Response::json(["invalid status"]);
         }
-        
-        
+    }
+    
+    public function showFreeSlots ($id,Request $request){
+
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
+        $data['user'] = $user;
+
+//        $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
+        $i = 0;
+//        $teacherId = $appointmentSlot->teacher_id;
+//        $teacher = UserDetails::where('user_id',$teacherId)->first();
+//        $teacherName = $teacher->name;
+        $calendarEvent = CalendarEvent::where('id',$id)->first();
+        $title = $calendarEvent->title;
+        $startDateTime = $calendarEvent->start;
+        $startDateTime= Carbon::parse($startDateTime);
+        $endDateTime = $calendarEvent->end;
+        $endDateTime = Carbon::parse($endDateTime);
+        $startTime = $startDateTime->toTimeString();
+        $endTime = $endDateTime->toTimeString();
+        $dayNo= date('w', strtotime($startDateTime));
+        global $day;
+        switch ($dayNo){
+            case 0: $day ="Sunday";
+                break;
+            case 1: $day = "Monday";
+                break;
+            case 2: $day = "Tuesday";
+                break;
+            case 3: $day ="Wednesday";
+                break;
+            case 4: $day = "Thursday";
+                break;
+            case 5: $day = "Friday";
+                break;
+            case 6: $day = "Saturday";
+                break;
+        }
+        $calendar_event=array(
+            'id'=> $id,
+            'title'=>$title,
+            'day'=>$day,
+            'startTime'=>$startTime,
+            'endTime'=>$endTime
+        );
+
+        return view('appointments.showFreeSlots', compact('calendar_event'),$data);
     }
 }
