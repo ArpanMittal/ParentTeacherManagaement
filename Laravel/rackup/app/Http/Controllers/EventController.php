@@ -188,6 +188,9 @@ class EventController extends Controller
             }
             else{
                 $appointmentRequestId = $appointmentRequest->id;
+                $parentId = $appointmentRequest->parent_id;
+                $parentDetails = UserDetails::where('user_id',$parentId)->first();
+                $parentName = $parentDetails->name;
                 $awaited = $appointmentRequest->isAwaited;
                 $confirmed = $appointmentRequest->isApproved;
                 $cancelled = $appointmentRequest->isCancel;
@@ -212,7 +215,7 @@ class EventController extends Controller
                     $status="Invalid";
                 }
                 $appointments[$i++] = Calendar::event(
-                    $status,
+                    $status.$parentName,
                     $isallDay,
                     $start,
                     $end,
