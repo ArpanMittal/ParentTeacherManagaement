@@ -66,11 +66,11 @@
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
                 <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
-                @if(($appointmentDetail['requestedBy']=="Parent") &&
+                @if(($appointmentDetails['requestedBy']=="Parent") &&
                 $appointmentDetails['status']=="Awaited"))
                     <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetails['requestId'])}}">Confirm Appointment</a>
                 @endif
-                @if(($appointmentDetail['requestedBy']=="Parent") &&
+                @if(($appointmentDetails['requestedBy']=="Parent") &&
                 ($appointmentDetails['status']=="Confirmed" || $appointmentDetails['status']=="Awaited"))
                     <a class="btn btn-danger" href="{{ route('getCancel',$appointmentDetails['requestId'])}}">Cancel Appointment</a>
                 @endif
