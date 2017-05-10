@@ -138,6 +138,11 @@ class AppointmentController extends Controller
         $gradeName = $gradeDetails->grade_name;
         $reasonOfAppointment = $appointmentRequest->reasonOfAppointment;
         $cancellationReason = $appointmentRequest->cancellationReason;
+        $requestType = $appointmentRequest->requestType;
+        if($requestType == "Parent Request")
+            $requestedBy = "Parent";
+        else
+            $requestedBy = "You";
         $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
         $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
         $booked= $slot->isBooked;
@@ -174,6 +179,7 @@ class AppointmentController extends Controller
             'cancellationReason'=>$cancellationReason,
             'start'=>$start,
             'end'=>$end,
+            'requestedBy'=>$requestedBy,
             'status'=>$status
         );
 
@@ -883,7 +889,7 @@ class AppointmentController extends Controller
         return Response::json([$appointmentDetails,HttpResponse::HTTP_OK]);
     }
 
-    public function updateEvent (Request $request){
+    public function updateEvent(Request $request){
         try {
             $token = $request->get('token');
             $user = JWTAuth::toUser($token);
@@ -924,7 +930,7 @@ class AppointmentController extends Controller
             try {
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
-                    ->where('id', $appointmentRequestId)
+                    ->kwhere('id', $appointmentRequestId)
                     ->update([
                         'isApproved' => 0,
                         'isCancel' => 1,

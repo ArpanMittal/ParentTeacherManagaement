@@ -524,6 +524,11 @@ class CalendarEventController extends Controller
         $gradeName = $gradeDetails->grade_name;
         $reasonOfAppointment = $appointmentRequest->reasonOfAppointment;
         $cancellationReason = $appointmentRequest->cancellationReason;
+        $requestType = $appointmentRequest->requestType;
+        if($requestType == "Parent Request")
+            $requestedBy = "Parent";
+        else
+            $requestedBy = "You";
         $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
         $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
         $booked= $slot->isBooked;
@@ -562,6 +567,7 @@ class CalendarEventController extends Controller
             'cancellationReason'=>$cancellationReason,
             'start'=>$start,
             'end'=>$end,
+            'requestedBy'=>$requestedBy,
             'status'=>$status
         );
 
