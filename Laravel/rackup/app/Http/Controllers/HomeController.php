@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Student;
 use App\UserDetails;
 use Illuminate\Http\Request;
+use Mockery\CountValidator\Exception;
 use Psy\Exception\ErrorException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -74,18 +75,6 @@ class HomeController extends Controller
     
    public function doLogin(Request $request)
     {
-       /*$validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect('login')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
-        } else {
-            $userdata = array(
-                'username'     => Input::get('email'),
-                'password'  => Input::get('password')
-            );
-            return var_export(Input::get('email'));*/
         $rules = array(
             'username'    => 'required|email',
             'password' => 'required|alphaNum'
@@ -124,11 +113,21 @@ class HomeController extends Controller
             ->first();
 
         if (!is_null($user)) {
+            $userId = $user->id;
+            $gcmRegistrationId = $request->get('gcmId');
+            try{
+                \DB::beginTransaction();
+                \DB::table('userDetails')
+                    ->where('user_id', $userId)
+                    ->update(['gcmRegistrationId' => $gcmRegistrationId]);
+            }catch (Exception $e){
+                \DB::rollback();
+            }
+            \DB::commit();
+            
             try {
                 $token = JWTAuth::fromUser($user);
                 $user = JWTAuth::toUser($token);
-
-                $userId = $user->id;
                 $userDetails = UserDetails::where('user_id', $userId)->first();
                 $studentDetails = Student::where('parent_id', $userId)->first();
 
@@ -155,6 +154,31 @@ class HomeController extends Controller
         }
     }
 
+//    Save gcm registration Id of users
+    public function saveGcmRegistrationId(Request $request){
+        try {
+            $token = $request->get('token');
+            $user = JWTAuth::toUser($token);
+            $userId = $user->id;
+        }catch (TokenExpiredException $e){
+            return Response::json (['Token expired'],498);
+        }catch (TokenInvalidException $e){
+            return Response::json (['Token invalid']);
+        }
+        $gcmRegistrationId = $request->get('gcmRegistrationId');
+        try{
+            \DB::beginTransaction();
+            DB::table('userDetails')
+                ->where('id', $userId)
+                ->update([
+                    'gcmRegistrationId'=>$gcmRegistrationId,
+                ]);
+        }catch (Exception $e){
+            \DB::rollback();
+        }
+        \DB::commit();
+    }
+
     public function editProfile(Request $request){
         try {
             $token = $request->get('token');
@@ -165,18 +189,37 @@ class HomeController extends Controller
         }catch (TokenInvalidException $e){
             return Response::json (['Token invalid']);
         }
-        $parentName = $request->input('parentName');
-        $contact = $request->input('contact');
-        $address = $request->input('address');
-        $studentName  =$request->input('studentName');
-        $dob = $request->input('dob');
+        $parentName = $request->get('parentName');
+        $parentGender = $request->get('parentGender');
+        $contact = $request->get('contact');
+        $address = $request->get('address');
+        $studentName  =$request->get('studentName');
+        $dob = $request->get('dob');
+        $studentGender = $request->get('studentGender');
+        $username = $request->get('username');
 
-        \DB::table('userDetails')
-            ->where('user_id',$userId)
-            ->update([
-                    'contact' => $contact,
-                    'address'=>$address
-                ]
-            );
+        try{
+            \DB::beginTransaction();
+            \DB::table('userDetails')
+                ->where('user_id',$userId)
+                ->update([
+                        'name'=>$parentName,
+                        'gender'=>$parentGender,
+                        'address'=>$address,
+                        'contact' => $contact
+                    ]
+                );
+            \DB::table('students')
+                ->where('parent_id',$userId)
+                ->update([
+                        'name'=>$studentName,
+                        'dob'=>$dob,
+                        'gender'=>$studentGender
+                    ]
+                );
+        }catch (Exception $e){
+            \DB::rollback();
+        }
+        \DB::commit();
     }
 }
