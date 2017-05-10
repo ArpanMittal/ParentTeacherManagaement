@@ -925,10 +925,15 @@ class AppointmentController extends Controller
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
                     ->where('id', $appointmentRequestId)
-                    ->update(
-                        ['isApproved' => 0,
-                            'isCancel' => 1,
-                            'isAwaited' => 0]);
+                    ->update([
+                        'isApproved' => 0,
+                        'isCancel' => 1,
+                        'isAwaited' => 0
+                    ]);
+                DB::table('teacherAppointmentsSlots')
+                    ->where('id', $appointmentSlotId)
+                    ->update(['isBooked' => 0]);
+                
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;
