@@ -933,7 +933,7 @@ class AppointmentController extends Controller
             try {
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
-                    ->kwhere('id', $appointmentRequestId)
+                    ->where('id', $appointmentRequestId)
                     ->update([
                         'isApproved' => 0,
                         'isCancel' => 1,
