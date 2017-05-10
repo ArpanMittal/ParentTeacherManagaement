@@ -166,28 +166,75 @@ class CalendarEventController extends Controller
         $slotDay = Input::get('day');
         $slotDayNo= date('w', strtotime($slotDay));
         $diffDays = $slotDayNo-$dayofweek;
+        global  $addDay;
         if ($diffDays<0){
-            if ($diffDays==-1){
-                $addDay = 6;
+            switch ($diffDays){
+                case -1 : $addDay = 6;
+                    break;
+                case -2 : $addDay = 5;
+                    break;
+                case -3 : $addDay = 4;
+                    break;
+                case -4 : $addDay = 3;
+                    break;
+                case -5 : $addDay = 2;
+                    break;
             }
-            elseif ($diffDays==-2){
-                $addDay = 5;
-            }
-            elseif ($diffDays==-3){
-                $addDay= 4;
-            }
-            elseif ($diffDays==-4){
-                $addDay =3;
-            }
-            elseif ($diffDays==-5){
-                $addDay = 2;
-            }
-            else{
-                $addDay = 1;
-            }
+//            if ($diffDays==-1){
+//                $addDay = 6;
+//            }
+//            elseif ($diffDays==-2){
+//                $addDay = 5;
+//            }
+//            elseif ($diffDays==-3){
+//                $addDay= 4;
+//            }
+//            elseif ($diffDays==-4){
+//                $addDay =3;
+//            }
+//            elseif ($diffDays==-5){
+//                $addDay = 2;
+//            }
         }
-        else
-            $addDay=7;
+        else{
+            switch ($diffDays){
+                case 0 : $addDay = 7;
+                    break;
+                case 1 : $addDay = 1;
+                    break;
+                case 2 : $addDay = 2;
+                    break;
+                case 3 : $addDay = 3;
+                    break;
+                case 4 : $addDay = 4;
+                    break;
+                case 5 : $addDay = 5;
+                    break;
+                case 6 : $addDay = 6;
+                    break;
+
+            }
+
+
+//            if ($diffDays==1){
+//                $addDay = 1;
+//            }
+//            elseif ($diffDays==2){
+//                $addDay = 2;
+//            }
+//            elseif ($diffDays==3){
+//                $addDay= 3;
+//            }
+//            elseif ($diffDays==4){
+//                $addDay =4;
+//            }
+//            elseif ($diffDays==5){
+//                $addDay = 5;
+//            }
+//            else{
+//                $addDay = 7;
+//            }
+        }
 //        $slotDate = $startDate->addDays($addDay);
         $startTime = Input::get('start');
         $startTime = Carbon::parse($startTime);
