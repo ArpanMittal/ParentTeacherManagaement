@@ -47,6 +47,14 @@ class SchoolEventController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = array(
+            'title' => 'required',
+            'startDate' => 'required|date|after:today',
+            'startTime'=>'required|date_format:H:i',
+            'endDate'=>'required|date|after_or_equal:startDate',
+            'endTime'=>'required|after:startTime|date_format:H:i'
+        );
+        $this->validate($request,$rules);
        try{
            \DB::beginTransaction();
            $startDate = Carbon::parse($request->input("startDate"));
@@ -131,6 +139,12 @@ class SchoolEventController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $rules = array(
+            'startDate' => 'date|after:today',
+            'startTime'=>'date_format:H:i',
+            'endDate'=>'date|after_or_equal:startDate',
+            'endTime'=>'after:startTime|date_format:H:i'
+        );
         try{
             \DB::beginTransaction();
             $school_event = CalendarEvent::findOrFail($id);

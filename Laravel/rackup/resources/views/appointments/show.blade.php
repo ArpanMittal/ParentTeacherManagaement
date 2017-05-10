@@ -18,6 +18,10 @@
                     <p class="form-control-static">{{$appointmentDetails['parentName']}}</p>
                 </div>
                 <div class="form-group">
+                    <label for="parentContact">PARENT CONTACT</label>
+                    <p class="form-control-static">{{$appointmentDetails['parentContact']}}</p>
+                </div>
+                <div class="form-group">
                     <label for="studentId">STUDENT ID</label>
                     <p class="form-control-static">{{$appointmentDetails['studentId']}}</p>
                 </div>
@@ -29,10 +33,10 @@
                     <label for="grade">GRADE</label>
                     <p class="form-control-static">{{$appointmentDetails['grade']}}</p>
                 </div>
-                <div class="form-group">
-                    <label for="title">TITLE</label>
-                    <p class="form-control-static">{{$appointmentDetails['title']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="title">TITLE</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['title']}}</p>--}}
+                {{--</div>--}}
                 @if($appointmentDetails['status']=="Confirmed" || $appointmentDetails['status']=="Awaited")
                     <div class="form-group">
                         <label for="reasonOfAppointment">REASON OF APPOINTMENT</label>

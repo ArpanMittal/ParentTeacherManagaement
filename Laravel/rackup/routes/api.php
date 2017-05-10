@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/login','HomeController@returnToken')->name('login');
 Route::post('/getContent','UploadController@getContent')->name('getContent');
 Route::post('/slotDetails','AppointmentController@sendAppointmentSlotDetails')->name('slotDetails');
-
 Route::post('/bookAppointments','AppointmentController@bookAppointments')->name('bookAppointments');
+Route::post('/sendEvent','AppointmentController@sendEvent')->name('sendEvent');
+Route::post('/updateEvent','AppointmentController@updateEvent')->name('updateEvent');
 //Route::post('/uploadLink','UploadController@returnUploadLink');

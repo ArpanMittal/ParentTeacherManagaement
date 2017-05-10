@@ -16,6 +16,7 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Mockery\CountValidator\Exception;
+use Psy\Test\Exception\RuntimeExceptionTest;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
@@ -29,6 +30,7 @@ use Illuminate\Validation\Rules\In;
 use App\CalendarEvent;
 use Tymon\JWTAuth\Providers\Storage\StorageInterface;
 use Carbon\Carbon;
+
 
 class AppointmentController extends Controller
 {
@@ -292,7 +294,7 @@ class AppointmentController extends Controller
         );
         // Google Cloud Messaging GCM API Key
 
-        define("GOOGLE_API_KEY", env('GCM_SERVER_KEY'));
+        define("GOOGLE_API_KEY", "AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
 
         $headers = array(
             'Authorization: key=' . GOOGLE_API_KEY,
@@ -816,7 +818,7 @@ class AppointmentController extends Controller
         return Response::json(HttpResponse::HTTP_OK);
     }
 
-    public function xyz(Request $request){
+    public function sendEvent(Request $request){
         try {
             $token = $request->get('token');;
             $user = JWTAuth::toUser($token);
@@ -830,6 +832,9 @@ class AppointmentController extends Controller
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
         $appointmentSlotId = $appointmentSlot->id;
         $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$appointmentSlotId)->first();
+        $teacher_id = $appointmentRequest->teacher_id;
+        $teacherDetails = UserDetails::where('user_id',$teacher_id)->first();
+        $teacher_name = $teacherDetails->name();
         $teacherContact = $appointmentRequest->contactNo;
         $booked = $appointmentSlot->isBooked;
         $cancelled = $appointmentRequest->isCancel;
@@ -847,10 +852,84 @@ class AppointmentController extends Controller
         else{
             $status = "Invalid Status";
         }
+        $event = CalendarEvent::where('id',$eventId)->first();
+        $start = $event->start;
+        $start = Carbon::parse($start);
+        $startDate = $start->toDateString();
+        $startTime = $start->toTimeString();
+        $end = $event->end;
+        $end=Carbon::parse($end);
+        $endDate = $end->toDateString();
+        $endTime = $end->toTimeString();
+        $requestType = $appointmentRequest->requestType;
         $appointmentDetails = array(
-            'status'=>$status,
-            'teacherContact'=>$teacherContact
+            'id' => $eventId,
+            'teacherId' => $teacher_id,
+            'teacherName' => $teacher_name,
+            'title' => $status,
+            'startDate'=>$startDate,
+            'endDate'=>$endDate,
+            'startTime' => $startTime,
+            'endTime' => $endTime,
+            'requestType'=>$requestType,
+            'contact'=>$teacherContact
         );
         return Response::json([$appointmentDetails,HttpResponse::HTTP_OK]);
+    }
+
+    public function updateEvent (Request $request){
+        try {
+            $token = $request->get('token');;
+            $user = JWTAuth::toUser($token);
+            $userId = $user->id;
+        }catch (TokenExpiredException $e){
+            return Response::json (['Token expired'],498);
+        }catch (TokenInvalidException $e){
+            return Response::json (['Token invalid']);
+        }
+        $eventId = $request->get('eventId');
+        $status = $request->get("status");
+
+        $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
+        $appointmentSlotId = $appointmentSlot->id;
+        $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$appointmentSlotId)->first();
+        $appointmentRequestId = $appointmentRequest->id;
+        if($status =="confirmed"){
+            try {
+                DB::beginTransaction();
+                DB::table('appointmentRequests')
+                    ->where('id', $appointmentRequestId)
+                    ->update(
+                        ['isApproved' => 1,
+                            'isCancel' => 0,
+                            'isAwaited' => 0]);
+            }catch (Exception $e){
+                DB::rollback();
+                return Response::json(HttpResponse::HTTP_CONFLICT);
+            }
+            DB::commit();
+            return Response::json(HttpResponse::HTTP_OK);
+        }
+        elseif ($status=="cancelled"){
+            try {
+                DB::beginTransaction();
+                DB::table('appointmentRequests')
+                    ->where('id', $appointmentRequestId)
+                    ->update(
+                        ['isApproved' => 0,
+                            'isCancel' => 1,
+                            'isAwaited' => 0]);
+            }catch (Exception $e){
+                DB::rollback();
+                return Response::json(HttpResponse::HTTP_CONFLICT);
+            }
+            DB::commit();
+            return Response::json(HttpResponse::HTTP_OK);
+        }
+        else{
+           return Response::json("invalid status"); 
+        }
+        
+        
     }
 }

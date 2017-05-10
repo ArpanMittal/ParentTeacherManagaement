@@ -18,6 +18,11 @@
                     <label for="parentName">PARENT NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['parentName']}}</p>
                 </div>
+
+                <div class="form-group">
+                    <label for="parentContact">PARENT CONTACT</label>
+                    <p class="form-control-static">{{$appointmentDetails['parentContact']}}</p>
+                </div>
                 <div class="form-group">
                     <label for="studentId">STUDENT ID</label>
                     <p class="form-control-static">{{$appointmentDetails['studentId']}}</p>
@@ -42,9 +47,14 @@
                     <label for="end">END</label>
                     <p class="form-control-static">{{$appointmentDetails['end']}}</p>
                 </div>
-                <div class="form-group">
+                <div class="form-group {{$errors->has('cancellationReason')?'has-error':''}}">
                     <label for="cancellationReason">Reason for Cancellation</label>
-                    <input type="text" name="cancellationReason" class="form-control" value=""/>
+                    <input type="text" name="cancellationReason" class="form-control" value="" required autofocus/>
+                    @if ($errors->has('cancellationReason'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('cancellationReason') }}</strong>
+                        </span>
+                    @endif
                 </div>
                 <a class="btn btn-default" href="{{ route('appointments.index') }}">Back</a>
                 <button class="btn btn-danger" type="submit" >Cancel</button>

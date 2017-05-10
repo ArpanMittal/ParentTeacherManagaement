@@ -27,6 +27,10 @@
                     <p class="form-control-static">{{$appointmentDetails['parentName']}}</p>
                 </div>
                 <div class="form-group">
+                    <label for="parentContact">PARENT CONTACT</label>
+                    <p class="form-control-static">{{$appointmentDetails['parentContact']}}</p>
+                </div>
+                <div class="form-group">
                     <label for="studentId">STUDENT ID</label>
                     <p class="form-control-static">{{$appointmentDetails['studentId']}}</p>
                 </div>
@@ -79,9 +83,14 @@
                 <div class="modal-body">
                     <form id="contactNumber" method="post" role="form" action="{{ route('changeContactNumber',$appointmentDetails['requestId'])}}">
                         {{csrf_field()}}
-                        <div class="form-group" id="contactNo">
+                        <div class="form-group {{$errors->has('contact')?'has-error':''}}" id="contactNo">
                             <label for="contact">Enter new Contact Number</label>
-                            <input type="text" id="contact" name="contact" class="form-control" value=""/>
+                            <input type="text" id="contact" name="contact" class="form-control" value=""  required autofocus/>
+                            @if ($errors->has('contact'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('contact') }}</strong>
+                                </span>
+                            @endif
                         </div>
                         <div class="form-group">
                             <button type="submit" id="change-contact" class="btn crud-submit btn-success">Change contact number</button>
@@ -89,7 +98,6 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>

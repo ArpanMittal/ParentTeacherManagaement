@@ -149,6 +149,15 @@ class CalendarEventController extends Controller
      */
     public function store(Request $request)
     {
+
+        $rules = array(
+            'teacherId' => 'required',
+            'day' => 'required',
+            'start'=>'required|date_format:H:i',
+            'end'=>'required|date_format:H:i|after:start',
+        );
+        $this->validate($request,$rules);
+
         $startDate=Carbon::today();
         $endDate=Carbon::today();
         $dayofweek = date('w', strtotime($startDate));
@@ -334,8 +343,14 @@ class CalendarEventController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function edit1($teacherId,$id)
+    public function edit1(Request $request,$teacherId,$id)
     {
+        $rules = array(
+            'start'=>'date_format:H:i',
+            'end'=>'date_format:H:i|after:start',
+        );
+        $this->validate($request,$rules);
+
         $calendarEvent = CalendarEvent::where('id',$id)->first();
         $startDateTime = $calendarEvent->start;
         $editDay = date('w',strtotime($startDateTime));

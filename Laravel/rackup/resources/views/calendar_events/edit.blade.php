@@ -33,13 +33,23 @@
                     <label for="day">DAY</label>
                     <p class="form-control-static">{{$calendar_event['day']}}</p>
                 </div>
-                <div class="form-group">
+                <div class="form-group {{$errors->has('start')?'has-error':''}}">
                     <label for="startTime">START TIME</label>
                     <input type="time" id="start" name="start" class="form-control" value="{{$calendar_event['startTime']}}"/>
+                    @if ($errors->has('start'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('start') }}</strong>
+                        </span>
+                    @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group {{$errors->has('end')?'has-error':''}}">
                     <label for="endTime">END TIME</label>
                     <input type="time" id="end" name="end" class="form-control" value="{{$calendar_event['endTime']}}"/>
+                    @if ($errors->has('end'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('end') }}</strong>
+                        </span>
+                    @endif
                 </div>
 
                 <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Back</a>
