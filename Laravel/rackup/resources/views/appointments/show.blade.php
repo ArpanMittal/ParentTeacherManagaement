@@ -64,10 +64,10 @@
 
                 <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
                 @if($appointmentDetails['status']=="Awaited")
-                    <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetails['requestId'])}}">Confirm</a>
+                    <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetails['requestId'])}}">Confirm Appointment</a>
                 @endif
                 @if($appointmentDetails['status']=="Confirmed" || $appointmentDetails['status']=="Awaited")
-                    <a class="btn btn-danger" href="{{ route('getCancel',$appointmentDetails['requestId'])}}">Cancel</a>
+                    <a class="btn btn-danger" href="{{ route('getCancel',$appointmentDetails['requestId'])}}">Cancel Appointment</a>
                 @endif
             </form>
         </div>
