@@ -932,11 +932,11 @@ class AppointmentController extends Controller
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;
-                return Response::json([$httpStatus]);
+                return Response::json(["Conflict",$httpStatus]);
             }
             DB::commit();
             $httpStatus = HttpResponse::HTTP_OK;
-            return Response::json([$httpStatus]);
+            return Response::json(["Success",$httpStatus]);
         }
         else{
            return Response::json(["invalid status"]);
