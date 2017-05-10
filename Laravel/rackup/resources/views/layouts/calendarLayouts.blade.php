@@ -33,8 +33,14 @@
             </button>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
+            @if(isset($user))
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('logout') }}">Logout</a></li>
+            </ul>
             <ul class="nav navbar-nav">
-                @if(isset($user))
+
+
                     @if($user->role_id==1)
                         <li><a href="/calendar">Show Calendar</a></li>
                         <li><a href="/calendar_events">Appointment Slots</a></li>
@@ -43,9 +49,10 @@
                     @if($user->role_id==4)
                         <li><a href="/teacherCalendar">Show Calendar</a></li>
                         <li><a href="/appointments">My Appointments</a></li>
+                        <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
                     @endif
-                @endif
             </ul>
+            @endif
         </div><!--/.nav-collapse -->
     </div>
 </nav>
