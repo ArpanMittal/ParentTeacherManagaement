@@ -62,7 +62,7 @@
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
 
-                <a class="btn btn-default" href="{{ route('appointments.index') }}">Back</a>
+                <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
                 @if($appointmentDetails['status']=="Awaited")
                     <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetails['requestId'])}}">Confirm</a>
                 @endif

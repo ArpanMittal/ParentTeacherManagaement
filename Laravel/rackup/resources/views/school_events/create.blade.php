@@ -57,7 +57,7 @@
                         </span>
                     @endif
                 </div>
-                <a class="btn btn-default" href="{{ route('school_events.index') }}">Back</a>
+                <a class="btn btn-default" href="{{ route('school_events.index') }}">Index</a>
                 <button class="btn btn-primary" type="submit" >Add New Event</button>
             </form>
         </div>

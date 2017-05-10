@@ -62,7 +62,7 @@
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
 
-                <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Back</a>
+                <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Index</a>
             </form>
         </div>
     </div>

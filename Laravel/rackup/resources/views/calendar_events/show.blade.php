@@ -38,7 +38,7 @@
                     <p class="form-control-static">{{$calendar_event['endTime']}}</p>
                 </div>
 
-            <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Back</a>
+            <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Index</a>
             <a class="btn btn-warning" href="{{ route('calendar_events.edit', $calendar_event['id']) }}">Edit</a>
             <form action="#/$calendar_event['id']" method="DELETE" style="display: inline;"
                   onsubmit="if(confirm('Delete? Are you sure?'))
