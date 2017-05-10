@@ -45,7 +45,21 @@ class EventController extends Controller
             $start = $databaseEvent->getStart();
             $end = $databaseEvent->getEnd();
             $eventType = $databaseEvent->eventType;
-            if($eventType=="Appointment"){
+            if($eventType=="School Function"){
+                $color=$databaseEvent->background_color;
+                $schoolEvents[$j++] = Calendar::event(
+                    $title,
+                    $isallDay,
+                    $start,
+                    $end,
+                    $id,
+                    [
+                        'color'=>$color,
+                        'url'=>'school_events/'.$id,
+                    ]
+                );
+            }
+            else{
                 $slot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
                 $slotId = $slot->id;
                 $teacherId = $slot->teacher_id;
@@ -56,7 +70,7 @@ class EventController extends Controller
                 if (is_null($appointmentRequest)){
                     if($start<$today){
                         $color= "Brown";
-                        $status="Past SLot";
+                        $status="Past Slot";
                     }
                     else{
                         $color ="Blue";
@@ -67,7 +81,7 @@ class EventController extends Controller
                     $awaited = $appointmentRequest->isAwaited;
                     $confirmed = $appointmentRequest->isApproved;
                     $cancelled = $appointmentRequest->isCancel;
-                    if ($booked==0 && $awaited==1 && $confirmed==0 && $cancelled==0){
+                    if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
                         $color = "Yellow";
                         $status = "Awaited";
                     }
@@ -84,12 +98,12 @@ class EventController extends Controller
                         $status="Past Booking";
                     }
                     else{
-                        $color ="Pink";
+                        $color ="Grey";
                         $status="Invalid";
                     }
                 }
                 $slots[$i++] = Calendar::event(
-                    $title.$teacherName.$status,
+                    $title.$teacherName.$status.$eventType,
                     $isallDay,
                     $start,
                     $end,
@@ -97,20 +111,6 @@ class EventController extends Controller
                     [
                         'color'=>$color,
                         'url'=>'calendar_events/'.$id,
-                    ]
-                );
-            }
-            else{
-                $color=$databaseEvent->background_color;
-                $schoolEvents[$j++] = Calendar::event(
-                    $title,
-                    $isallDay,
-                    $start,
-                    $end,
-                    $id,
-                    [
-                        'color'=>$color,
-                        'url'=>'school_events/'.$id,
                     ]
                 );
             }
@@ -147,6 +147,7 @@ class EventController extends Controller
             $start = $databaseEvent->getStart();
             $end = $databaseEvent->getEnd();
             $id = $databaseEvent->getId();
+            $eventType = $databaseEvent->eventType;
             $appointmentRequest=AppointmentRequest::where('teacherAppointmentsSlot_id',$slotId)->first();
             if (is_null($appointmentRequest)){
                 if($start<$today){
@@ -158,7 +159,7 @@ class EventController extends Controller
                     $status="Free Slot";
                 }
                 $freeSlots[$j++] = Calendar::event(
-                    $title.$status,
+                    $title.$status.$eventType,
                     $isallDay,
                     $start,
                     $end,
@@ -174,7 +175,7 @@ class EventController extends Controller
                 $awaited = $appointmentRequest->isAwaited;
                 $confirmed = $appointmentRequest->isApproved;
                 $cancelled = $appointmentRequest->isCancel;
-                if ($booked==0 && $awaited==1 && $confirmed==0 && $cancelled==0){
+                if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
                     $color = "Yellow";
                     $status="Awaited";
                 }
@@ -191,11 +192,11 @@ class EventController extends Controller
                     $status = "Past Booking";
                 }
                 else{
-                    $color= "Pink";
+                    $color= "Grey";
                     $status="Invalid";
                 }
                 $appointments[$i++] = Calendar::event(
-                    $title.$status,
+                    $status,
                     $isallDay,
                     $start,
                     $end,

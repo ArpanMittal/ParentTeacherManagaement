@@ -744,7 +744,7 @@ class AppointmentController extends Controller
             elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
                 $status = "Confirmed";
             }
-            elseif($booked==1 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+            elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
                 $status="Cancelled";
             }
             else{
@@ -846,7 +846,7 @@ class AppointmentController extends Controller
         elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
             $status = "Confirmed";
         }
-        elseif($booked==1 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+        elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
             $status="Cancelled";
         }
         else{
