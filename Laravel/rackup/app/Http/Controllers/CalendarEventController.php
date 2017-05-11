@@ -285,11 +285,11 @@ class CalendarEventController extends Controller
             }
             \DB::commit();
             return redirect(route('calendar_events.index'))
-                ->with('message', 'Slot added successfully');
+                ->with('success', 'Slot added successfully');
         }
         else{
             return redirect(route('calendar_events.index'))
-                ->with('message', 'Slot already exists');
+                ->with('failure', 'Slot already exists');
         }
 
 
@@ -455,7 +455,7 @@ class CalendarEventController extends Controller
                     }
                     else{
                         \DB::rollback();
-                        return redirect(route('calendar_events.index'))->with('message1', 'Cannot Update Slot due to appointment request.');
+                        return redirect(route('calendar_events.index'))->with('failure', 'Cannot Update Slot due to appointment request.');
                     }
                 }
                 else{
@@ -467,7 +467,7 @@ class CalendarEventController extends Controller
             \DB::rollback();
         }
         \DB::commit();
-        return redirect(route('calendar_events.index'))->with('message', 'Slot updated successfully.');
+        return redirect(route('calendar_events.index'))->with('success', 'Slot updated successfully.');
     }
 
     /**
@@ -501,7 +501,7 @@ class CalendarEventController extends Controller
                     }
                     else{
                         \DB::rollback();
-                        return redirect(route('calendar_events.index'))->with('message1', 'Cannot Delete Slot due to appointment request.');
+                        return redirect(route('calendar_events.index'))->with('failure', 'Cannot Delete Slot due to appointment request.');
                     }
                 }
                 else{
@@ -513,7 +513,7 @@ class CalendarEventController extends Controller
             \DB::rollback();
         }
         \DB::commit();
-        return redirect(route('calendar_events.index'))->with('message', 'Slot deleted successfully.');
+        return redirect(route('calendar_events.index'))->with('success', 'Slot deleted successfully.');
     }
     
     public function showAppointments($id,Request $request){
@@ -556,7 +556,7 @@ class CalendarEventController extends Controller
         elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
             $status = "Confirmed";
         }
-        elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+        elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
             $status="Cancelled";
         }
         else{

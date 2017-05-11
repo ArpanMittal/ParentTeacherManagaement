@@ -10,9 +10,16 @@
         <div class="col-md-12">
 
             <div>
-                @if (session('message'))
+                @if (session('failure'))
+                    <div class="alert alert-danger">
+                        {{ session('failure') }}
+                    </div>
+                @endif
+            </div>
+            <div>
+                @if (session('success'))
                     <div class="alert alert-success">
-                        {{ session('message') }}
+                        {{ session('success') }}
                     </div>
                 @endif
             </div>

@@ -85,7 +85,7 @@ class AppointmentController extends Controller
             elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
                 $status = "Confirmed";
             }
-            elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+            elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
                 $status="Cancelled";
             }
             else{
@@ -155,7 +155,7 @@ class AppointmentController extends Controller
         elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
             $status = "Confirmed";
         }
-        elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+        elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
             $status="Cancelled";
         }
         else{
@@ -499,9 +499,6 @@ class AppointmentController extends Controller
                ($endDateTime<$slotEnd && $endDateTime>$slotStart)){
                 if($teacherSlot->isBooked == 0){
                     $flag=1;
-                    $message = array("message"=>"Request of Appointment by $teacherName on $startDate /n from $startTime to $endTime.
-                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEventId);
-                     $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                     try{
                         \DB::beginTransaction();
                         \DB::table('teacherAppointmentsSlots')
@@ -529,24 +526,24 @@ class AppointmentController extends Controller
                         $apppointmentRequest->isApproved = 0;
                         $apppointmentRequest->requestType = "Teacher Request";
                         $apppointmentRequest->save();
+                        $message = array("message"=>"Request of Appointment by $teacherName on $startDate /n from $startTime to $endTime.
+                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
+                        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                     }catch (Exception $e){
                         \DB::rollback();
-                        return redirect(route('appointments.index'))->with('message', 'Could not send appointment request. Please try again');
+                        return redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');
                     }
                     \DB::commit();
                 }
                 else{
-                    return redirect(route('appointments.index'))->with('message','Slot is already booked');
+                    return redirect(route('appointments.index'))->with('failure','Slot is already booked');
                 }
             }
         }
         if ($flag == 1){
-            return redirect(route('appointments.index'))->with('message', 'Appointment Request Sent Successfully');
+            return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
         }
         else{
-            $message =array("message"=> "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
-                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEventId);
-            $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
             try{
                 \DB::beginTransaction();
                 $calendarEvent = new CalendarEvent();
@@ -571,12 +568,15 @@ class AppointmentController extends Controller
                 $apppointmentRequest->isApproved = 0;
                 $apppointmentRequest->requestType = "Teacher Request";
                 $apppointmentRequest->save();
+                $message =array("message"=> "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
+                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
+                $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
             }catch (Exception $e){
                 \DB::rollback();
-                return redirect(route('appointments.index'))->with('message', 'Could not send appointment request. Please try again');
+                return redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');
             }
             \DB::commit();
-            return redirect(route('appointments.index'))->with('message', 'Appointment Request Sent Successfully');
+            return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
         }
 
     }
@@ -757,7 +757,7 @@ class AppointmentController extends Controller
             elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
                 $status = 2;
             }
-            elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+            elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
                 $status=3;
             }
             else{
@@ -862,7 +862,7 @@ class AppointmentController extends Controller
             //confirmed
             $status = 2;
         }
-        elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+        elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
             //cancelled
             $status=3;
         }

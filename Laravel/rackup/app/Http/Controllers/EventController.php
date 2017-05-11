@@ -103,7 +103,7 @@ class EventController extends Controller
                         $color = "Green";
                         $status="Confirmed";
                     }
-                    elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+                    elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
                         $color="Red";
                         $status = "Cancelled";
                     }
@@ -202,7 +202,7 @@ class EventController extends Controller
                     $color = "Green";
                     $status="Confirmed";
                 }
-                elseif($booked==0 && $awaited==0 && $confirmed==0 && $cancelled==1) {
+                elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
                     $color="Red";
                     $status="Cancelled";
                 }
