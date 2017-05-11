@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\In;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -143,6 +144,61 @@ class CalendarEventController extends Controller
     }
 
 
+
+    function getDay($slotDay){
+        $startDate = Carbon::today();
+        $endDate = Carbon::today();
+        $dayofweek = date('w', strtotime($startDate));
+        $slotDayNo = date('w', strtotime($slotDay));
+        $diffDays = $slotDayNo - $dayofweek;
+        global $addDay;
+        if ($diffDays < 0) {
+            switch ($diffDays) {
+                case -1 :
+                    $addDay = 6;
+                    break;
+                case -2 :
+                    $addDay = 5;
+                    break;
+                case -3 :
+                    $addDay = 4;
+                    break;
+                case -4 :
+                    $addDay = 3;
+                    break;
+                case -5 :
+                    $addDay = 2;
+                    break;
+            }
+        }
+        else {
+            switch ($diffDays) {
+                case 0 :
+                    $addDay = 7;
+                    break;
+                case 1 :
+                    $addDay = 1;
+                    break;
+                case 2 :
+                    $addDay = 2;
+                    break;
+                case 3 :
+                    $addDay = 3;
+                    break;
+                case 4 :
+                    $addDay = 4;
+                    break;
+                case 5 :
+                    $addDay = 5;
+                    break;
+                case 6 :
+                    $addDay = 6;
+                    break;
+
+            }
+        }
+        return array('addDay'=>$addDay,'startDate'=>$startDate,'endDate'=>$endDate);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -155,128 +211,87 @@ class CalendarEventController extends Controller
         $rules = array(
             'teacherId' => 'required',
             'day' => 'required',
-            'start'=>'required|date_format:H:i',
-            'end'=>'required|date_format:H:i|after:start',
+            'start' => 'required|date_format:H:i',
+            'end' => 'required|date_format:H:i|after:start',
         );
-        $this->validate($request,$rules);
+        $this->validate($request, $rules);
 
-        $startDate=Carbon::today();
-        $endDate=Carbon::today();
-        $dayofweek = date('w', strtotime($startDate));
+        $teacherId =Input::get("teacherId");
         $slotDay = Input::get('day');
-        $slotDayNo= date('w', strtotime($slotDay));
-        $diffDays = $slotDayNo-$dayofweek;
-        global  $addDay;
-        if ($diffDays<0){
-            switch ($diffDays){
-                case -1 : $addDay = 6;
-                    break;
-                case -2 : $addDay = 5;
-                    break;
-                case -3 : $addDay = 4;
-                    break;
-                case -4 : $addDay = 3;
-                    break;
-                case -5 : $addDay = 2;
-                    break;
-            }
-//            if ($diffDays==-1){
-//                $addDay = 6;
-//            }
-//            elseif ($diffDays==-2){
-//                $addDay = 5;
-//            }
-//            elseif ($diffDays==-3){
-//                $addDay= 4;
-//            }
-//            elseif ($diffDays==-4){
-//                $addDay =3;
-//            }
-//            elseif ($diffDays==-5){
-//                $addDay = 2;
-//            }
-        }
-        else{
-            switch ($diffDays){
-                case 0 : $addDay = 7;
-                    break;
-                case 1 : $addDay = 1;
-                    break;
-                case 2 : $addDay = 2;
-                    break;
-                case 3 : $addDay = 3;
-                    break;
-                case 4 : $addDay = 4;
-                    break;
-                case 5 : $addDay = 5;
-                    break;
-                case 6 : $addDay = 6;
-                    break;
-
-            }
-
-
-//            if ($diffDays==1){
-//                $addDay = 1;
-//            }
-//            elseif ($diffDays==2){
-//                $addDay = 2;
-//            }
-//            elseif ($diffDays==3){
-//                $addDay= 3;
-//            }
-//            elseif ($diffDays==4){
-//                $addDay =4;
-//            }
-//            elseif ($diffDays==5){
-//                $addDay = 5;
-//            }
-//            else{
-//                $addDay = 7;
-//            }
-        }
-//        $slotDate = $startDate->addDays($addDay);
         $startTime = Input::get('start');
+        $endTime = Input::get('end');
+
+        $arr = $this->getDay($slotDay);
+        $addDay = $arr['addDay'];
+        $startDate = $arr['startDate'];
+        $endDate = $arr['endDate'];
+
         $startTime = Carbon::parse($startTime);
         $hours = (double)$startTime->format('H');
         $minutes = (double)$startTime->format('i');
         $seconds = (double)$startTime->format('s');
         $startDateTime = $startDate->addDays($addDay);
-        $startDateTime = date_time_set($startDateTime,$hours,$minutes,$seconds);
-        $endTime = Input::get('end');
+        $startDateTime = date_time_set($startDateTime, $hours, $minutes,$seconds);
+        $startDate = Carbon::parse($startDateTime)->toDateString();
+
         $endTime = Carbon::parse($endTime);
         $hours = (double)$endTime->format('H');
         $minutes = (double)$endTime->format('i');
         $seconds = (double)$endTime->format('s');
         $endDateTime = $endDate->addDays($addDay);
-        $endDateTime = date_time_set($endDateTime,$hours,$minutes,$seconds);
-        $i = 0;
-       while ($i!=52){
-            try{
+        $endDateTime = date_time_set($endDateTime, $hours, $minutes, $seconds);
+
+        $calendarEvent1 = \DB::table('calendar_events')
+            ->join('teacherAppointmentsSlots','teacherAppointmentsSlots.calendarEventsId','calendar_events.id')
+            ->where('teacherAppointmentsSlots.teacher_id',$teacherId)
+            ->whereDate('calendar_events.start',$startDate)
+            ->get();
+
+        $calendarEvent2 = \DB::table('calendar_events')
+            ->join('teacherAppointmentsSlots','teacherAppointmentsSlots.calendarEventsId','calendar_events.id')
+            ->where('teacherAppointmentsSlots.teacher_id',$teacherId)
+            ->whereDate('calendar_events.start',$startDate)
+            ->where(function($query) use($endDateTime,$startDateTime){
+                $query->where('calendar_events.start','>',$endDateTime)
+                    ->orwhere('calendar_events.end','<',$startDateTime);
+            })->get();
+
+        //Insert if not empty
+        if ($calendarEvent1->isEmpty() || $calendarEvent2->isNotEmpty())
+        {
+            $i = 0;
+            try {
                 \DB::beginTransaction();
-                $calendar_event = new CalendarEvent();
-                $calendar_event->title= 5;
-                $calendar_event->start= $startDateTime;
-                $calendar_event->end= $endDateTime;
-                $calendar_event->is_all_day = 0;
-                $calendar_event->background_color = "blue";
-                $calendar_event->eventType = "Teacher Appointment";
-                $calendar_event->save();
-                $teacherSlots = new TeacherAppointmentSlots();
-                $teacherSlots->teacher_id = $request->input("teacherId");
-                $teacherSlots->isBooked = 0;
-                $teacherSlots->calendarEventsId = $calendar_event->getId();
-                $teacherSlots->save();
-            }catch (Exception $e){
+                while ($i != 52) {
+                    $calendar_event = new CalendarEvent();
+                    $calendar_event->title = 5;
+                    $calendar_event->start = $startDateTime;
+                    $calendar_event->end = $endDateTime;
+                    $calendar_event->is_all_day = 0;
+                    $calendar_event->background_color = "blue";
+                    $calendar_event->eventType = "Teacher Appointment";
+                    $calendar_event->save();
+                    $teacherSlots = new TeacherAppointmentSlots();
+                    $teacherSlots->teacher_id = $teacherId;
+                    $teacherSlots->isBooked = 0;
+                    $teacherSlots->calendarEventsId = $calendar_event->getId();
+                    $teacherSlots->save();
+                    $i++;
+                    $startDateTime->addDays(7);
+                    $endDateTime->addDays(7);
+                }
+            } catch (Exception $e) {
                 \DB::rollBack();
             }
             \DB::commit();
-           $i++;
-           $startDateTime->addDays(7);
-           $endDateTime->addDays(7);
+            return redirect(route('calendar_events.index'))
+                ->with('message', 'Slot added successfully');
         }
-        return redirect(route('calendar_events.index'))
-            ->with('message', 'Slot added successfully');
+        else{
+            return redirect(route('calendar_events.index'))
+                ->with('message', 'Slot already exists');
+        }
+
 
     }
 

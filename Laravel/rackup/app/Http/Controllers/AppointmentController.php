@@ -256,7 +256,7 @@ class AppointmentController extends Controller
         $contactNo = $appointmentDetail->contactNo;
         $parentId = $appointmentDetail->parent_id;
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
-        $gcmRegistrationId = $parentDetails->gcmRegistrationId;
+        $gcmRegistrationId[0] = $parentDetails->gcmRegistrationId;
         $slotId = $appointmentDetail->teacherAppointmentsSlot_id;
         $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
         $teacherId = $slot->teacher_id;
@@ -269,8 +269,8 @@ class AppointmentController extends Controller
         $startTime = $start->toTimeString();
         $end = Carbon::parse($event->end);
         $endTime = $end->toTimeString();
-        $message = "Your appointment with $teacherName on $startDate from $startTime to $endTime has been confirmed.
-        Whatsapp Video Call Number : $contactNo";
+        $message = array("message"=>"Your appointment with $teacherName on $startDate from $startTime to $endTime has been confirmed.
+        Whatsapp Video Call Number : $contactNo","eventId"=>$eventId);
         $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         try {
             DB::beginTransaction();
@@ -289,19 +289,18 @@ class AppointmentController extends Controller
 
     }
     //generic php function to send GCM push notification
-    function sendPushNotificationToGCM($registatoin_ids, $message) {
-        return $registatoin_ids;
+    function sendPushNotificationToGCM($registration_ids, $message) {
         //Google cloud messaging GCM-API url
         $url='https://gcm-http.googleapis.com/gcm/send';
 
         //$url = 'fcm.googleapis.com/fcm/';
         $fields = array(
-            'registration_ids' => $registatoin_ids,
+            'registration_ids' => $registration_ids,
             'data' => $message,
         );
         // Google Cloud Messaging GCM API Key
 
-        define("GOOGLE_API_KEY", "AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
+        define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
 
         $headers = array(
             'Authorization: key=' . GOOGLE_API_KEY,
@@ -369,7 +368,7 @@ class AppointmentController extends Controller
         $slotId = $appointmentDetail->teacherAppointmentsSlot_id;
         $parentId = $appointmentDetail->parent_id;
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
-        $gcmRegistrationId = $parentDetails->gcmRegistrationId;
+        $gcmRegistrationId[0] = $parentDetails->gcmRegistrationId;
         $teacherId = $appointmentDetail->teacher_id;
         $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
         $teacherName = $teacherDetails->name;
@@ -388,7 +387,8 @@ class AppointmentController extends Controller
         $end = $calendarEventDetails->end;
         $end = Carbon::parse($end);
         $endTime = $end->toTimeString();
-        $message = "Your appointment with $teacherName on $startDate from $startTime to $endTime has been cancelled due to $cancellationReason";
+        $message = array("message"=>"Your appointment with $teacherName on $startDate from $startTime to $endTime
+         has been cancelled due to $cancellationReason","eventId"=>$calendarEventId);
         $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         try {
             DB::beginTransaction();
@@ -455,7 +455,7 @@ class AppointmentController extends Controller
             'parentId' => 'required',
             'startDate' => 'required|date|after:today',
             'startTime'=>'required|date_format:H:i',
-            'endDate'=>'required|date|after_or_equal:startDate',
+            //'endDate'=>'required|date|after_or_equal:startDate',
             'endTime'=>'required|after:startTime|date_format:H:i',
             'appointmentReason'=>'required',
             'contactNo'=>'required|digits:10',
@@ -465,18 +465,21 @@ class AppointmentController extends Controller
         $teacherName = $teacherDetails->name;
         $parentId = Input::get('parentId');
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
-        $gcmRegistrationId = $parentDetails->gcmRegistrationId;
+        $gcmRegistrationId[0] = $parentDetails->gcmRegistrationId;
 //        $title = Input::get('title');
         $appointmentReason = Input::get('appointmentReason');
         $contactNo = Input::get("contactNo");
-        $startDate = Carbon::parse(Input::get('startDate'));
+        $startDate = Input::get('startDate');
+        $startDate = Carbon::parse($startDate);
+        $endDate = $startDate;
+        $endDate = Carbon::parse($endDate);
         $startTime =Input::get('startTime');
         $startTime = Carbon::parse($startTime);
         $hours = (double)$startTime->format('H');
         $minutes = (double)$startTime->format('i');
         $seconds = (double)$startTime->format('s');
         $startDateTime = date_time_set($startDate,$hours,$minutes,$seconds);
-        $endDate = Carbon::parse(Input::get('endDate'));
+        //$endDate = Carbon::parse(Input::get('endDate'));
         $endTime =Input::get("endTime");
         $endTime = Carbon::parse($endTime);
         $hours = (double)$endTime->format('H');
@@ -496,9 +499,9 @@ class AppointmentController extends Controller
                ($endDateTime<$slotEnd && $endDateTime>$slotStart)){
                 if($teacherSlot->isBooked == 0){
                     $flag=1;
-                    $message = "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
-                     Whatsapp Video Call Number : $contactNo";
-                    $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                    $message = array("message"=>"Request of Appointment by $teacherName on $startDate /n from $startTime to $endTime.
+                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEventId);
+                     $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                     try{
                         \DB::beginTransaction();
                         \DB::table('teacherAppointmentsSlots')
@@ -541,8 +544,8 @@ class AppointmentController extends Controller
             return redirect(route('appointments.index'))->with('message', 'Appointment Request Sent Successfully');
         }
         else{
-            $message = "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
-                     Whatsapp Video Call Number : $contactNo";
+            $message =array("message"=> "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
+                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEventId);
             $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
             try{
                 \DB::beginTransaction();
@@ -772,7 +775,6 @@ class AppointmentController extends Controller
                 'requestType'=>$requestType
             );
         }
-        
         return Response::json([$calendar_events,$appointmentData, HttpResponse::HTTP_OK]);
     }
 
@@ -878,6 +880,10 @@ class AppointmentController extends Controller
         $endDate = $end->toDateString();
         $endTime = $end->toTimeString();
         $requestType = $appointmentRequest->requestType;
+        if($status == 3)
+            $reason = $appointmentRequest->cancellationReason;
+        else
+            $reason = $appointmentRequest->reasonOfAppointment;
         $appointmentDetails = array(
             'id' => $eventId,
             'teacherId' => $teacher_id,
@@ -888,7 +894,8 @@ class AppointmentController extends Controller
             'startTime' => $startTime,
             'endTime' => $endTime,
             'requestType'=>$requestType,
-            'contact'=>$teacherContact
+            'contact'=>$teacherContact,
+            'reason'=>$reason
         );
         return Response::json([$appointmentDetails,HttpResponse::HTTP_OK]);
     }
@@ -904,6 +911,7 @@ class AppointmentController extends Controller
             return Response::json (['Token invalid']);
         }
         $eventId = $request->get('eventId');
+        $cancellationReason = $request->get('cancellationReason');
         $status = $request->get("status");
 
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
@@ -938,7 +946,8 @@ class AppointmentController extends Controller
                     ->update([
                         'isApproved' => 0,
                         'isCancel' => 1,
-                        'isAwaited' => 0
+                        'isAwaited' => 0,
+                        'cancellationReason'=>$cancellationReason
                     ]);
                 DB::table('teacherAppointmentsSlots')
                     ->where('id', $appointmentSlotId)

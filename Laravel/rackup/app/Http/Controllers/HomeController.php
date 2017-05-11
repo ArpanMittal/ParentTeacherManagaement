@@ -115,16 +115,17 @@ class HomeController extends Controller
         if (!is_null($user)) {
             $userId = $user->id;
             $gcmRegistrationId = $request->get('gcmRegistrationId');
-            try{
-                \DB::beginTransaction();
-                \DB::table('userDetails')
-                    ->where('user_id', $userId)
-                    ->update(['gcmRegistrationId' => $gcmRegistrationId]);
-            }catch (Exception $e){
-                \DB::rollback();
+            if (!is_null($gcmRegistrationId)){
+                try{
+                    \DB::beginTransaction();
+                    \DB::table('userDetails')
+                        ->where('user_id', $userId)
+                        ->update(['gcmRegistrationId' => $gcmRegistrationId]);
+                }catch (Exception $e){
+                    \DB::rollback();
+                }
+                \DB::commit();
             }
-            \DB::commit();
-            
             try {
                 $token = JWTAuth::fromUser($user);
                 $user = JWTAuth::toUser($token);

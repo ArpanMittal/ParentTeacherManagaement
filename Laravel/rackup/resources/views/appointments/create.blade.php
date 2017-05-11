@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="form-group {{$errors->has('startDate')?'has-error':''}}">
-                    <label for="startDate">Start Date</label>
+                    <label for="startDate">Date</label>
                     <input type="date" name="startDate" class="form-control" value=""  required autofocus/>
                     @if ($errors->has('startDate'))
                         <span class="help-block">
@@ -50,15 +50,15 @@
                     @endif
                 </div>
 
-                <div class="form-group {{$errors->has('endDate')?'has-error':''}}">
-                    <label for="endDate">End Date</label>
-                    <input type="date" name="endDate" class="form-control" value=""  required autofocus/>
-                    @if ($errors->has('endDate'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('endDate') }}</strong>
-                        </span>
-                    @endif
-                </div>
+                {{--<div class="form-group {{$errors->has('endDate')?'has-error':''}}">--}}
+                    {{--<label for="endDate">End Date</label>--}}
+                    {{--<input type="date" name="endDate" class="form-control" value=""  required autofocus/>--}}
+                    {{--@if ($errors->has('endDate'))--}}
+                        {{--<span class="help-block">--}}
+                            {{--<strong>{{ $errors->first('endDate') }}</strong>--}}
+                        {{--</span>--}}
+                    {{--@endif--}}
+                {{--</div>--}}
 
                 <div class="form-group {{$errors->has('endTime')?'has-error':''}}">
                     <label for="endTime">End Time</label>
