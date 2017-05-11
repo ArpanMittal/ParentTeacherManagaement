@@ -47,6 +47,7 @@ class AppointmentController extends Controller
 
         $appointmentRequests = AppointmentRequest::where('teacher_id',$id)
             ->orderBy('requestType')
+            ->orderBy('id','desc')
             ->get();
         $i=0;
         $appointmentDetails = array();
@@ -527,7 +528,7 @@ class AppointmentController extends Controller
                         $apppointmentRequest->requestType = "Teacher Request";
                         $apppointmentRequest->save();
                         $message = array("message"=>"Request of Appointment by $teacherName on $startDate /n from $startTime to $endTime.
-                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
+                        Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
                         $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                     }catch (Exception $e){
                         \DB::rollback();
