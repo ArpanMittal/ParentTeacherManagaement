@@ -498,7 +498,7 @@ class AppointmentController extends Controller
                     $flag=1;
                     $message = "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
                      Whatsapp Video Call Number : $contactNo";
-                    sendPushNotificationToGCM($gcmRegistrationId,$message);
+                    $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                     try{
                         \DB::beginTransaction();
                         \DB::table('teacherAppointmentsSlots')
