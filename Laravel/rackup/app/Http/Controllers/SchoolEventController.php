@@ -6,6 +6,7 @@ use App\CalendarEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Mockery\CountValidator\Exception;
+use Illuminate\Support\Facades\Input;
 
 class SchoolEventController extends Controller
 {
@@ -51,18 +52,29 @@ class SchoolEventController extends Controller
             'title' => 'required',
             'startDate' => 'required|date|after:today',
             'startTime'=>'required|date_format:H:i',
-            'endDate'=>'required|date|after_or_equal:startDate',
+//            'endDate'=>'required|date|after_or_equal:startDate',
             'endTime'=>'required|after:startTime|date_format:H:i'
         );
         $this->validate($request,$rules);
        try{
            \DB::beginTransaction();
-           $startDate = Carbon::parse($request->input("startDate"));
-           $startTime = $request->input("startTime");
-           $startDateTime = $startDate->addHours($startTime);
-           $endDate = Carbon::parse($request->input("endDate"));
-           $endTime = $request->input("endTime");
-           $endDateTime = $endDate->addHours($endTime);
+           $startDate = Input::get('startDate');
+           $startDate = Carbon::parse($startDate);
+           $endDate = $startDate;
+           $endDate = Carbon::parse($endDate);
+           $startTime =Input::get('startTime');
+           $startTime = Carbon::parse($startTime);
+           $hours = (double)$startTime->format('H');
+           $minutes = (double)$startTime->format('i');
+           $seconds = (double)$startTime->format('s');
+           $startDateTime = date_time_set($startDate,$hours,$minutes,$seconds);
+           //$endDate = Carbon::parse(Input::get('endDate'));
+           $endTime =Input::get("endTime");
+           $endTime = Carbon::parse($endTime);
+           $hours = (double)$endTime->format('H');
+           $minutes = (double)$endTime->format('i');
+           $seconds = (double)$endTime->format('s');
+           $endDateTime = date_time_set($endDate,$hours,$minutes,$seconds);
            $school_event = new CalendarEvent();
 
            $school_event->title            = $request->input("title");
@@ -142,19 +154,30 @@ class SchoolEventController extends Controller
         $rules = array(
             'startDate' => 'date|after:today',
             'startTime'=>'date_format:H:i',
-            'endDate'=>'date|after_or_equal:startDate',
+//            'endDate'=>'date|after_or_equal:startDate',
             'endTime'=>'after:startTime|date_format:H:i'
         );
         try{
             \DB::beginTransaction();
             $school_event = CalendarEvent::findOrFail($id);
 
-            $startDate = Carbon::parse($request->input("startDate"));
-            $startTime = $request->input("startTime");
-            $startDateTime = $startDate->addHours($startTime);
-            $endDate = Carbon::parse($request->input("endDate"));
-            $endTime = $request->input("endTime");
-            $endDateTime = $endDate->addHours($endTime);
+            $startDate = Input::get('startDate');
+            $startDate = Carbon::parse($startDate);
+            $endDate = $startDate;
+            $endDate = Carbon::parse($endDate);
+            $startTime =Input::get('startTime');
+            $startTime = Carbon::parse($startTime);
+            $hours = (double)$startTime->format('H');
+            $minutes = (double)$startTime->format('i');
+            $seconds = (double)$startTime->format('s');
+            $startDateTime = date_time_set($startDate,$hours,$minutes,$seconds);
+            //$endDate = Carbon::parse(Input::get('endDate'));
+            $endTime =Input::get("endTime");
+            $endTime = Carbon::parse($endTime);
+            $hours = (double)$endTime->format('H');
+            $minutes = (double)$endTime->format('i');
+            $seconds = (double)$endTime->format('s');
+            $endDateTime = date_time_set($endDate,$hours,$minutes,$seconds);
 
             $school_event->title            = $request->input("title");
             $school_event->start            = $startDateTime;

@@ -44,15 +44,15 @@
                         </span>
                     @endif
                 </div>
-                <div class="form-group {{$errors->has('endDate')?'has-error':''}}">
-                    <label for="endDate">END DATE</label>
-                    <input type="date" name="endDate" class="form-control" value="{{$school_event['endDate']}}"/>
-                    @if ($errors->has('endDate'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('endDate') }}</strong>
-                        </span>
-                    @endif
-                </div>
+                {{--<div class="form-group {{$errors->has('endDate')?'has-error':''}}">--}}
+                    {{--<label for="endDate">END DATE</label>--}}
+                    {{--<input type="date" name="endDate" class="form-control" value="{{$school_event['endDate']}}"/>--}}
+                    {{--@if ($errors->has('endDate'))--}}
+                        {{--<span class="help-block">--}}
+                            {{--<strong>{{ $errors->first('endDate') }}</strong>--}}
+                        {{--</span>--}}
+                    {{--@endif--}}
+                {{--</div>--}}
                 <div class="form-group {{$errors->has('endTime')?'has-error':''}}">
                     <label for="endTime">END TIME</label>
                     <input type="time" name="endTime" class="form-control" value="{{$school_event['endTime']}}"/>
