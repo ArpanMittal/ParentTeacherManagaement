@@ -290,6 +290,7 @@ class AppointmentController extends Controller
     }
     //generic php function to send GCM push notification
     function sendPushNotificationToGCM($registatoin_ids, $message) {
+        return $registatoin_ids;
         //Google cloud messaging GCM-API url
         $url='https://gcm-http.googleapis.com/gcm/send';
 
@@ -497,7 +498,7 @@ class AppointmentController extends Controller
                     $flag=1;
                     $message = "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
                      Whatsapp Video Call Number : $contactNo";
-                    $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                    sendPushNotificationToGCM($gcmRegistrationId,$message);
                     try{
                         \DB::beginTransaction();
                         \DB::table('teacherAppointmentsSlots')
