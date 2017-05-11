@@ -80,10 +80,10 @@ class AppointmentController extends Controller
             $awaited = $appointmentRequest->isAwaited;
             $confirmed = $appointmentRequest->isApproved;
             $cancelled = $appointmentRequest->isCancel;
-            if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
+            if ($awaited==1 && $confirmed==0 && $cancelled==0){
                 $status = "Awaited";
             }
-            elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
+            elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
                 $status = "Confirmed";
             }
             elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
@@ -150,10 +150,10 @@ class AppointmentController extends Controller
         $awaited = $appointmentRequest->isAwaited;
         $confirmed = $appointmentRequest->isApproved;
         $cancelled = $appointmentRequest->isCancel;
-        if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
+        if ($awaited==1 && $confirmed==0 && $cancelled==0){
             $status = "Awaited";
         }
-        elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
+        elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
             $status = "Confirmed";
         }
         elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
@@ -752,10 +752,10 @@ class AppointmentController extends Controller
             $awaited = $appointmentRequest->isAwaited;
             $confirmed = $appointmentRequest->isApproved;
             $requestType = $appointmentRequest->requestType;
-            if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
+            if ($awaited==1 && $confirmed==0 && $cancelled==0){
                 $status = 1;
             }
-            elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
+            elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
                 $status = 2;
             }
             elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
@@ -855,11 +855,11 @@ class AppointmentController extends Controller
         $cancelled = $appointmentRequest->isCancel;
         $awaited = $appointmentRequest->isAwaited;
         $confirmed = $appointmentRequest->isApproved;
-        if ($booked==1 && $awaited==1 && $confirmed==0 && $cancelled==0){
+        if ($awaited==1 && $confirmed==0 && $cancelled==0){
            //awaited
             $status = 1;
         }
-        elseif ($booked==1 && $awaited==0 && $confirmed==1 && $cancelled==0){
+        elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
             //confirmed
             $status = 2;
         }
