@@ -13,22 +13,22 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                <div class="form-group">
-                    <label for="nome">ID</label>
-                    <p class="form-control-static">{{$calendar_event['id']}}</p>
-                </div>
-                <div class="form-group">
-                    <label for="teacherId">TEACHER ID</label>
-                    <p class="form-control-static">{{$calendar_event['teacherId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="nome">ID</label>--}}
+                    {{--<p class="form-control-static">{{$calendar_event['id']}}</p>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="teacherId">TEACHER ID</label>--}}
+                    {{--<p class="form-control-static">{{$calendar_event['teacherId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="teacherName">TEACHER NAME</label>
                     <p class="form-control-static">{{$calendar_event['teacherName']}}</p>
                 </div>
-                <div class="form-group">
-                    <label for="title">TITLE</label>
-                    <input type="text" name="title" class="form-control" value="{{$calendar_event['title']}}"/>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="title">TITLE</label>--}}
+                    {{--<input type="text" name="title" class="form-control" value="{{$calendar_event['title']}}"/>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="start">START</label>
                     <input type="DATETIME" name="start" class="form-control" value="{{$calendar_event['start']}}"/>

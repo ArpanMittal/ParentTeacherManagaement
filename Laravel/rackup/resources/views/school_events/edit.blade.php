@@ -13,10 +13,10 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                <div class="form-group">
-                    <label for="nome">ID</label>
-                    <p class="form-control-static">{{$school_event['id']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="nome">ID</label>--}}
+                    {{--<p class="form-control-static">{{$school_event['id']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group {{$errors->has('title')?'has-error':''}}">
                     <label for="title">TITLE</label>
                     <input type="text" name="title" class="form-control" value="{{$school_event['title']}}"/>
@@ -27,7 +27,7 @@
                     @endif
                 </div>
                 <div class="form-group {{$errors->has('startDate')?'has-error':''}}">
-                    <label for="startDate">START DATE</label>
+                    <label for="startDate">DATE</label>
                     <input type="date" name="startDate" class="form-control" value="{{$school_event['startDate']}}"/>
                     @if ($errors->has('startDate'))
                         <span class="help-block">

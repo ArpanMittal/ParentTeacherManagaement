@@ -26,7 +26,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    {{--<th>ID</th>--}}
                     <th>TITLE</th>
                     <th>START</th>
                     <th>END</th>
@@ -38,7 +38,7 @@
 
                 @foreach($school_events as $school_event)
                     <tr>
-                        <td>{{$school_event->id}}</td>
+                        {{--<td>{{$school_event->id}}</td>--}}
                         <td>{{$school_event->title}}</td>
                         <td>{{$school_event->start}}</td>
                         <td>{{$school_event->end}}</td>

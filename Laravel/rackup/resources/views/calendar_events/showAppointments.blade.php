@@ -9,17 +9,21 @@
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group">
-                    <label for="nome">REQUEST ID</label>
-                    <p class="form-control-static">{{$appointmentDetails['requestId']}}</p>
-                </div>
-                <div class="form-group">
-                    <label for="teacherId">TEACHER ID</label>
-                    <p class="form-control-static">{{$appointmentDetails['teacherId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="nome">REQUEST ID</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['requestId']}}</p>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="teacherId">TEACHER ID</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['teacherId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="teacherName">TEACHER NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['teacherName']}}</p>
+                </div>
+                <div class="form-group">
+                    <label for="teacherContact">TEACHER CONTACT</label>
+                    <p class="form-control-static">{{$appointmentDetails['teacherContact']}}</p>
                 </div>
                 <div class="form-group">
                     <label for="parentName">PARENT NAME</label>
@@ -29,10 +33,10 @@
                     <label for="parentContact">PARENT CONTACT</label>
                     <p class="form-control-static">{{$appointmentDetails['parentContact']}}</p>
                 </div>
-                <div class="form-group">
-                    <label for="studentId">STUDENT ID</label>
-                    <p class="form-control-static">{{$appointmentDetails['studentId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="studentId">STUDENT ID</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['studentId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="studentName">STUDENT NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['studentName']}}</p>
@@ -73,8 +77,6 @@
                     <label for="status">STATUS</label>
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
-
-
                 <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Index</a>
             </form>
         </div>

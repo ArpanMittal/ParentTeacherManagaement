@@ -22,7 +22,7 @@
                     @endif
                 </div>
                 <div class="form-group {{$errors->has('end')?'has-error':''}}">
-                    <label for="startDate">START DATE</label>
+                    <label for="startDate">DATE</label>
                     <input type="date" name="startDate" class="form-control" value="{{ Input::old('startDate') }}" required autofocus/>
                     @if ($errors->has('startDate'))
                         <span class="help-block">
@@ -44,7 +44,7 @@
                     {{--<input type="date" name="endDate" class="form-control" value="{{ Input::old('endDate') }}" required autofocus/>--}}
                     {{--@if ($errors->has('endDate'))--}}
                         {{--<span class="help-block">--}}
-                            {{--<strong>{{ $errors->first('endDate') }}</strong>--}}
+                                {{--<strong>{{ $errors->first('endDate') }}</strong>--}}
                         {{--</span>--}}
                     {{--@endif--}}
                 {{--</div>--}}

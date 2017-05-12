@@ -10,10 +10,10 @@
         <div class="col-md-12">
 
             <form method="post" role="form" action="{{ route('postCancel',$appointmentDetails['requestId'])}}">
-                <div class="form-group">
-                    <label for="nome">REQUEST ID</label>
-                    <p class="form-control-static">{{$appointmentDetails['requestId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="nome">REQUEST ID</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['requestId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="parentName">PARENT NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['parentName']}}</p>
@@ -23,10 +23,10 @@
                     <label for="parentContact">PARENT CONTACT</label>
                     <p class="form-control-static">{{$appointmentDetails['parentContact']}}</p>
                 </div>
-                <div class="form-group">
-                    <label for="studentId">STUDENT ID</label>
-                    <p class="form-control-static">{{$appointmentDetails['studentId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="studentId">STUDENT ID</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['studentId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="studentName">STUDENT NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['studentName']}}</p>
@@ -35,10 +35,10 @@
                     <label for="grade">GRADE</label>
                     <p class="form-control-static">{{$appointmentDetails['grade']}}</p>
                 </div>
-                <div class="form-group">
-                    <label for="title">TITLE</label>
-                    <p class="form-control-static">{{$appointmentDetails['title']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="title">TITLE</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['title']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="start">START</label>
                     <p class="form-control-static">{{$appointmentDetails['start']}}</p>

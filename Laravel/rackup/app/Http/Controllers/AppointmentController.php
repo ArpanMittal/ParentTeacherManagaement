@@ -582,6 +582,7 @@ class AppointmentController extends Controller
             $teacher_id = $appointmentRequest->teacher_id;
             $teacherDetails = UserDetails::where('user_id',$teacher_id)->first();
             $teacher_name = $teacherDetails->name;
+            $teacherContact = $appointmentRequest->contactNo;
             $slotDetails = TeacherAppointmentSlots::where('id',$slotId)->first();
             $event_id = $slotDetails->calendarEventsId;
             $calendar_event = CalendarEvent::where('id',$event_id)->first();
@@ -614,6 +615,7 @@ class AppointmentController extends Controller
                 'id' => $event_id,
                 'teacherId' => $teacher_id,
                 'teacherName' => $teacher_name,
+                'teacherContact'=>$teacherContact,
                 'title' => $status,
                 'startDate'=>$startDate,
                 'endDate'=>$endDate,
@@ -701,13 +703,16 @@ class AppointmentController extends Controller
         //confirmed
         if($status ==2){
             try {
+                $parentContact = $request->get('parentContact');
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
                     ->where('id', $appointmentRequestId)
                     ->update(
                         ['isApproved' => 1,
                             'isCancel' => 0,
-                            'isAwaited' => 0]);
+                            'isAwaited' => 0,
+                            'parentContact'=>$parentContact
+                        ]);
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;

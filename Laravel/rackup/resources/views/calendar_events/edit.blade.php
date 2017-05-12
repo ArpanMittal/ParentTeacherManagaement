@@ -13,21 +13,17 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                <div class="form-group">
-                    <label for="id">ID</label>
-                    <p class="form-control-static">{{$calendar_event['id']}}</p>
-                </div>
-                <div class="form-group">
-                    <label for="teacherId">TEACHER ID</label>
-                    <p class="form-control-static">{{$calendar_event['teacherId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="id">ID</label>--}}
+                    {{--<p class="form-control-static">{{$calendar_event['id']}}</p>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="teacherId">TEACHER ID</label>--}}
+                    {{--<p class="form-control-static">{{$calendar_event['teacherId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="teacherName">TEACHER NAME</label>
                     <p class="form-control-static">{{$calendar_event['teacherName']}}</p>
-                </div>
-                <div class="form-group">
-                    <label for="title">TITLE</label>
-                    <p class="form-control-static">{{$calendar_event['title']}}</p>
                 </div>
                 <div class="form-group">
                     <label for="day">DAY</label>
@@ -35,7 +31,7 @@
                 </div>
                 <div class="form-group {{$errors->has('start')?'has-error':''}}">
                     <label for="startTime">START TIME</label>
-                    <input type="time" id="start" name="start" class="form-control" value="{{$calendar_event['startTime']}}"/>
+                    <input type="time" id="start" name="start" class="form-control" value="{{$calendar_event['startTime']}}" onClick="Clear1(this.id);"/>
                     @if ($errors->has('start'))
                         <span class="help-block">
                             <strong>{{ $errors->first('start') }}</strong>
@@ -44,7 +40,7 @@
                 </div>
                 <div class="form-group {{$errors->has('end')?'has-error':''}}">
                     <label for="endTime">END TIME</label>
-                    <input type="time" id="end" name="end" class="form-control" value="{{$calendar_event['endTime']}}"/>
+                    <input type="time" id="end" name="end" class="form-control" value="{{$calendar_event['endTime']}}" onClick="Clear1(this.id);"/>
                     @if ($errors->has('end'))
                         <span class="help-block">
                             <strong>{{ $errors->first('end') }}</strong>
@@ -58,5 +54,19 @@
         </div>
     </div>
 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var click = 0;
+        function Clear1(id){
+            click += 1;
+            if ((click == 1 && id=="start") || (click==1 && id=="end")) {
+                document.getElementById('start').value = "";
+                document.getElementById('end').value = "";
+            }
+        }
+    </script>
 
 @endsection

@@ -5,17 +5,20 @@
         <h1>Add Slots</h1>
     </div>
 
+    <div>
+        @if (session('failure'))
+            <div class="alert alert-danger">
+                {{ session('failure') }}
+            </div>
+        @endif
+    </div>
+
 
     <div class="row">
         <div class="col-md-12">
 
             <form action="{{ route('calendar_events.store') }}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                {{--<div class="form-group">--}}
-                    {{--<label for="title">TITLE</label>--}}
-                    {{--<input type="text" name="title" class="form-control" value=""/>--}}
-                {{--</div>--}}
 
                 <div class="form-group {{$errors->has('teacherId')?'has-error':''}}">
                     <label for="teacher">TEACHER</label>
@@ -47,7 +50,7 @@
 
                 <div class="form-group {{$errors->has('start')?'has-error':''}}">
                     <label for="start">START</label>
-                    <input type="time" name="start" class="form-control" value="{{ Input::old('start') }}" required autofocus/>
+                    <input type="time" id="start" name="start" class="form-control"  value="{{ Input::old('start') }}" required autofocus />
                     @if ($errors->has('start'))
                         <span class="help-block">
                             <strong>{{ $errors->first('start') }}</strong>
@@ -56,7 +59,7 @@
                 </div>
                 <div class="form-group {{$errors->has('end')?'has-error':''}}" >
                     <label for="end">END</label>
-                    <input type="time" name="end" class="form-control" value="{{ Input::old('end') }}" required autofocus/>
+                    <input type="time" id="end" name="end" class="form-control"  value="{{ Input::old('end') }}" required autofocus />
                     @if ($errors->has('end'))
                         <span class="help-block">
                             <strong>{{ $errors->first('end') }}</strong>
@@ -70,6 +73,5 @@
             </form>
         </div>
     </div>
-
 
 @endsection

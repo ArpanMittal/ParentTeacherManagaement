@@ -9,21 +9,17 @@
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group">
-                    <label for="nome">ID</label>
-                    <p class="form-control-static">{{$calendar_event['id']}}</p>
-                </div>
-                <div class="form-group">
-                    <label for="teacherId">TEACHER ID</label>
-                    <p class="form-control-static">{{$calendar_event['teacherId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="nome">ID</label>--}}
+                    {{--<p class="form-control-static">{{$calendar_event['id']}}</p>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="teacherId">TEACHER ID</label>--}}
+                    {{--<p class="form-control-static">{{$calendar_event['teacherId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="teacherName">TEACHER NAME</label>
                     <p class="form-control-static">{{$calendar_event['teacherName']}}</p>
-                </div>
-                <div class="form-group">
-                    <label for="title">TITLE</label>
-                    <p class="form-control-static">{{$calendar_event['title']}}</p>
                 </div>
                 <div class="form-group">
                     <label for="day">DAY</label>

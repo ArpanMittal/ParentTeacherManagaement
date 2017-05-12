@@ -9,10 +9,10 @@
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group">
-                    <label for="nome">REQUEST ID</label>
-                    <p class="form-control-static">{{$appointmentDetails['requestId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="nome">REQUEST ID</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['requestId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="parentName">PARENT NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['parentName']}}</p>
@@ -21,10 +21,10 @@
                     <label for="parentContact">PARENT CONTACT</label>
                     <p class="form-control-static">{{$appointmentDetails['parentContact']}}</p>
                 </div>
-                <div class="form-group">
-                    <label for="studentId">STUDENT ID</label>
-                    <p class="form-control-static">{{$appointmentDetails['studentId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="studentId">STUDENT ID</label>--}}
+                    {{--<p class="form-control-static">{{$appointmentDetails['studentId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="studentName">STUDENT NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['studentName']}}</p>

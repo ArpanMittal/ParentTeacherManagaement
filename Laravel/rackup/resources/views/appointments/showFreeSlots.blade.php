@@ -9,10 +9,10 @@
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group">
-                    <label for="nome">ID</label>
-                    <p class="form-control-static">{{$calendar_event['id']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="nome">ID</label>--}}
+                    {{--<p class="form-control-static">{{$calendar_event['id']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="day">DAY</label>
                     <p class="form-control-static">{{$calendar_event['day']}}</p>

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\In;
 use Illuminate\Support\Facades\Input;
+use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Mockery\CountValidator\Exception;
 
 class CalendarEventController extends Controller
@@ -288,8 +289,8 @@ class CalendarEventController extends Controller
                 ->with('success', 'Slot added successfully');
         }
         else{
-            return redirect(route('calendar_events.index'))
-                ->with('failure', 'Slot already exists');
+            return redirect(route('calendar_events.create'))
+                ->with('failure', 'Slot already exists')->withInput();
         }
 
 
@@ -367,8 +368,8 @@ class CalendarEventController extends Controller
         $teacherName = $teacher->name;
         $calendarEvent = CalendarEvent::where('id',$id)->first();
         $title = $calendarEvent->title;
-        $startDateTime = $calendarEvent->start;
-        $endDateTime = $calendarEvent->end;
+        $startDateTime = Carbon::parse($calendarEvent->start);
+        $endDateTime = Carbon::parse($calendarEvent->end);
         $startTime = $startDateTime->toTimeString();
         $endTime = $endDateTime->toTimeString();
         $dayNo= date('w', strtotime($startDateTime));

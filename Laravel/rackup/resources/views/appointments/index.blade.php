@@ -26,9 +26,9 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>REQUEST ID</th>
+                    {{--<th>REQUEST ID</th>--}}
                     <th>PARENT NAME</th>
-                    <th>STUDENT ID</th>
+                    {{--<th>STUDENT ID</th>--}}
                     <th>STUDENT NAME</th>
                     <th>GRADE</th>
                     <th>REASON OF APPOINTMENT/CANCELLATION</th>
@@ -44,9 +44,9 @@
                 <tbody>
                 @foreach($appointmentDetails as $appointmentDetail)
                     <tr>
-                        <td>{{$appointmentDetail['requestId']}}</td>
+                        {{--<td>{{$appointmentDetail['requestId']}}</td>--}}
                         <td>{{$appointmentDetail['parentName']}}</td>
-                        <td>{{$appointmentDetail['studentId']}}</td>
+                        {{--<td>{{$appointmentDetail['studentId']}}</td>--}}
                         <td>{{$appointmentDetail['studentName']}}</td>
                         <td>{{$appointmentDetail['grade']}}</td>
                         @if($appointmentDetail['status']=="Awaited" || $appointmentDetail['status']=="Confirmed")
@@ -65,8 +65,7 @@
                             @if(($appointmentDetail['requestedBy']=="Parent") && ($appointmentDetail['status']=="Awaited"))
                                 <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetail['requestId'])}}">Confirm</a>
                             @endif
-                            @if(($appointmentDetail['requestedBy']=="Parent") &&
-                             ($appointmentDetail['status']=="Confirmed" || $appointmentDetail['status']=="Awaited") )
+                            @if(($appointmentDetail['status']=="Confirmed" || $appointmentDetail['status']=="Awaited"))
                                 <a class="btn btn-danger" href="{{ route('getCancel',$appointmentDetail['requestId'])}}">Cancel</a>
                             @endif
                         </td>

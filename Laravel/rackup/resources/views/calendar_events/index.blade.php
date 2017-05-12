@@ -28,10 +28,9 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>TEACHER ID</th>
+                    {{--<th>ID</th>--}}
+                    {{--<th>TEACHER ID</th>--}}
                     <th>TEACHER NAME</th>
-                    <th>TITLE</th>
                     <th>DAY</th>
                     <th>START TIME</th>
                     <th>END TIME</th>
@@ -43,12 +42,9 @@
 
                 @foreach($calendar_events as $calendar_event)
                     <tr>
-                        <td>{{$calendar_event['id']}}</td>
-                        <td>{{$calendar_event['teacherId']}}</td>
+                        {{--<td>{{$calendar_event['id']}}</td>--}}
+                        {{--<td>{{$calendar_event['teacherId']}}</td>--}}
                         <td>{{$calendar_event['teacherName']}}</td>
-                        @if($calendar_event['title']==5)
-                        <td>Free Slot</td>
-                        @endif
                         <td>{{$calendar_event['day']}}</td>
                         <td>{{$calendar_event['startTime']}}</td>
                         <td>{{$calendar_event['endTime']}}</td>
