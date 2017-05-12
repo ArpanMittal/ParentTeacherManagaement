@@ -417,7 +417,7 @@ class AppointmentController extends Controller
                         $apppointmentRequest->save();
                         $message = array("message"=>"Request of Appointment by $teacherName on $startDate /n from $startTime to $endTime.
                         Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
-                        return $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                     }catch (Exception $e){
                         \DB::rollback();
                         return redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');
@@ -461,7 +461,7 @@ class AppointmentController extends Controller
                 $apppointmentRequest->save();
                 $message =array("message"=> "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
                      Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
-                return $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
             }catch (Exception $e){
                 \DB::rollback();
                 return redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');

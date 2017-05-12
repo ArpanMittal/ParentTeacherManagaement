@@ -543,7 +543,7 @@ class CalendarEventController extends Controller
         if($requestType == "Parent Request")
             $requestedBy = "Parent";
         else
-            $requestedBy = "You";
+            $requestedBy = "Teacher";
         $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
         $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
         $booked= $slot->isBooked;
