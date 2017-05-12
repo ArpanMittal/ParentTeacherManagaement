@@ -35,7 +35,7 @@ use Carbon\Carbon;
 class AppointmentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of appointments.
      *
      * @return Response
      */
@@ -44,7 +44,7 @@ class AppointmentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-
+        //Retrieve all the appointment requests of the logged in teacher
         $appointmentRequests = AppointmentRequest::where('teacher_id',$id)
             ->orderBy('requestType')
             ->orderBy('id','desc')
@@ -53,81 +53,17 @@ class AppointmentController extends Controller
         $appointmentDetails = array();
         foreach ($appointmentRequests as $appointmentRequest){
             $appointmentRequestId=$appointmentRequest->id;
-            $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
-            $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
-            $eventId = $slot->calendarEventsId;
-            $event = CalendarEvent::where('id',$eventId)->first();
-//            $eventType = $event->eventType;
-//            if ($eventType == 'Teacher Appointment'){
-            $booked= $slot->isBooked;
-            $parentId = $appointmentRequest->parent_id;
-            $parentDetails = UserDetails::where('user_id',$parentId)->first();
-            $parentName = $parentDetails->name;
-            $parentContact = $appointmentRequest->parentContact;
-            $studentDetails = Student::where('parent_id',$parentId)->first();
-            $studentId = $studentDetails->id;
-            $studentName = $studentDetails->name;
-            $gradeId = $studentDetails->grade_id;
-            $gradeDetails = Grade::where('id',$gradeId)->first();
-            $gradeName = $gradeDetails->grade_name;
-            $reasonOfAppointment = $appointmentRequest->reasonOfAppointment;
-            $cancellationReason = $appointmentRequest->cancellationReason;
-            $requestType = $appointmentRequest->requestType;
-            if($requestType == "Parent Request")
-                $requestedBy = "Parent";
-            else
-                $requestedBy = "You";
-            $awaited = $appointmentRequest->isAwaited;
-            $confirmed = $appointmentRequest->isApproved;
-            $cancelled = $appointmentRequest->isCancel;
-            if ($awaited==1 && $confirmed==0 && $cancelled==0){
-                $status = "Awaited";
-            }
-            elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
-                $status = "Confirmed";
-            }
-            elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
-                $status="Cancelled";
-            }
-            else{
-                $status = "Invalid Status";
-            }
-            $appointmentDetails[$i++] = array(
-                'requestId' => $appointmentRequestId,
-                'parentName'=>$parentName,
-                'parentContact'=>$parentContact,
-                'studentId'=>$studentId,
-                'studentName'=>$studentName,
-                'grade'=>$gradeName,
-                'eventId'=>$eventId,
-                'title'=>$event->title,
-                'reasonOfAppointment'=>$reasonOfAppointment,
-                'cancellationReason'=>$cancellationReason,
-                'start'=>$event->start,
-                'end'=>$event->end,
-                'requestedBy'=>$requestedBy,
-                'status'=>$status
-            );
+            $appointmentDetails[$i++]=$this->getAppointments($appointmentRequestId);
         }
-
-//    }
         return view('appointments.index', compact('appointmentDetails'),$data);
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function show($id,Request $request)
-    {
-        $user_id = $request->session()->get('id');
-        $user = \DB::table('users')->whereId($user_id)->first();
-        $data['user'] = $user;
 
+    //Retrieve appointment details corresponding to an appointment request id
+    public function getAppointments ($id){
         $appointmentRequest = AppointmentRequest::where('id',$id)->first();
-        $appointmentRequestId=$appointmentRequest->id;
+        $appointmentRequestId=$id;
         $parentId = $appointmentRequest->parent_id;
+        //Retrieve parent and student details  corresponding to the appointment request
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
         $parentName = $parentDetails->name;
         $parentContact = $appointmentRequest->parentContact;
@@ -144,6 +80,7 @@ class AppointmentController extends Controller
             $requestedBy = "Parent";
         else
             $requestedBy = "You";
+        //Retrieve appointment slot corresponding to the appointment request
         $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
         $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
         $booked= $slot->isBooked;
@@ -162,11 +99,14 @@ class AppointmentController extends Controller
         else{
             $status = "Invalid Status";
         }
+        //Retrieve appointment event corresponding to the appointment slot
         $eventId = $slot->calendarEventsId;
         $event = CalendarEvent::where('id',$eventId)->first();
         $title=$event->title;
         $start=$event->start;
         $end=$event->end;
+        $teacherId = $appointmentRequest->teacher_id;
+        $contactNo = $appointmentRequest->contactNo;
         $appointmentDetails= array(
             'requestId' => $appointmentRequestId,
             'parentName'=>$parentName,
@@ -181,8 +121,25 @@ class AppointmentController extends Controller
             'start'=>$start,
             'end'=>$end,
             'requestedBy'=>$requestedBy,
-            'status'=>$status
+            'status'=>$status,
+            'contact'=>$contactNo,
+            'teacherId'=>$teacherId
         );
+        return $appointmentDetails;
+    }
+    /**
+     * Display a specific appointment
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function show($id,Request $request)
+    {
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
+        $data['user'] = $user;
+
+        $appointmentDetails = $this->getAppointments($id);
 
         return view('appointments.show', compact('appointmentDetails'),$data);
     }
@@ -193,65 +150,10 @@ class AppointmentController extends Controller
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
 
-        $appointmentRequest = AppointmentRequest::where('id',$id)->first();
-        $appointmentRequestId=$appointmentRequest->id;
-        $parentId = $appointmentRequest->parent_id;
-        $parentDetails = UserDetails::where('user_id',$parentId)->first();
-        $parentName = $parentDetails->name;
-        $parentContact = $appointmentRequest->parentContact;
-        $studentDetails = Student::where('parent_id',$parentId)->first();
-        $studentId = $studentDetails->id;
-        $studentName = $studentDetails->name;
-        $gradeId = $studentDetails->grade_id;
-        $gradeDetails = Grade::where('id',$gradeId)->first();
-        $gradeName = $gradeDetails->grade_name;
-        $reasonOfAppointment = $appointmentRequest->reasonOfAppointment;
-        $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
-        $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
-        $eventId = $slot->calendarEventsId;
-        $event = CalendarEvent::where('id',$eventId)->first();
-        $title=$event->title;
-        $start=$event->start;
-        $end=$event->end;
-        $teacherId = $appointmentRequest->teacher_id;
-//        $teacherDetail = UserDetails::where('user_id',$teacherId)->first();
-        $contactNo = $appointmentRequest->contactNo;
-//        $message = "A whatsapp video call has been scheduled on the number ".$contactNo;
-        $appointmentDetails= array(
-            'requestId' => $appointmentRequestId,
-            'parentName'=>$parentName,
-            'parentContact'=>$parentContact,
-            'studentId'=>$studentId,
-            'studentName'=>$studentName,
-            'grade'=>$gradeName,
-            'eventId'=>$eventId,
-            'title'=>$title,
-            'reasonOfAppointment'=>$reasonOfAppointment,
-            'start'=>$start,
-            'end'=>$end,
-            'contact'=>$contactNo,
-            'teacherId'=>$teacherId
-        );
-        //return var_export($appointmentDetails);
+        $appointmentDetails = $this->getAppointments($id);
         return view('appointments.confirm',compact('appointmentDetails'),$data);
 
     }
-
-    public function changeContactNumber($id){
-        $contactNo = Input::get('contact');
-        try {
-            DB::beginTransaction();
-           $request= DB::table('appointmentRequests')
-                ->where('id', $id)
-                ->update(['contactNo' => $contactNo]);
-        }catch (Exception $e){
-            DB::rollBack();
-            return Response::json("Insertion failed",HttpResponse::HTTP_PARTIAL_CONTENT);
-        }
-        DB::commit();
-        return Response::json($contactNo,HttpResponse::HTTP_OK);
-    }
-
     public function postConfirm($id){
         $appointmentDetail = AppointmentRequest::where('id',$id)->first();
         $contactNo = $appointmentDetail->contactNo;
@@ -289,6 +191,21 @@ class AppointmentController extends Controller
         return redirect(route('appointments.index'));
 
     }
+    //Change contact no of teacher in case of different whatsapp number
+    public function changeContactNumber($id){
+        $contactNo = Input::get('contact');
+        try {
+            DB::beginTransaction();
+            $request= DB::table('appointmentRequests')
+                ->where('id', $id)
+                ->update(['contactNo' => $contactNo]);
+        }catch (Exception $e){
+            DB::rollBack();
+            return Response::json("Insertion failed",HttpResponse::HTTP_PARTIAL_CONTENT);
+        }
+        DB::commit();
+        return Response::json($contactNo,HttpResponse::HTTP_OK);
+    }
     //generic php function to send GCM push notification
     function sendPushNotificationToGCM($registration_ids, $message) {
         //Google cloud messaging GCM-API url
@@ -300,7 +217,6 @@ class AppointmentController extends Controller
             'data' => $message,
         );
         // Google Cloud Messaging GCM API Key
-
         define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
 
         $headers = array(
@@ -330,40 +246,10 @@ class AppointmentController extends Controller
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
 
-        $appointmentRequest = AppointmentRequest::where('id',$id)->first();
-        $appointmentRequestId=$appointmentRequest->id;
-        $parentId = $appointmentRequest->parent_id;
-        $parentDetails = UserDetails::where('user_id',$parentId)->first();
-        $parentName = $parentDetails->name;
-        $parentContact = $appointmentRequest->parentContact;
-        $studentDetails = Student::where('parent_id',$parentId)->first();
-        $studentId = $studentDetails->id;
-        $studentName = $studentDetails->name;
-        $gradeId = $studentDetails->grade_id;
-        $gradeDetails = Grade::where('id',$gradeId)->first();
-        $gradeName = $gradeDetails->grade_name;
-        $slotId=$appointmentRequest->teacherAppointmentsSlot_id;
-        $slot = TeacherAppointmentSlots::where('id',$slotId)->first();
-        $eventId = $slot->calendarEventsId;
-        $event = CalendarEvent::where('id',$eventId)->first();
-        $title=$event->title;
-        $start=$event->start;
-        $end=$event->end;
-        $appointmentDetails= array(
-            'requestId' => $appointmentRequestId,
-            'parentName'=>$parentName,
-            'parentContact'=>$parentContact,
-            'studentId'=>$studentId,
-            'studentName'=>$studentName,
-            'grade'=>$gradeName,
-            'eventId'=>$eventId,
-            'title'=>$title,
-            'start'=>$start,
-            'end'=>$end,
-        );
-        //return var_export($appointmentDetails);
+        $appointmentDetails = $this->getAppointments($id);
         return view('appointments.cancel',compact('appointmentDetails'),$data);
     }
+
     public function postCancel(Request $request,$id){
         $appointmentDetail = AppointmentRequest::where('id',$id)->first();
         $slotId = $appointmentDetail->teacherAppointmentsSlot_id;
@@ -413,7 +299,7 @@ class AppointmentController extends Controller
 
     }
     /**
-     * Show the form for creating a new resource.
+     * Show the form for requesting appointment from teacher side
      *
      * @return Response
      */
@@ -442,7 +328,7 @@ class AppointmentController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * Store the appointment request by teacher
      *
      * @param Request $request
      * @return Response
@@ -495,9 +381,11 @@ class AppointmentController extends Controller
             $calendarEvent = CalendarEvent::where('id',$calendarEventId)->first();
             $slotStart = $calendarEvent->start;
             $slotEnd = $calendarEvent->end;
+            //If requested time is clashing with the existing slots
             if(($startDateTime==$slotStart)|| ($endDateTime==$slotEnd)||
                ($startDateTime>$slotStart && $startDateTime<$slotEnd)||
                ($endDateTime<$slotEnd && $endDateTime>$slotStart)){
+                //If the existing slot is not booked
                 if($teacherSlot->isBooked == 0){
                     $flag=1;
                     try{
@@ -536,6 +424,7 @@ class AppointmentController extends Controller
                     }
                     \DB::commit();
                 }
+                //If existing slot is booked
                 else{
                     return redirect(route('appointments.index'))->with('failure','Slot is already booked');
                 }
@@ -544,6 +433,7 @@ class AppointmentController extends Controller
         if ($flag == 1){
             return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
         }
+        //If requested time is not clashing with the existing slots
         else{
             try{
                 \DB::beginTransaction();
@@ -581,95 +471,51 @@ class AppointmentController extends Controller
         }
 
     }
-//
-//    /**
-//     * Show the form for editing the specified resource.
-//     *
-//     * @param  int $id
-//     * @return Response
-//     */
-//    public function edit($id)
-//    {
-//        $calendar_event = CalendarEvent::findOrFail($id);
-//
-//        return view('calendar_events.edit', compact('calendar_event'));
-//    }
-//    /**
-//     * Update the specified resource in storage.
-//     *
-//     * @param  int    $id
-//     * @param Request $request
-//     * @return Response
-//     */
-//    public function update(Request $request, $id)
-//    {
-//        $calendar_event = CalendarEvent::findOrFail($id);
-//
-//        $calendar_event->title            = $request->input("title");
-//        $calendar_event->start            = $request->input("start");
-//        $calendar_event->end              = $request->input("end");
-//        $calendar_event->save();k
-//
-////        \DB::table('calendar_events')
-////            ->where('id',$id)
-////            ->update(
-////            ['title' => $calendar_event->title,
-////                'start' => $calendar_event->start,
-////                'end'=>$calendar_event->end,
-////                'is_all_day'=>$calendar_event->is_all_day,
-////                'background_color'=>$calendar_event->background_color
-////            ]
-////        );
-//
-//        return redirect(route('calendar_events.index'))->with('message', 'Item updated successfully.');
-//    }
-//
-//    /**
-//     * Remove the specified resource from storage.
-//     *
-//     * @param  int $id
-//     * @return Response
-//     */
-//    public function destroy($id)
-//    {
-//        $calendar_event = CalendarEvent::findOrFail($id);
-//        $calendar_event->delete();
-//
-//        return redirect(route('calendar_events.index'))->with('message', 'Item deleted successfully.');
-//    }
-//
-//    public function showAppointmentDetails(Request $request)
-//    {
-//        $id = $request->session()->get('id');
-//        $user = \DB::table('users')->whereId($id)->first();
-//        //role_id of admin is 1
-//        if ($user->role_id == 1) {
-//            $rules = array(
-//                'teacherName' => 'required'
-//            );
-//            $this->validate($request, $rules);
-//            $teacherName = Input::get('teacherName');
-//            $teacherDetails = UserDetails::where('name', $teacherName)->first();
-//            $teacherId = $teacherDetails->user_id;
-//            $teacherAppointmentDetails = TeacherAppointmentSlots::where('teacher_id', $teacherId)->first();
-//            $teacherAppointmentData = array(
-//                'id' => $teacherId,
-//                'name' => $teacherName,
-//                'date' => $teacherAppointmentDetails->dates,
-//                'day' => $teacherAppointmentDetails->day,
-//                'duration' => $teacherAppointmentDetails->duration,
-//                'booked' => $teacherAppointmentDetails->isBooked
-//            );
-//            // var_dump($teacherAppointmentData);
-//            return Response::json([$teacherAppointmentData, HttpResponse::HTTP_OK]);
-//        } else {
-//            return Response::json(["Permission Denied", HttpResponse::HTTP_UNAUTHORIZED]);
-//        }
-//    }
-    
+    //Show free slots of the logged in teacher
+    public function showFreeSlots($id,Request $request){
 
-    //API for sending free slot details of teachers for 7 days (after today) in reference to a particular grade
-    //and send the status of appointment request
+        $user_id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($user_id)->first();
+        $data['user'] = $user;
+        $i = 0;
+        $calendarEvent = CalendarEvent::where('id',$id)->first();
+        $title = $calendarEvent->title;
+        $startDateTime = $calendarEvent->start;
+        $startDateTime= Carbon::parse($startDateTime);
+        $endDateTime = $calendarEvent->end;
+        $endDateTime = Carbon::parse($endDateTime);
+        $startTime = $startDateTime->toTimeString();
+        $endTime = $endDateTime->toTimeString();
+        $dayNo= date('w', strtotime($startDateTime));
+        global $day;
+        switch ($dayNo){
+            case 0: $day ="Sunday";
+                break;
+            case 1: $day = "Monday";
+                break;
+            case 2: $day = "Tuesday";
+                break;
+            case 3: $day ="Wednesday";
+                break;
+            case 4: $day = "Thursday";
+                break;
+            case 5: $day = "Friday";
+                break;
+            case 6: $day = "Saturday";
+                break;
+        }
+        $calendar_event=array(
+            'id'=> $id,
+            'title'=>$title,
+            'day'=>$day,
+            'startTime'=>$startTime,
+            'endTime'=>$endTime
+        );
+
+        return view('appointments.showFreeSlots', compact('calendar_event'),$data);
+    }
+    /*API for sending free slot details of teachers for 7 days (after today) in reference to a particular grade and
+    details of all the appointments requested by particular parent*/
     public function sendAppointmentSlotDetails(Request $request){
         try {
             $token = $request->get('token');;
@@ -683,8 +529,9 @@ class AppointmentController extends Controller
         $today = Carbon::today()->addDay();
         $date = $today->toDateString();
         $dateCount=0;
-        $calendar_events=array();
+        $freeSlots=array();
         $i=0;
+        //Send free slots
         while ($dateCount!=7){
             $studentDetails= Student::where('parent_id',$userId)->first();
             $gradeId = $studentDetails->grade_id;
@@ -711,7 +558,7 @@ class AppointmentController extends Controller
                 $teacherId = $calendarEvent->teacher_id;
                 $teacherDetails = UserDetails::where('user_id', $teacherId)->first();
                 $teacherName = $teacherDetails->name;
-                $calendar_events[$i++] = array(
+                $freeSlots[$i++] = array(
                     'id' => $calendarEventId,
                     'teacherId' => $teacherId,
                     'teacherName' => $teacherName,
@@ -729,8 +576,7 @@ class AppointmentController extends Controller
         $j=0;
         $appointmentRequests = AppointmentRequest::all()
             ->where('parent_id',$userId);
-        
-//            ->where('requestType','=','Parent Request');
+        //Send details of appointments
         foreach ($appointmentRequests as $appointmentRequest){
             $slotId = $appointmentRequest->teacherAppointmentsSlot_id;
             $teacher_id = $appointmentRequest->teacher_id;
@@ -776,9 +622,10 @@ class AppointmentController extends Controller
                 'requestType'=>$requestType
             );
         }
-        return Response::json([$calendar_events,$appointmentData, HttpResponse::HTTP_OK]);
+        return Response::json([$freeSlots,$appointmentData, HttpResponse::HTTP_OK]);
     }
 
+    //API to book an appointment
     public function bookAppointments(Request $request){
         try {
             $token = $request->get('token');
@@ -832,75 +679,7 @@ class AppointmentController extends Controller
         $httpStatus = HttpResponse::HTTP_OK;
         return Response::json(["Success",$httpStatus]);
     }
-
-    public function sendEvent(Request $request){
-        try {
-            $token = $request->get('token');;
-            $user = JWTAuth::toUser($token);
-            $userId = $user->id;
-        }catch (TokenExpiredException $e){
-            return Response::json (['Token expired'],498);
-        }catch (TokenInvalidException $e){
-            return Response::json (['Token invalid']);
-        }
-        $eventId = $request->get('eventId');
-        $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
-        $appointmentSlotId = $appointmentSlot->id;
-        $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$appointmentSlotId)->first();
-        $teacher_id = $appointmentRequest->teacher_id;
-        $teacherDetails = UserDetails::where('user_id',$teacher_id)->first();
-        $teacher_name = $teacherDetails->name();
-        $teacherContact = $appointmentRequest->contactNo;
-        $booked = $appointmentSlot->isBooked;
-        $cancelled = $appointmentRequest->isCancel;
-        $awaited = $appointmentRequest->isAwaited;
-        $confirmed = $appointmentRequest->isApproved;
-        if ($awaited==1 && $confirmed==0 && $cancelled==0){
-           //awaited
-            $status = 1;
-        }
-        elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
-            //confirmed
-            $status = 2;
-        }
-        elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
-            //cancelled
-            $status=3;
-        }
-        else{
-            //invalid
-            $status = 4;
-        }
-        $event = CalendarEvent::where('id',$eventId)->first();
-        $start = $event->start;
-        $start = Carbon::parse($start);
-        $startDate = $start->toDateString();
-        $startTime = $start->toTimeString();
-        $end = $event->end;
-        $end=Carbon::parse($end);
-        $endDate = $end->toDateString();
-        $endTime = $end->toTimeString();
-        $requestType = $appointmentRequest->requestType;
-        if($status == 3)
-            $reason = $appointmentRequest->cancellationReason;
-        else
-            $reason = $appointmentRequest->reasonOfAppointment;
-        $appointmentDetails = array(
-            'id' => $eventId,
-            'teacherId' => $teacher_id,
-            'teacherName' => $teacher_name,
-            'title' => $status,
-            'startDate'=>$startDate,
-            'endDate'=>$endDate,
-            'startTime' => $startTime,
-            'endTime' => $endTime,
-            'requestType'=>$requestType,
-            'contact'=>$teacherContact,
-            'reason'=>$reason
-        );
-        return Response::json([$appointmentDetails,HttpResponse::HTTP_OK]);
-    }
-
+    //API to update the status of appointment event : confirmed or cancelled
     public function updateEvent(Request $request){
         try {
             $token = $request->get('token');
@@ -912,7 +691,6 @@ class AppointmentController extends Controller
             return Response::json (['Token invalid']);
         }
         $eventId = $request->get('eventId');
-        $cancellationReason = $request->get('cancellationReason');
         $status = $request->get("status");
 
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
@@ -940,6 +718,7 @@ class AppointmentController extends Controller
         }
         //cancelled
         elseif ($status==3){
+            $cancellationReason = $request->get('cancellationReason');
             try {
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
@@ -953,7 +732,7 @@ class AppointmentController extends Controller
                 DB::table('teacherAppointmentsSlots')
                     ->where('id', $appointmentSlotId)
                     ->update(['isBooked' => 0]);
-                
+
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;
@@ -964,55 +743,79 @@ class AppointmentController extends Controller
             return Response::json(["Success",$httpStatus]);
         }
         else{
-           return Response::json(["invalid status"]);
+            return Response::json(["invalid status"]);
         }
     }
-    
-    public function showFreeSlots($id,Request $request){
 
-        $user_id = $request->session()->get('id');
-        $user = \DB::table('users')->whereId($user_id)->first();
-        $data['user'] = $user;
 
-//        $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
-        $i = 0;
-//        $teacherId = $appointmentSlot->teacher_id;
-//        $teacher = UserDetails::where('user_id',$teacherId)->first();
-//        $teacherName = $teacher->name;
-        $calendarEvent = CalendarEvent::where('id',$id)->first();
-        $title = $calendarEvent->title;
-        $startDateTime = $calendarEvent->start;
-        $startDateTime= Carbon::parse($startDateTime);
-        $endDateTime = $calendarEvent->end;
-        $endDateTime = Carbon::parse($endDateTime);
-        $startTime = $startDateTime->toTimeString();
-        $endTime = $endDateTime->toTimeString();
-        $dayNo= date('w', strtotime($startDateTime));
-        global $day;
-        switch ($dayNo){
-            case 0: $day ="Sunday";
-                break;
-            case 1: $day = "Monday";
-                break;
-            case 2: $day = "Tuesday";
-                break;
-            case 3: $day ="Wednesday";
-                break;
-            case 4: $day = "Thursday";
-                break;
-            case 5: $day = "Friday";
-                break;
-            case 6: $day = "Saturday";
-                break;
-        }
-        $calendar_event=array(
-            'id'=> $id,
-            'title'=>$title,
-            'day'=>$day,
-            'startTime'=>$startTime,
-            'endTime'=>$endTime
-        );
+//    public function sendEvent(Request $request){
+//        try {
+//            $token = $request->get('token');;
+//            $user = JWTAuth::toUser($token);
+//            $userId = $user->id;
+//        }catch (TokenExpiredException $e){
+//            return Response::json (['Token expired'],498);
+//        }catch (TokenInvalidException $e){
+//            return Response::json (['Token invalid']);
+//        }
+//        $eventId = $request->get('eventId');
+//        $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
+//        $appointmentSlotId = $appointmentSlot->id;
+//        $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$appointmentSlotId)->first();
+//        $teacher_id = $appointmentRequest->teacher_id;
+//        $teacherDetails = UserDetails::where('user_id',$teacher_id)->first();
+//        $teacher_name = $teacherDetails->name();
+//        $teacherContact = $appointmentRequest->contactNo;
+//        $booked = $appointmentSlot->isBooked;
+//        $cancelled = $appointmentRequest->isCancel;
+//        $awaited = $appointmentRequest->isAwaited;
+//        $confirmed = $appointmentRequest->isApproved;
+//        if ($awaited==1 && $confirmed==0 && $cancelled==0){
+//           //awaited
+//            $status = 1;
+//        }
+//        elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
+//            //confirmed
+//            $status = 2;
+//        }
+//        elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
+//            //cancelled
+//            $status=3;
+//        }
+//        else{
+//            //invalid
+//            $status = 4;
+//        }
+//        $event = CalendarEvent::where('id',$eventId)->first();
+//        $start = $event->start;
+//        $start = Carbon::parse($start);
+//        $startDate = $start->toDateString();
+//        $startTime = $start->toTimeString();
+//        $end = $event->end;
+//        $end=Carbon::parse($end);
+//        $endDate = $end->toDateString();
+//        $endTime = $end->toTimeString();
+//        $requestType = $appointmentRequest->requestType;
+//        if($status == 3)
+//            $reason = $appointmentRequest->cancellationReason;
+//        else
+//            $reason = $appointmentRequest->reasonOfAppointment;
+//        $appointmentDetails = array(
+//            'id' => $eventId,
+//            'teacherId' => $teacher_id,
+//            'teacherName' => $teacher_name,
+//            'title' => $status,
+//            'startDate'=>$startDate,
+//            'endDate'=>$endDate,
+//            'startTime' => $startTime,
+//            'endTime' => $endTime,
+//            'requestType'=>$requestType,
+//            'contact'=>$teacherContact,
+//            'reason'=>$reason
+//        );
+//        return Response::json([$appointmentDetails,HttpResponse::HTTP_OK]);
+//    }
 
-        return view('appointments.showFreeSlots', compact('calendar_event'),$data);
-    }
+
+
 }
