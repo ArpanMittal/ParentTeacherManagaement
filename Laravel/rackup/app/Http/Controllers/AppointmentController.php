@@ -599,14 +599,18 @@ class AppointmentController extends Controller
             $awaited = $appointmentRequest->isAwaited;
             $confirmed = $appointmentRequest->isApproved;
             $requestType = $appointmentRequest->requestType;
+           global  $reason;
             if ($awaited==1 && $confirmed==0 && $cancelled==0){
                 $status = 1;
+                $reason = $appointmentRequest->reasonOfAppointment;
             }
             elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
                 $status = 2;
+                $reason = $appointmentRequest->reasonOfAppointment;
             }
             elseif($awaited==0 && $confirmed==0 && $cancelled==1) {
                 $status=3;
+                $reason = $appointmentRequest->cancellationReason;
             }
             else{
                 $status = 4;
@@ -621,7 +625,9 @@ class AppointmentController extends Controller
                 'endDate'=>$endDate,
                 'startTime' => $startTime,
                 'endTime' => $endTime,
-                'requestType'=>$requestType
+                'requestType'=>$requestType,
+                'reason'=>$reason
+
             );
         }
         return Response::json([$freeSlots,$appointmentData, HttpResponse::HTTP_OK]);
