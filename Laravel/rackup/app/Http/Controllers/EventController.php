@@ -32,6 +32,14 @@ class EventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        if ($request->has("month")){
+            $data['month'] = $request->get("month");
+        }
+        $calendar = $this->genCal();
+        return view('calendar_events.calendar', compact('calendar'),$data);
+        }
+
+    private function genCal(){
         $databaseEvents = $this->calendarEvent->all();
         $slots = array();
         $schoolEvents = array();
@@ -47,8 +55,11 @@ class EventController extends Controller
             $start = $databaseEvent->getStart();
             $end = $databaseEvent->getEnd();
             $eventType = $databaseEvent->eventType;
-            if($eventType=="School Function"){
-                $color=$databaseEvent->background_color;
+            if($eventType=="Parent Function" || $eventType=="Teacher Function" ){
+                if ($eventType =="Parent Function")
+                    $color="Magenta";
+                else
+                    $color = "BlueViolet";
                 $schoolEvents[$j++] = Calendar::event(
                     $title,
                     $isallDay,
@@ -96,7 +107,7 @@ class EventController extends Controller
                     $confirmed = $appointmentRequest->isApproved;
                     $cancelled = $appointmentRequest->isCancel;
                     if ($awaited==1 && $confirmed==0 && $cancelled==0){
-                        $color = "Yellow";
+                        $color = "Orange";
                         $status = "Awaited";
                     }
                     elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
@@ -135,8 +146,8 @@ class EventController extends Controller
         $calendar = Calendar::addEvents($slots);
         $calendar = Calendar::addEvents($schoolEvents);
         $calendar = Calendar::addEvents($appointments);
-        return view('calendar_events.calendar', compact('calendar'),$data);
-        }
+        return $calendar;
+    }
 
 
     //Teacher Calendar
@@ -195,7 +206,7 @@ class EventController extends Controller
                 $confirmed = $appointmentRequest->isApproved;
                 $cancelled = $appointmentRequest->isCancel;
                 if ( $awaited==1 && $confirmed==0 && $cancelled==0){
-                    $color = "Yellow";
+                    $color = "Orange";
                     $status="Awaited";
                 }
                 elseif ($awaited==0 && $confirmed==1 && $cancelled==0){
@@ -228,16 +239,23 @@ class EventController extends Controller
             }
         }
 
-        $schoolEvents = CalendarEvent::all()->where('eventType','School Function');
+        $schoolEvents = \DB::table('calendar_events')
+            ->where('eventType',"Parent Function")
+            ->orWhere('eventType',"Teacher Function")
+            ->get();
         $school_events = array();
         $k=0;
         foreach ($schoolEvents as $schoolEvent){
-            $id = $schoolEvent->getId();
-            $title = $schoolEvent->getTitle();
-            $isallDay = $schoolEvent->isAllDay();
-            $start = $schoolEvent->getStart();
-            $end = $schoolEvent->getEnd();
-            $color = $schoolEvent->background_color;
+            $eventType = $schoolEvent->eventType;
+            if ($eventType =="Parent Function")
+                $color="Magenta";
+            else
+                $color = "BlueViolet";
+            $id = $schoolEvent->id;
+            $title = $schoolEvent->title;
+            $isallDay = $schoolEvent->is_all_day;
+            $start = $schoolEvent->start;
+            $end = $schoolEvent->end;
             $school_events[$k++] = Calendar::event(
                 $title,
                 $isallDay,
@@ -253,5 +271,12 @@ class EventController extends Controller
         $calendar = Calendar::addEvents($appointments);
         $calendar = Calendar::addEvents($school_events);
         return view('appointments.calendar', compact('calendar'),$data);
+    }
+
+    public function getCalendar(Request $request){
+        $month = $request->get('month');
+        $calendar = $this->genCal();
+        $calendar->calendar($month) ;
+        return view('calendar_events.cal', compact('calendar'));;
     }
 }

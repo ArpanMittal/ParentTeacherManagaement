@@ -13,18 +13,13 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                {{--<div class="form-group">--}}
-                    {{--<label for="nome">ID</label>--}}
-                    {{--<p class="form-control-static">{{$school_event['id']}}</p>--}}
-                {{--</div>--}}
-                <div class="form-group {{$errors->has('title')?'has-error':''}}">
+                <div class="form-group">
+                    <label for="eventType">EVENT TYPE</label>
+                    <p class="form-control-static">{{$school_event['eventType']}}</p>
+                </div>
+                <div class="form-group">
                     <label for="title">TITLE</label>
-                    <input type="text" name="title" class="form-control" value="{{$school_event['title']}}"/>
-                    @if ($errors->has('title'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('title')}}</strong>
-                        </span>
-                    @endif
+                    <p class="form-control-static">{{$school_event['title']}}</p>
                 </div>
                 <div class="form-group {{$errors->has('startDate')?'has-error':''}}">
                     <label for="startDate">DATE</label>
@@ -37,25 +32,16 @@
                 </div>
                 <div class="form-group {{$errors->has('startTime')?'has-error':''}}">
                     <label for="startTime">START TIME</label>
-                    <input type="time" name="startTime" class="form-control" value="{{$school_event['startTime']}}"/>
+                    <input type="time" id="startTime" name="startTime" class="form-control" value="{{$school_event['startTime']}}" onClick="Clear1(this.id);"/>
                     @if ($errors->has('startTime'))
                         <span class="help-block">
                             <strong>{{ $errors->first('startTime') }}</strong>
                         </span>
                     @endif
                 </div>
-                {{--<div class="form-group {{$errors->has('endDate')?'has-error':''}}">--}}
-                    {{--<label for="endDate">END DATE</label>--}}
-                    {{--<input type="date" name="endDate" class="form-control" value="{{$school_event['endDate']}}"/>--}}
-                    {{--@if ($errors->has('endDate'))--}}
-                        {{--<span class="help-block">--}}
-                            {{--<strong>{{ $errors->first('endDate') }}</strong>--}}
-                        {{--</span>--}}
-                    {{--@endif--}}
-                {{--</div>--}}
                 <div class="form-group {{$errors->has('endTime')?'has-error':''}}">
                     <label for="endTime">END TIME</label>
-                    <input type="time" name="endTime" class="form-control" value="{{$school_event['endTime']}}"/>
+                    <input type="time" id="endTime" name="endTime" class="form-control" value="{{$school_event['endTime']}}" onClick="Clear1(this.id);"/>
                     @if ($errors->has('endTime'))
                         <span class="help-block">
                             <strong>{{ $errors->first('endTime') }}</strong>
@@ -69,5 +55,18 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var click = 0;
+        function Clear1(id){
+            click += 1;
+            if ((click == 1 && id=="startTime") || (click==1 && id=="endTime")) {
+                document.getElementById('startTime').value = "";
+                document.getElementById('endTime').value = "";
+            }
+        }
+    </script>
 
 @endsection

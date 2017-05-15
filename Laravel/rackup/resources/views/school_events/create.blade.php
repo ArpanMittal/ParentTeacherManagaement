@@ -13,6 +13,20 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 <div class="form-group {{$errors->has('end')?'has-error':''}}">
+                    <label for="eventType">EVENT TYPE</label>
+                    <select  id="eventType" name="eventType" class="form-control" required autofocus>
+                        @foreach($eventTypes as $eventType)
+                            <option value = "{{$eventType}}">{{$eventType}}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('eventType'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('eventType') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="form-group {{$errors->has('end')?'has-error':''}}">
                     <label for="title">TITLE</label>
                     <input type="text" name="title" class="form-control" value="{{ Input::old('title') }}" required autofocus/>
                     @if ($errors->has('title'))

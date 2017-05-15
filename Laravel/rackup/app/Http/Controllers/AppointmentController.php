@@ -630,7 +630,33 @@ class AppointmentController extends Controller
 
             );
         }
-        return Response::json([$freeSlots,$appointmentData, HttpResponse::HTTP_OK]);
+
+        $school_events = CalendarEvent::all()
+            ->where('eventType',"Parent Function");
+        $k = 0;
+        $schoolEvents = array();
+        foreach ($school_events as $school_event){
+            $eventId = $school_event->id;
+            $title = $school_event->title;
+            $startDateTime = $school_event->start;
+            $startDateTime = Carbon::parse($startDateTime);
+            $startDate = $startDateTime->toDateString();
+            $startTime = $startDateTime->toTimeString();
+            $endDateTime = $school_event->end;
+            $endDateTime = Carbon::parse($endDateTime);
+            $endDate = $endDateTime->toDateString();
+            $endTime = $endDateTime->toTimeString();
+            $schoolEvents[$k++] = array(
+                'eventId'=>$eventId,
+                'title'=>$title,
+                'startDate'=>$startDate,
+                'startTime'=>$startTime,
+                'endTime'=>$endTime
+            );
+        }
+
+
+        return Response::json([$freeSlots,$appointmentData,$schoolEvents, HttpResponse::HTTP_OK]);
     }
 
     //API to book an appointment
@@ -641,7 +667,13 @@ class AppointmentController extends Controller
             $eventId = $request->get('eventId');
             $reasonOfAppointment = $request->get('reasonOfAppointment');
             $parentContact = $request->get('parentContact');
-
+            if ((is_null($token))
+                ||(is_null($teacherId))
+                ||(is_null($eventId))
+                ||(is_null($reasonOfAppointment))
+                ||(is_null($parentContact))){
+                return Response::json(["No content. Fill all the details",HttpResponse::HTTP_NO_CONTENT]);
+            }
             $parent = JWTAuth::toUser($token);
             $parentId= $parent->id;
         }catch (TokenExpiredException $e){
@@ -651,46 +683,55 @@ class AppointmentController extends Controller
             return Response::json (['Token invalid']);
         }
 
-        $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
-        $contactNo = $teacherDetails->contact;
-        $teacherSlot = \DB::table('teacherAppointmentsSlots')
-            ->where('teacher_id',$teacherId)
-            ->where('calendarEventsId',$eventId)
-            ->first();
-        $slotId = $teacherSlot->id;
-        try {
-            \DB::beginTransaction();
-            \DB::table('teacherAppointmentsSlots')
-                ->where('id', $slotId)
-                ->update(['isBooked' => 1]);
-            \DB::table('calendar_events')
-                ->where('id', $eventId)
-                ->update(['eventType' => 'Teacher Appointment']);
-            $appointmentRequest = new AppointmentRequest();
-            $appointmentRequest->parent_id = $parentId;
-            $appointmentRequest->teacher_id = $teacherId;
-            $appointmentRequest->teacherAppointmentsSlot_id = $slotId;
-            $appointmentRequest->reasonOfAppointment= $reasonOfAppointment;
-            $appointmentRequest->isAwaited=1;
-            $appointmentRequest->isApproved=0;
-            $appointmentRequest->isCancel=0;
-            $appointmentRequest->contactNo=$contactNo;
-            $appointmentRequest->parentContact = $parentContact;
-            $appointmentRequest->requestType ="Parent Request";
-            $appointmentRequest->save();
-        }catch (Exception $e){
-            \DB::rollBack();
-            $httpStatus = HttpResponse::HTTP_PARTIAL_CONTENT;
-            return Response::json(["Partial Content",$httpStatus]);
-        }
-        \DB::commit();
-        $httpStatus = HttpResponse::HTTP_OK;
-        return Response::json(["Success",$httpStatus]);
+
+            $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
+            $contactNo = $teacherDetails->contact;
+            $teacherSlot = \DB::table('teacherAppointmentsSlots')
+                ->where('teacher_id',$teacherId)
+                ->where('calendarEventsId',$eventId)
+                ->first();
+            $slotId = $teacherSlot->id;
+            try {
+                \DB::beginTransaction();
+                \DB::table('teacherAppointmentsSlots')
+                    ->where('id', $slotId)
+                    ->update(['isBooked' => 1]);
+                \DB::table('calendar_events')
+                    ->where('id', $eventId)
+                    ->update(['eventType' => 'Teacher Appointment']);
+                $appointmentRequest = new AppointmentRequest();
+                $appointmentRequest->parent_id = $parentId;
+                $appointmentRequest->teacher_id = $teacherId;
+                $appointmentRequest->teacherAppointmentsSlot_id = $slotId;
+                $appointmentRequest->reasonOfAppointment= $reasonOfAppointment;
+                $appointmentRequest->isAwaited=1;
+                $appointmentRequest->isApproved=0;
+                $appointmentRequest->isCancel=0;
+                $appointmentRequest->contactNo=$contactNo;
+                $appointmentRequest->parentContact = $parentContact;
+                $appointmentRequest->requestType ="Parent Request";
+                $appointmentRequest->save();
+            }catch (Exception $e){
+                \DB::rollBack();
+                $httpStatus = HttpResponse::HTTP_PARTIAL_CONTENT;
+                return Response::json(["Partial Content",$httpStatus]);
+            }
+            \DB::commit();
+            $httpStatus = HttpResponse::HTTP_OK;
+            return Response::json(["Success",$httpStatus]);
+
     }
     //API to update the status of appointment event : confirmed or cancelled
     public function updateEvent(Request $request){
         try {
             $token = $request->get('token');
+            $eventId = $request->get('eventId');
+            $status = $request->get("status");
+            if ((is_null($token))
+                ||(is_null($eventId))
+                ||(is_null($status))){
+                return Response::json(["No content. Fill all the details",HttpResponse::HTTP_NO_CONTENT]);
+            }
             $user = JWTAuth::toUser($token);
             $userId = $user->id;
         }catch (TokenExpiredException $e){
@@ -698,10 +739,6 @@ class AppointmentController extends Controller
         }catch (TokenInvalidException $e){
             return Response::json (['Token invalid']);
         }
-        $eventId = $request->get('eventId');
-        $status = $request->get("status");
-
-
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
         $appointmentSlotId = $appointmentSlot->id;
         $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$appointmentSlotId)->first();
@@ -710,6 +747,9 @@ class AppointmentController extends Controller
         if($status ==2){
             try {
                 $parentContact = $request->get('parentContact');
+                if (is_null($parentContact)){
+                    return Response::json(["Partial content. Fill all the details",HttpResponse::HTTP_PARTIAL_CONTENT]);
+                }
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
                     ->where('id', $appointmentRequestId)
@@ -722,15 +762,18 @@ class AppointmentController extends Controller
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;
-                return Response::json([$httpStatus]);
+                return Response::json(["Conflict in Confirmation",$httpStatus]);
             }
             DB::commit();
             $httpStatus = HttpResponse::HTTP_OK;
-            return Response::json([$httpStatus]);
+            return Response::json(["Success in Confirmation",$httpStatus]);
         }
         //cancelled
         elseif ($status==3){
             $cancellationReason = $request->get('cancellationReason');
+            if (is_null($cancellationReason)){
+                return Response::json(["Partial content. Fill all the details",HttpResponse::HTTP_PARTIAL_CONTENT]);
+            }
             try {
                 DB::beginTransaction();
                 DB::table('appointmentRequests')
@@ -748,11 +791,11 @@ class AppointmentController extends Controller
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;
-                return Response::json(["Conflict",$httpStatus]);
+                return Response::json(["Conflict in Cancellation",$httpStatus]);
             }
             DB::commit();
             $httpStatus = HttpResponse::HTTP_OK;
-            return Response::json(["Success",$httpStatus]);
+            return Response::json(["Success in Cancellation",$httpStatus]);
         }
         else{
             return Response::json(["invalid status"]);

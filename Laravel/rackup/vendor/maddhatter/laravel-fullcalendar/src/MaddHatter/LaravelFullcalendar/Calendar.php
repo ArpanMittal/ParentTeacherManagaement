@@ -1,12 +1,16 @@
 <?php namespace MaddHatter\LaravelFullcalendar;
 
 use ArrayAccess;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\View\Factory;
+use PhpParser\Node\Scalar\String_;
 
 class Calendar
 {
 
+    public $flag =0;
+    public $defaultDate1 = '2017-06-01';
     /**
      * @var Factory
      */
@@ -34,6 +38,7 @@ class Calendar
             'right' => 'month,agendaWeek,agendaDay',
         ],
         'eventLimit' => true,
+        'defaultDate'
     ];
 
     /**
@@ -81,10 +86,26 @@ class Calendar
      *
      * @return string
      */
-    public function calendar()
-    {
-        return '<div id="calendar-' . $this->getId() . '"></div>';
+//    public function calendar()
+//    {
+//        return '<div id="calendar-' . $this->getId() . '"></div>';
+//
+//    }
+
+    public function calendar($month){
+        if ($month==null){
+            return '<div id="calendar-' . $this->getId() . '"></div>';
+        }
+        else{
+            $this->flag =1;
+            $this->getOptionsJson(array($month));
+            return '<div id="calendar-' . $this->getId() . '"></div>';
+        }
+        
     }
+
+
+
 
     /**
      * Get the <script> block to render the calendar (as a View)
@@ -93,7 +114,9 @@ class Calendar
      */
     public function script()
     {
-        $options = $this->getOptionsJson();
+        $date = null;
+        $options = $this->getOptionsJson(array($date));
+
 
         return $this->view->make('fullcalendar::script', [
             'id' => $this->getId(),
@@ -174,6 +197,8 @@ class Calendar
         return $this;
     }
 
+
+
     /**
      * Get the fullcalendar options (not including the events list)
      *
@@ -212,12 +237,26 @@ class Calendar
      *
      * @return string
      */
-    public function getOptionsJson()
+    public function getOptionsJson(array $month)
     {
+
+//            }
+//        }
         $options      = $this->getOptions();
         $placeholders = $this->getCallbackPlaceholders();
         $parameters   = array_merge($options, $placeholders);
+        $parameters['timezone']="00:00+05:30";
+        if ($month != null) {
+           if ($month[0]){
+                $this->defaultDate1 ='2017-'.$month[0].'-02';
+//                $parameters['defaultDate'] = '2017-01-01';
+            }
 
+            $parameters['defaultDate'] =  $this->defaultDate1;
+
+        }
+//        $parameters['defaultDate'] = '2017-01-01';
+        //$parameters['defaultDate'] = $defaultDate;
         $parameters['events'] = $this->eventCollection->toArray();
 
         $json = json_encode($parameters);

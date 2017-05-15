@@ -10,10 +10,10 @@
         <div class="col-md-12">
 
             <form action="#">
-                {{--<div class="form-group">--}}
-                    {{--<label for="nome">ID</label>--}}
-                    {{--<p class="form-control-static">{{$school_event->id}}</p>--}}
-                {{--</div>--}}
+                <div class="form-group">
+                    <label for="eventType">Event Type</label>
+                    <p class="form-control-static">{{$school_event->eventType}}</p>
+                </div>
                 <div class="form-group">
                     <label for="title">TITLE</label>
                     <p class="form-control-static">{{$school_event->title}}</p>
