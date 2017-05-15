@@ -62,7 +62,7 @@ class EventController extends Controller
                     $color = "BlueViolet";
                 $schoolEvents[$j++] = Calendar::event(
                     $title,
-                    $isallDay,
+                    0,
                     $start."+05:30",
                     $end."+05:30",
                     $id,
@@ -91,7 +91,7 @@ class EventController extends Controller
                     }
                     $slots[$i++] = Calendar::event(
                         $title.$teacherName.$status,
-                        $isallDay,
+                        0,
                         $start."+05:30",
                         $end."+05:30",
                         $id,
@@ -128,7 +128,7 @@ class EventController extends Controller
                     }
                     $appointments[$k++] = Calendar::event(
                         $status.$teacherName.$eventType,
-                        $isallDay,
+                        0,
                         $start."+05:30",
                         $end."+05:30",
                         $id,
@@ -197,7 +197,7 @@ class EventController extends Controller
                 }
                 $freeSlots[$j++] = Calendar::event(
                     $title.$status.$eventType,
-                    $isallDay,
+                    0,
                     $start."+05:30",
                     $end."+05:30",
                     $id,
@@ -237,7 +237,7 @@ class EventController extends Controller
                 }
                 $appointments[$i++] = Calendar::event(
                     $status.$parentName,
-                    $isallDay,
+                    0,
                     $start."+05:30",
                     $end."+05:30",
                     $id,
@@ -268,7 +268,7 @@ class EventController extends Controller
             $end = $schoolEvent->end;
             $school_events[$k++] = Calendar::event(
                 $title,
-                $isallDay,
+                0,
                 $start."+05:30",
                 $end."+05:30",
                 $id,
