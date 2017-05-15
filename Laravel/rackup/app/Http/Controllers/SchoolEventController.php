@@ -139,7 +139,7 @@ class SchoolEventController extends Controller
                    $parentDetails = UserDetails::where('user_id',$parentId)->first();
                    $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
                    $message = array("message"=>"Upcoming Event: $title on $startDate from $startTime to $endTime","eventId"=>$eventId);
-                   return $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                   sendPushNotificationToGCM($gcmRegistrationId,$message);
                }
            }
            
@@ -265,7 +265,7 @@ class SchoolEventController extends Controller
                     $parentDetails = UserDetails::where('user_id',$parentId)->first();
                     $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
                     $message = array("message"=>"Event Update: $title rescheduled to $startDate from $startTime to $endTime","eventId"=>$eventId);
-                    return $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                    sendPushNotificationToGCM($gcmRegistrationId,$message);
                 }
             }
             
