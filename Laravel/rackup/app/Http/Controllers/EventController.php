@@ -156,6 +156,16 @@ class EventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+
+        if ($request->has("month")){
+            $data['month'] = $request->get("month");
+        }
+        $calendar = $this->teacherCal($user_id);
+
+        return view('appointments.calendar', compact('calendar'),$data);
+    }
+
+    public  function  teacherCal($user_id){
         $teacherDetails = UserDetails::where('user_id',$user_id)->first();
         $teacherName = $teacherDetails->name;
         $today = Carbon::today();
@@ -270,9 +280,9 @@ class EventController extends Controller
         $calendar = Calendar::addEvents($freeSlots);
         $calendar = Calendar::addEvents($appointments);
         $calendar = Calendar::addEvents($school_events);
-        return view('appointments.calendar', compact('calendar'),$data);
-    }
 
+        return $calendar;
+    }
     public function getCalendar(Request $request){
         $month = $request->get('month');
         $calendar = $this->genCal();
