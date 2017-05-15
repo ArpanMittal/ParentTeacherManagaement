@@ -63,8 +63,8 @@ class EventController extends Controller
                 $schoolEvents[$j++] = Calendar::event(
                     $title,
                     $isallDay,
-                    $start,
-                    $end,
+                    $start."+05:30",
+                    $end."+05:30",
                     $id,
                     [
                         'color'=>$color,
@@ -92,8 +92,8 @@ class EventController extends Controller
                     $slots[$i++] = Calendar::event(
                         $title.$teacherName.$status,
                         $isallDay,
-                        $start,
-                        $end,
+                        $start."+05:30",
+                        $end."+05:30",
                         $id,
                         [
                             'color'=>$color,
@@ -129,8 +129,8 @@ class EventController extends Controller
                     $appointments[$k++] = Calendar::event(
                         $status.$teacherName.$eventType,
                         $isallDay,
-                        $start,
-                        $end,
+                        $start."+05:30",
+                        $end."+05:30",
                         $id,
                         [
                             'color'=>$color,
@@ -198,8 +198,8 @@ class EventController extends Controller
                 $freeSlots[$j++] = Calendar::event(
                     $title.$status.$eventType,
                     $isallDay,
-                    $start,
-                    $end,
+                    $start."+05:30",
+                    $end."+05:30",
                     $id,
                     [
                         'color'=>$color,
@@ -238,8 +238,8 @@ class EventController extends Controller
                 $appointments[$i++] = Calendar::event(
                     $status.$parentName,
                     $isallDay,
-                    $start,
-                    $end,
+                    $start."+05:30",
+                    $end."+05:30",
                     $id,
                     [
                         'color'=>$color,
@@ -269,8 +269,8 @@ class EventController extends Controller
             $school_events[$k++] = Calendar::event(
                 $title,
                 $isallDay,
-                $start,
-                $end,
+                $start."+05:30",
+                $end."+05:30",
                 $id,
                 [
                     'color'=>$color
