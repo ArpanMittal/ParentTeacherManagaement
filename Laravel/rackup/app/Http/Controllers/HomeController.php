@@ -148,7 +148,9 @@ class HomeController extends Controller
         $dob = $request->get('dob');
 //        $studentGender = $request->get('studentGender');
         $username = $request->get('username');
-
+        if(is_null($parentName)||is_null($contact)||is_null($address)||is_null($studentName)||is_null($dob)){
+            return Response::json(["Incomplete data",HttpResponse::HTTP_PARTIAL_CONTENT]);
+        }
         try{
             \DB::beginTransaction();
             \DB::table('userDetails')
