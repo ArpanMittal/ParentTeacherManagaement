@@ -170,7 +170,9 @@ class HomeController extends Controller
                 );
         }catch (Exception $e){
             \DB::rollback();
+            return Response::json(["Partial Content",HttpResponse::HTTP_PARTIAL_CONTENT]);
         }
         \DB::commit();
+        return Response::json(["Success",HttpResponse::HTTP_OK]);
     }
 }
