@@ -22,7 +22,8 @@ class SchoolEventController extends Controller
             'registration_ids' => $registration_ids,
             'data' => $message,
         );
-        define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
+        if (!defined('GOOGLE_API_KEY'))
+            define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
 
         $headers = array(
             'Authorization: key=' . GOOGLE_API_KEY,
@@ -132,13 +133,13 @@ class SchoolEventController extends Controller
                $eventId = $school_event->getId();
                $parents = User::all()->where('role_id',2);
                $i = 0;
-//               $gcmRegistrationId = array();
+               $gcmRegistrationId = array();
                foreach ($parents as $parent){
                    $parentId = $parent->id;
                    $parentDetails = UserDetails::where('user_id',$parentId)->first();
-//                   $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
-//                   $message = array("message"=>"Upcoming Event: $title on $startDate from $startTime to $endTime","eventId"=>$eventId);
-//                   $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                   $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
+                   $message = array("message"=>"Upcoming Event: $title on $startDate from $startTime to $endTime","eventId"=>$eventId);
+                   $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                }
            }
            
@@ -258,13 +259,13 @@ class SchoolEventController extends Controller
                 $eventId = $school_event->getId();
                 $parents = User::all()->where('role_id',2);
                 $i=0;
-//                $gcmRegistrationId=array();
+                $gcmRegistrationId=array();
                 foreach ($parents as $parent){
                     $parentId = $parent->id;
                     $parentDetails = UserDetails::where('user_id',$parentId)->first();
-//                    $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
-//                    $message = array("message"=>"Event Update: $title rescheduled to $startDate from $startTime to $endTime","eventId"=>$eventId);
-//                    $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                    $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
+                    $message = array("message"=>"Event Update: $title rescheduled to $startDate from $startTime to $endTime","eventId"=>$eventId);
+                    $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                 }
             }
             

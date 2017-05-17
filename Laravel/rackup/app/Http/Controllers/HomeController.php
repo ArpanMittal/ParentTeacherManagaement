@@ -14,8 +14,6 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use App\User;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -49,31 +47,9 @@ class HomeController extends Controller
     public function showLogin(){
         return view('auth.login');
     }
-
-    //Login Process
-    /*public function doLogin(Request $request)
-    {
-        $rules = array(
-            'username' => 'required|email',
-            'password' => 'required|alphaNum|min:8'
-        );
-        $user = \DB::table('users')
-            ->whereUsernameAndPassword(Input::get('email'), Input::get('password'))
-            ->first();
-        if (!is_null($user)) {
-            //echo "logged in";
-            $user = $request->user();
-            echo $user;
-            $user = Auth::user();
-            //auth()->login($user);
-            return redirect('home');
-        } else {
-            echo "no";
-            //return redirect('login');
-        }
-    }*/
     
-   public function doLogin(Request $request)
+    //Do login
+    public function doLogin(Request $request)
     {
         $rules = array(
             'username'    => 'required|email',
@@ -86,10 +62,6 @@ class HomeController extends Controller
             ->where('username','=',$username,'AND','password','=',$password)
             ->first();
 
-//        $user =\DB::table('users')
-//        ->whereUsernameAndPassword(Input::get('email'),Input::get('password'))
-//        ->first();
-
         if ( !is_null($user) ){
             $request->session()->put('id',$user->id);
             return redirect('home');
@@ -100,12 +72,14 @@ class HomeController extends Controller
         }
     }
 
+    //Do logout
     public function doLogout(Request $request){
         $request->session()->forget('id');
         return redirect('login');
     }
 
 
+    //Return token and save the gcm registration id of the logged in user
     public function returnToken(Request $request)
     {
         $user = \DB::table('users')
@@ -154,32 +128,8 @@ class HomeController extends Controller
             return Response::json(['error' => 'Null User'], HttpResponse::HTTP_NO_CONTENT);
         }
     }
-
-//    Save gcm registration Id of users
-    public function saveGcmRegistrationId(Request $request){
-        try {
-            $token = $request->get('token');
-            $user = JWTAuth::toUser($token);
-            $userId = $user->id;
-        }catch (TokenExpiredException $e){
-            return Response::json (['Token expired'],498);
-        }catch (TokenInvalidException $e){
-            return Response::json (['Token invalid']);
-        }
-        $gcmRegistrationId = $request->get('gcmRegistrationId');
-        try{
-            \DB::beginTransaction();
-            DB::table('userDetails')
-                ->where('user_id', $userId)
-                ->update([
-                    'gcmRegistrationId'=>$gcmRegistrationId,
-                ]);
-        }catch (Exception $e){
-            \DB::rollback();
-        }
-        \DB::commit();
-    }
-
+    
+    //API to update profile details 
     public function editProfile(Request $request){
         try {
             $token = $request->get('token');
@@ -191,12 +141,12 @@ class HomeController extends Controller
             return Response::json (['Token invalid']);
         }
         $parentName = $request->get('parentName');
-        $parentGender = $request->get('parentGender');
+//        $parentGender = $request->get('parentGender');
         $contact = $request->get('contact');
         $address = $request->get('address');
         $studentName  =$request->get('studentName');
         $dob = $request->get('dob');
-        $studentGender = $request->get('studentGender');
+//        $studentGender = $request->get('studentGender');
         $username = $request->get('username');
 
         try{
@@ -205,7 +155,7 @@ class HomeController extends Controller
                 ->where('user_id',$userId)
                 ->update([
                         'name'=>$parentName,
-                        'gender'=>$parentGender,
+//                        'gender'=>$parentGender,
                         'address'=>$address,
                         'contact' => $contact
                     ]
@@ -215,7 +165,7 @@ class HomeController extends Controller
                 ->update([
                         'name'=>$studentName,
                         'dob'=>$dob,
-                        'gender'=>$studentGender
+//                        'gender'=>$studentGender
                     ]
                 );
         }catch (Exception $e){
