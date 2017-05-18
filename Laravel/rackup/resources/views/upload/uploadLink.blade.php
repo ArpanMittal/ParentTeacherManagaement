@@ -85,12 +85,20 @@
     </div>
 </div>
 
+
 <div class="container">
     <div class="row">
         <div class="col-md-12 ">
             <div class="panel panel-default">
                 <div class="panel-heading"><h1>Upload Video Link</h1></div>
                 <div class="panel-body">
+                    <div>
+                        @if (session('failure'))
+                            <div class="alert alert-danger">
+                                {{ session('failure') }}
+                            </div>
+                        @endif
+                    </div>
                     <form id="uploadLink" method="post" role="form" action="/uploadLink" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
@@ -158,6 +166,20 @@
 
                         <div class="col-md-12"></div>
 
+                        <div class="form-group {{$errors->has('description')?'has-error':''}}">
+                            <label for="description"  class="col-md-4 control-label">Description</label>
+                            <div class="col-md-6">
+                                <input type="text" name="description" id="description" value="{{ Input::old('description    ') }}" required autofocus>
+                                @if ($errors->has('description'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('description') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-md-12"></div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
@@ -166,18 +188,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-md-offset-4">
-                            @if (session('status'))
-                                <div class="alert alert-danger">
-                                    {{ session('status') }}
-                                </div>
-                            @elseif(session('status1'))
-                                <div class="alert alert-success">
-                                    {{ session('status1') }}
-                                </div>
-                            @endif
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <a class="btn btn-default" href="{{ route('upload.index') }}">Back</a>
+                            </div>
                         </div>
                     </form>
+
+
                 </div>
             </div>
         </div>
@@ -211,7 +229,6 @@
                         var contents = $.makeArray(data);
                         //alert(contents);
                         $.each(contents, function(index,content) {
-
                             $('select[name="contentName"]').append('<option value="'+content.name +'">'+content.name +'</option>');
                         });
 
