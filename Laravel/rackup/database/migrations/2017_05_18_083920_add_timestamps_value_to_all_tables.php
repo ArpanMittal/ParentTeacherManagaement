@@ -13,11 +13,11 @@ class AddTimestampsValueToAllTables extends Migration
      */
     public function up()
     {
-        Schema::table('appointmentRequests', function(Blueprint $table) {
-            $table->dropColumn('created_at');
-            $table->dropColumn('updated_at');
-            
-        });
+//        Schema::table('appointmentRequests', function(Blueprint $table) {
+//            $table->dropColumn('created_at');
+//            $table->dropColumn('updated_at');
+//            
+//        });
         Schema::table('appointmentRequests', function(Blueprint $table) {
 //            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
