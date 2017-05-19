@@ -101,7 +101,6 @@
         var formData = new FormData($(this)[0]);
         var studentId = $('#studentId option:selected').val();
         formData.append('studentId',studentId);
-        alert(formData+"formdata");
         $.ajax({
             url: url,
             type: 'POST',
@@ -115,7 +114,7 @@
                 alert("success");
                 alert(returndata+"return data");
                 var studentId = returndata;
-                alert($('#studentId option:selected').val()+"selected");
+                $('#studentId option:selected').val()+"selected";
                 toastr.success('Image uploaded', 'Success Alert', {timeOut: 5000});
 //                window.location.reload();
             },
