@@ -11,20 +11,22 @@ $("#create-category").click(function(e){
     $.ajax({
         dataType: 'json',
         type:'POST',
-        url: 'createCategory',
+        url: form_action,
         data:{grade:grade, contentName:contentName},
         success: function( data ) {
             //alert('success');
             //alert(JSON.stringify(data));
-            $(".modal").modal('hide');
             toastr.success('Created', 'Success Alert', {timeOut: 5000});
-            //console.log(JSON.stringify(data));
             window.location.reload();
+            $("#newContent").modal('hide');
+            //console.log(JSON.stringify(data));
+
         },
         error: function(data) {
-            $(".modal").modal('hide');
+
             toastr.error('Category already exits','Failure Alert', {timeOut: 5000});
-            //window.location.reload();
+            $("#newContent").modal('hide');
+            window.location.reload();
             //console.log(JSON.stringify(data));
             //alert('error');
             //alert(JSON.stringify(data));
@@ -32,3 +34,8 @@ $("#create-category").click(function(e){
 
     });
 });
+
+
+
+
+

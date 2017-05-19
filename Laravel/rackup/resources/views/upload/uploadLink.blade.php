@@ -206,11 +206,11 @@
 </div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.3.1/jquery.twbsPagination.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 
 <script type="text/javascript">
     var url = "<?php echo route('createCategory')?>";
@@ -232,8 +232,15 @@
                             $('select[name="contentName"]').empty();
                             var contents = $.makeArray(data);
                             if (jQuery.isEmptyObject(contents)){
-                                document.getElementById('contents').style.display='none';
-                                document.getElementById('status').style.display='block';
+                                if(gradeID!=0){
+                                    document.getElementById('contents').style.display='none';
+                                    document.getElementById('status').style.display='block';
+                                }
+                                else {
+                                    document.getElementById('contents').style.display='none';
+                                    document.getElementById('status').style.display='hide';
+
+                                }
                             }
                             else{
                                 $.each(contents, function(index,content) {
