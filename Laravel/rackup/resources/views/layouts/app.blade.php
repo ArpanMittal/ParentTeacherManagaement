@@ -44,7 +44,7 @@
 
             <!-- Branding Image -->
             <a class="navbar-brand">
-                Rackup Cambridge
+               <h>Rackup Cambridge</h>
             </a>
         </div>
 
@@ -74,7 +74,12 @@
 </nav>
 
 @yield('sidebar')
-@yield('content')
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">@yield('content')</div>
+    </div>
+</div>
+
 
 
         <!-- JavaScripts -->

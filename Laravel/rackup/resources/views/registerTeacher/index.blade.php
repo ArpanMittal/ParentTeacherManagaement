@@ -28,12 +28,8 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Student Name</th>
-                    <th>Student Gender</th>
-                    <th>DOB</th>
-                    <th>Grade Name</th>
-                    <th>Parent Name</th>
-                    <th>Parent Gender</th>
+                    <th>Teacher Name</th>
+                    <th>Gender</th>
                     <th>Contact</th>
                     <th>Address</th>
                     <th>Username</th>
@@ -43,23 +39,19 @@
 
                 <tbody>
 
-                @foreach($parent_details as $parent_detail)
+                @foreach($teacher_details as $teacher_detail)
                     <tr>
-                        <td>{{$parent_detail['studentId']}}</td>
-                        <td>{{$parent_detail['studentName']}}</td>
-                        <td>{{$parent_detail['studentGender']}}</td>
-                        <td>{{$parent_detail['dob']}}</td>
-                        <td>{{$parent_detail['gradeName']}}</td>
-                        <td>{{$parent_detail['parentName']}}</td>
-                        <td>{{$parent_detail['parentGender']}}</td>
-                        <td>{{$parent_detail['contact']}}</td>
-                        <td>{{$parent_detail['address']}}</td>
-                        <td>{{$parent_detail['username']}}</td>
+                        <td>{{$teacher_detail['teacherId']}}</td>
+                        <td>{{$teacher_detail['teacherName']}}</td>
+                        <td>{{$teacher_detail['teacherGender']}}</td>
+                        <td>{{$teacher_detail['contact']}}</td>
+                        <td>{{$teacher_detail['address']}}</td>
+                        <td>{{$teacher_detail['username']}}</td>
 
                         <td class="text-right">
-                            <a class="btn btn-primary" href="{{ route('registerParent.show', $parent_detail['parentId']) }}">View</a>
-                            <a class="btn btn-warning " href="{{ route('registerParent.edit', $parent_detail['parentId']) }}">Edit</a>
-                            <form action="{{ route('registerParent.destroy', $parent_detail['parentId']) }}" method="POST" style="display: inline;"
+                            <a class="btn btn-primary" href="{{ route('registerTeacher.show', $teacher_detail['teacherId']) }}">View</a>
+                            <a class="btn btn-warning " href="{{ route('registerTeacher.edit', $teacher_detail['teacherId']) }}">Edit</a>
+                            <form action="{{ route('registerTeacher.destroy', $teacher_detail['teacherId']) }}" method="POST" style="display: inline;"
                                   onsubmit="if(confirm('Delete? Are you sure?'))
                                   {
                                   return true
@@ -80,7 +72,7 @@
                 </tbody>
             </table>
 
-            <a class="btn btn-success" href="{{ route('registerParent.create') }}">Create New User</a>
+            <a class="btn btn-success" href="{{ route('registerTeacher.create') }}">Create New User</a>
         </div>
     </div>
 

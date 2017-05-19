@@ -54,8 +54,8 @@
 
 
 
-            <a class="btn btn-default" href="{{ route('admin.index') }}">Back</a>
-            <a class="btn btn-warning" href="{{ route('admin.edit', $parent_details['parentId']) }}">Edit</a>
+            <a class="btn btn-default" href="{{ route('registerParent.index') }}">Back</a>
+            <a class="btn btn-warning" href="{{ route('registerParent.edit', $parent_details['parentId']) }}">Edit</a>
             <form action="#/$parent_details['parentId']"
                   method="DELETE"
                   style="display: inline;"

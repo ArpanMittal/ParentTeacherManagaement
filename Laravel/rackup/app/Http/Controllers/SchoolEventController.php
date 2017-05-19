@@ -45,7 +45,7 @@ class SchoolEventController extends Controller
         return $result;
     }
     /**
-     * Display a listing of the resource.
+     * Display a listing of the school events.
      *
      * @return Response
      */
@@ -65,7 +65,7 @@ class SchoolEventController extends Controller
         return view('school_events.index', compact('school_events'),$data);
     }
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new school event.
      *
      * @return Response
      */
@@ -84,7 +84,7 @@ class SchoolEventController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created school event.
      *
      * @param Request $request
      * @return Response
@@ -152,7 +152,7 @@ class SchoolEventController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified school event.
      *
      * @param  int $id
      * @return Response
@@ -168,6 +168,7 @@ class SchoolEventController extends Controller
         return view('school_events.show', compact('school_event'),$data);
     }
 
+    //Display specified school event to teacher
     public function showEvents($id,Request $request)
     {
         $user_id = $request->session()->get('id');
@@ -181,7 +182,7 @@ class SchoolEventController extends Controller
 
     
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified school event.
      *
      * @param  int $id
      * @return Response
@@ -215,7 +216,7 @@ class SchoolEventController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified school event.
      *
      * @param  int    $id
      * @param Request $request
@@ -278,7 +279,7 @@ class SchoolEventController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified school event.
      *
      * @param  int $id
      * @return Response

@@ -67,7 +67,6 @@
             </table>
 
             <a class="btn btn-success" href="{{ route('uploadLink') }}">Upload New Link</a>
-            <a class="btn btn-danger" href="{{route('uploadFile')}}">Upload Pdf</a>
         </div>
     </div>
 

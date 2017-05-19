@@ -5,11 +5,17 @@
         <h1>Create New User</h1>
     </div>
 
+    @if (session('failure'))
+        <div class="alert alert-danger">
+            {{ session('failure') }}
+        </div>
+    @endif
+
 
     <div class="row">
         <div class="col-md-12">
 
-            <form action="{{ route('admin.store') }}" method="POST">
+            <form action="{{ route('registerParent.store') }}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 
@@ -159,7 +165,7 @@
                         @endif
                     </div>
                 </div>
-                <a class="btn btn-default" href="{{ route('admin.index') }}">Back</a>
+                <a class="btn btn-default" href="{{ route('registerParent.index') }}">Back</a>
                 <button class="btn btn-primary" type="submit" >Create</button>
             </form>
         </div>

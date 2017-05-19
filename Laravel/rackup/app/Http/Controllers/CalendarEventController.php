@@ -14,15 +14,68 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rules\In;
 use Illuminate\Support\Facades\Input;
-use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Mockery\CountValidator\Exception;
 
 class CalendarEventController extends Controller
 {
+    //Get the week day from the slot day
+    function getDay($slotDay){
+        $startDate = Carbon::today();
+        $endDate = Carbon::today();
+        $dayofweek = date('w', strtotime($startDate));
+        $slotDayNo = date('w', strtotime($slotDay));
+        $diffDays = $slotDayNo - $dayofweek;
+        global $addDay;
+        if ($diffDays < 0) {
+            switch ($diffDays) {
+                case -1 :
+                    $addDay = 6;
+                    break;
+                case -2 :
+                    $addDay = 5;
+                    break;
+                case -3 :
+                    $addDay = 4;
+                    break;
+                case -4 :
+                    $addDay = 3;
+                    break;
+                case -5 :
+                    $addDay = 2;
+                    break;
+            }
+        }
+        else {
+            switch ($diffDays) {
+                case 0 :
+                    $addDay = 7;
+                    break;
+                case 1 :
+                    $addDay = 1;
+                    break;
+                case 2 :
+                    $addDay = 2;
+                    break;
+                case 3 :
+                    $addDay = 3;
+                    break;
+                case 4 :
+                    $addDay = 4;
+                    break;
+                case 5 :
+                    $addDay = 5;
+                    break;
+                case 6 :
+                    $addDay = 6;
+                    break;
+
+            }
+        }
+        return array('addDay'=>$addDay,'startDate'=>$startDate,'endDate'=>$endDate);
+    }
     /**
- * Display a listing of the resource.
+ * Display a listing of the free slots.
  *
  * @return Response
  */
@@ -119,7 +172,7 @@ class CalendarEventController extends Controller
         return view('calendar_events.index', compact('calendar_events'),$data);
     }
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new free slot.
      *
      * @return Response
      */
@@ -143,65 +196,9 @@ class CalendarEventController extends Controller
         $days = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
         return view('calendar_events.create',compact('teacherData','days'),$data);
     }
-
-
-
-    function getDay($slotDay){
-        $startDate = Carbon::today();
-        $endDate = Carbon::today();
-        $dayofweek = date('w', strtotime($startDate));
-        $slotDayNo = date('w', strtotime($slotDay));
-        $diffDays = $slotDayNo - $dayofweek;
-        global $addDay;
-        if ($diffDays < 0) {
-            switch ($diffDays) {
-                case -1 :
-                    $addDay = 6;
-                    break;
-                case -2 :
-                    $addDay = 5;
-                    break;
-                case -3 :
-                    $addDay = 4;
-                    break;
-                case -4 :
-                    $addDay = 3;
-                    break;
-                case -5 :
-                    $addDay = 2;
-                    break;
-            }
-        }
-        else {
-            switch ($diffDays) {
-                case 0 :
-                    $addDay = 7;
-                    break;
-                case 1 :
-                    $addDay = 1;
-                    break;
-                case 2 :
-                    $addDay = 2;
-                    break;
-                case 3 :
-                    $addDay = 3;
-                    break;
-                case 4 :
-                    $addDay = 4;
-                    break;
-                case 5 :
-                    $addDay = 5;
-                    break;
-                case 6 :
-                    $addDay = 6;
-                    break;
-
-            }
-        }
-        return array('addDay'=>$addDay,'startDate'=>$startDate,'endDate'=>$endDate);
-    }
+    
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created free slot.
      *
      * @param Request $request
      * @return Response
@@ -257,7 +254,7 @@ class CalendarEventController extends Controller
                     ->orwhere('calendar_events.end','<',$startDateTime);
             })->get();
 
-        //Insert if not empty
+        //Insert if calendarEvents2 not empty
         if ($calendarEvent1->isEmpty() || $calendarEvent2->isNotEmpty())
         {
             $i = 0;
@@ -297,7 +294,7 @@ class CalendarEventController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified free slot.
      *
      * @param  int $id
      * @return Response
@@ -350,7 +347,7 @@ class CalendarEventController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified free slot.
      *
      * @param  int $id
      * @return Response
@@ -402,7 +399,7 @@ class CalendarEventController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified free slot.
      *
      * @param  int    $id
      * @param Request $request
@@ -487,9 +484,9 @@ class CalendarEventController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified free slot.
      *
-     * @param  int $id
+     * @param  int $idk
      * @return Response
      */
     public function destroy($id)
@@ -532,6 +529,7 @@ class CalendarEventController extends Controller
         return redirect(route('calendar_events.index'))->with('success', 'Slot deleted successfully.');
     }
     
+    //Show appointments of all the teachers
     public function showAppointments($id,Request $request){
         
         $user_id = $request->session()->get('id');
