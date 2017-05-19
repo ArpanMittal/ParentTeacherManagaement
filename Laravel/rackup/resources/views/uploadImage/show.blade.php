@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group">
                     <label for="filePath">Image URL</label>
-                    <p class="form-control-static">{{$uploadedImages['filePath']}}</p>
+                    <p class="form-control-static"><a href="{{$uploadedImage['filePath']}}">{{$uploadedImage['filePath']}}</a></p>
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>
