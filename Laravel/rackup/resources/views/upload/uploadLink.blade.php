@@ -99,13 +99,16 @@
                             </div>
                         @endif
                     </div>
+                    <div id="status" class="alert alert-danger" style="display:none;">
+                        No category for this grade. Click on Create New Category to add category.
+                    </div>
                     <form id="uploadLink" method="post" role="form" action="/uploadLink" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
                             <label for="gradeId"  class="col-md-4 control-label ">Grade</label>
                             <div class="col-md-6">
                                 <select  id="gradeId"name="gradeId" class="form-control">
-                                    <option>Select grade</option>
+                                    <option value=0>Select grade</option>
                                     @foreach($grades as $grade)
                                         <option value = "{{$grade['id']}}">{{$grade['name']}}</option>
                                     @endforeach
@@ -218,25 +221,35 @@
     $(document).ready(function() {
         $('select[name="gradeId"]').on('change', function() {
             var gradeID = $(this).val();
-            if(gradeID) {
-                $.ajax({
-                    url: 'category'+gradeID,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        document.getElementById('contents').style.display='block';
-                        $('select[name="contentName"]').empty();
-                        var contents = $.makeArray(data);
-                        //alert(contents);
-                        $.each(contents, function(index,content) {
-                            $('select[name="contentName"]').append('<option value="'+content.name +'">'+content.name +'</option>');
-                        });
-
-                    }
-                });
-            }else{
-                $('select[name="contentName"]').empty();
-            }
+//            if(gradeID != 0){
+                if(gradeID) {
+                    $.ajax({
+                        url: 'category'+gradeID,
+                        type: "GET",
+                        dataType: "json",
+                        success:function(data) {
+                            document.getElementById('contents').style.display='block';
+                            $('select[name="contentName"]').empty();
+                            var contents = $.makeArray(data);
+                            if (jQuery.isEmptyObject(contents)){
+                                document.getElementById('contents').style.display='none';
+                                document.getElementById('status').style.display='block';
+                            }
+                            else{
+                                $.each(contents, function(index,content) {
+                                    $('select[name="contentName"]').append('<option value="'+content.name +'">'+content.name +'</option>');
+                                });
+                                document.getElementById('status').style.display='none';
+                            }
+                        }
+                    });
+                }else{
+                    $('select[name="contentName"]').empty();
+                }
+//            }
+//            else{
+//                document.getElementById('contents').style.display='none';
+//            }
         });
     });
 </script>
