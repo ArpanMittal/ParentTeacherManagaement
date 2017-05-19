@@ -539,6 +539,7 @@ class CalendarEventController extends Controller
         $appointmentRequest = AppointmentRequest::where('id',$id)->first();
         $appointmentRequestId=$appointmentRequest->id;
         $teacherId = $appointmentRequest->teacher_id;
+        $teacherContact = $appointmentRequest->contactNo;
         $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
         $teacherName = $teacherDetails->name;
         $parentId = $appointmentRequest->parent_id;
@@ -585,6 +586,7 @@ class CalendarEventController extends Controller
             'requestId' => $appointmentRequestId,
             'teacherId' =>$teacherId,
             'teacherName' =>$teacherName,
+            'teacherContact'=>$teacherContact,
             'parentName'=>$parentName,
             'parentContact'=>$parentContact,
             'studentId'=>$studentId,
