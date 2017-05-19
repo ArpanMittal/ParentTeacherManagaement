@@ -27,7 +27,7 @@
                 </div>
 
             <a class="btn btn-default" href="{{ route('uploadImage.index') }}">Back</a>
-            <form action="#/$uploadedImage['imageId']" method="DELETE" style="display: inline;"
+            <form action="#/$uploadedImages['imageId']" method="DELETE" style="display: inline;"
                   onsubmit="if(confirm('Delete? Are you sure?'))
                    { return true }
                    else {return false };">
