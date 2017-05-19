@@ -26,10 +26,13 @@
     </div>
 
     <div id="status" class="alert alert-success" style="display:none;">
-        Please enter next image or Click on Finish if you have completed uploading images of selected student
+        Upload successful. Upload next image or Click on Send Notification to notify parent.
+    </div>
+    <div id="invalidFormat" class="alert alert-danger" style="display:none;">
+        Invalid File format.Upload only jpg images
     </div>
 
-    <form id="uploadImage" action="{{ route('upload.store')}}" enctype="multipart/form-data" method="post" >
+    <form id="uploadImage" action="{{ route('upload.store')}}" enctype="multipart/form-data" method="post" onsubmit="return validate()" >
         {{csrf_field()}}
 
         <div class="form-group {{$errors->has('studentId')?'has-error':''}}">
@@ -72,10 +75,10 @@
             </div>
         </div>
 
-        <input type="submit" id="upload" value="Upload">
+        <input type="submit" id="upload" value="Upload" >
 
-        <button id="finishUpload" type="submit" class="btn btn-primary">
-            Finish
+        <button id="sendNotification" type="submit" class="btn btn-primary">
+            Send Notification
         </button>
 
     </form>
@@ -91,6 +94,21 @@
 
 <script type="text/javascript">
     var url = "<?php echo route('upload.store')?>";
+    var flag = 0;
+</script>
+<script type="text/javascript">
+    function validate() {
+        var filename=document.getElementById('fileEntries').value;
+        var extension=filename.substr(filename.lastIndexOf('.')+1).toLowerCase();
+        //alert(extension);
+        if(extension=='jpg') {
+            flag = 1;
+        } else {
+            flag =0;
+            document.getElementById('invalidFormat').style.display='block';
+            document.getElementById('status').style.display='none';
+        }
+    }
 </script>
 
 <script type="text/javascript">
@@ -101,6 +119,7 @@
         var formData = new FormData($(this)[0]);
         var studentId = $('#studentId option:selected').val();
         formData.append('studentId',studentId);
+    if(flag == 1){
         $.ajax({
             url: url,
             type: 'POST',
@@ -111,6 +130,7 @@
             processData: false,
             success: function (returndata) {
                 document.getElementById('status').style.display='block';
+                document.getElementById('invalidFormat').style.display='none';
                 alert("success");
                 alert(returndata+"return data");
                 var studentId = returndata;
@@ -126,9 +146,10 @@
             }
         });
         document.getElementById("studentId").disabled = true;
+    }
     });
 
-    $("#finishUpload").click(function(e){
+    $("#sendNotification").click(function(e){
         alert('on click');
         e.preventDefault();
         var studentId = $('#studentId option:selected').val();
@@ -146,12 +167,11 @@
                 alert('error');
                 alert(data);
                 toastr.error('Failed to send notification','Failure Alert', {timeOut: 5000});
+                window.location.reload();
             }
 
         });
     });
-
-
 
 </script>
 </body>
