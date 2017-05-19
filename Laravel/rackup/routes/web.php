@@ -28,6 +28,7 @@ Route::resource('registerTeacher','RegisterTeacherController');
 
 Route::get('/uploadFile','UploadController@showUpload')->middleware('check.session');
 Route::post('/uploadFile','UploadController@doUpload')->name('uploadFile');
+Route::resource('uploadImage','UploadImageController');
 Route::get('/uploadLink','UploadController@showUploadLink')->middleware('check.session');
 Route::post('/uploadLink','UploadController@doUploadLink')->name('uploadLink');
 Route::post('createCategory','UploadController@createCategory')->name('createCategory');

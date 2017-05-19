@@ -24,7 +24,7 @@
                     {{--<li><a href="{{ route('upload')}}">Upload File</a></li>--}}
                     {{--<li><a href="{{ route('uploadLink')}}">Upload Link</a></li>--}}
                     <li><a href="{{ route('upload.index')}}">Upload Links</a></li>
-                    <li><a href="{{ route('uploadFile')}}">Upload Image</a></li>
+                    <li><a href="{{ route('uploadImage.index')}}">Upload Image</a></li>
                     <li><a href="{{ route('appointments.index')}}">View Appointments</a></li>
                     <li><a href="{{ route('editProfileDetails')}}">Edit Profile</a></li>
                     {{--<li><a href="{{route('teacherAppointments')}}">Show Appointments</a></li>--}}
