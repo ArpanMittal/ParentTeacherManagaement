@@ -41,7 +41,7 @@
                     <tr>
                         <td>{{$uploadedImage['studentName']}}</td>
                         <td>{{$uploadedImage['title']}}</td>
-                        <td>{{$uploadedImage['filePath']}}</td>
+                        <td><a href="web.rackupcambridge.com{{$uploadedImage['filePath']}}">web.rackupcambridge.com{{$uploadedImage['filePath']}}</a></td>
                         <td>{{$uploadedImage['description']}}<td>
 
                         <td class="text-right">
