@@ -26,7 +26,7 @@
                     <p class="form-control-static">{{$calendar_event['endTime']}}</p>
                 </div>
 
-                <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
+                <a class="btn btn-default" href="{{ route('appointments.index') }}">Home</a>
 
             </form>
         </div>

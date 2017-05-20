@@ -10,7 +10,7 @@ class Calendar
 {
 
     public $flag =0;
-    public $defaultDate1 = '2017-06-01';
+    public $defaultDate1;
     /**
      * @var Factory
      */
@@ -92,13 +92,13 @@ class Calendar
 //
 //    }
 
-    public function calendar($month){
-        if ($month==null){
+    public function calendar($month,$year){
+        if ($month==null || $year==null){
             return '<div id="calendar-' . $this->getId() . '"></div>';
         }
         else{
             $this->flag =1;
-            $this->getOptionsJson(array($month));
+            $this->getOptionsJson(array($month),array($year));
             return '<div id="calendar-' . $this->getId() . '"></div>';
         }
         
@@ -114,8 +114,9 @@ class Calendar
      */
     public function script()
     {
-        $date = null;
-        $options = $this->getOptionsJson(array($date));
+        $month = null;
+        $year = null;
+        $options = $this->getOptionsJson(array($month),array($year));
 
 
         return $this->view->make('fullcalendar::script', [
@@ -237,24 +238,22 @@ class Calendar
      *
      * @return string
      */
-    public function getOptionsJson(array $month)
+    public function getOptionsJson(array $month,array $year)
     {
-
-//            }
-//        }
+        
         $options      = $this->getOptions();
         $placeholders = $this->getCallbackPlaceholders();
         $parameters   = array_merge($options, $placeholders);
         $parameters['timezone']="00:00+05:30";
-        if ($month != null) {
-           if ($month[0]){
-                $this->defaultDate1 ='2017-'.$month[0].'-02';
+        if ($month != null && $year != null) {
+           if ($month[0] && $year[0]){
+                $this->defaultDate1 =$year[0].'-'.$month[0].'-02';
 //                $parameters['defaultDate'] = '2017-01-01';
             }
 
             $parameters['defaultDate'] =  $this->defaultDate1;
 
-        }
+        }       
 //        $parameters['defaultDate'] = '2017-01-01';
         //$parameters['defaultDate'] = $defaultDate;
         $parameters['events'] = $this->eventCollection->toArray();

@@ -28,8 +28,7 @@
                 </div>
             </form>
 
-
-            <a class="btn btn-default" href="{{ route('school_events.index') }}">Index</a>
+            <a class="btn btn-default" href="{{ route('school_events.index') }}">Home</a>
             <a class="btn btn-warning" href="{{ route('school_events.edit', $school_event->id) }}">Edit</a>
             <form action="#/$school_event->id" method="DELETE" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };"><button class="btn btn-danger" type="submit">Delete</button></form>
         </div>

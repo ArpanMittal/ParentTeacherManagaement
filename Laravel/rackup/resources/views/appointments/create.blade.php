@@ -90,7 +90,7 @@
                     @endif
                 </div>
 
-                <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
+                <a class="btn btn-default" href="{{ route('appointments.index') }}">Home</a>
                 <button class="btn btn-primary" type="submit" >Send Request</button>
             </form>
         </div>

@@ -56,7 +56,7 @@
                         </span>
                     @endif
                 </div>
-                <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
+                <a class="btn btn-default" href="{{ route('appointments.index') }}">Home</a>
                 <button class="btn btn-danger" type="submit" >Cancel Appointment</button>
             </form>
         </div>

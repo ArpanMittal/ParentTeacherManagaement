@@ -77,7 +77,7 @@
                     <label for="status">STATUS</label>
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
-                <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Index</a>
+                <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Home</a>
             </form>
         </div>
     </div>

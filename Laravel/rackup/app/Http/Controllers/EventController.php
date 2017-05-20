@@ -33,11 +33,15 @@ class EventController extends Controller
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
         if ($request->has("month")){
-            $data['month'] = $request->get("month");
+           $monthYear  = $request->get("month");
+            $year = substr($monthYear,2);
+            $month = substr($monthYear,0,2);
+            $data['month'] = $month;
+            $data['year1'] = $year;
         }
         $calendar = $this->genCal();
         return view('calendar_events.calendar', compact('calendar'),$data);
-        }
+    }
 
     private function genCal(){
         $databaseEvents = $this->calendarEvent->all();
@@ -158,7 +162,11 @@ class EventController extends Controller
         $data['user'] = $user;
 
         if ($request->has("month")){
-            $data['month'] = $request->get("month");
+            $monthYear  = $request->get("month");
+            $year = substr($monthYear,2);
+            $month = substr($monthYear,0,2);
+            $data['month'] = $month;
+            $data['year1'] = $year;
         }
         $calendar = $this->teacherCal($user_id);
 

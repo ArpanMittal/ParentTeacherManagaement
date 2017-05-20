@@ -65,7 +65,7 @@
                     <label for="status">STATUS</label>
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
-                <a class="btn btn-default" href="{{ route('appointments.index') }}">Index</a>
+                <a class="btn btn-default" href="{{ route('appointments.index') }}">Home</a>
                 @if(($appointmentDetails['requestedBy']=="Parent") &&
                 $appointmentDetails['status']=="Awaited"))
                     <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetails['requestId'])}}">Confirm Appointment</a>
