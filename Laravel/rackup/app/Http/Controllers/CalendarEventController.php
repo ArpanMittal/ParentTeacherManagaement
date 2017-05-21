@@ -117,7 +117,7 @@ class CalendarEventController extends Controller
         while($dayCount!=6) {
             $calendarEvents = \DB::table('calendar_events')
                 ->whereDATE('start',$weekday)
-                ->where('eventType','Teacher Appointment')
+                ->where('eventType','Free Slot')
                 ->get();
             foreach ($calendarEvents as $calendarEvent)
             {
@@ -267,7 +267,7 @@ class CalendarEventController extends Controller
                     $calendar_event->end = $endDateTime;
                     $calendar_event->is_all_day = 0;
                     $calendar_event->background_color = "blue";
-                    $calendar_event->eventType = "Teacher Appointment";
+                    $calendar_event->eventType = "Free Slot";
                     $calendar_event->save();
                     $teacherSlots = new TeacherAppointmentSlots();
                     $teacherSlots->teacher_id = $teacherId;

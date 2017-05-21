@@ -534,9 +534,10 @@ class AppointmentController extends Controller
                 ->join('calendar_events','teacherAppointmentsSlots.calendarEventsId','calendar_events.id')
                 ->where('teacherAppointmentsSlots.isBooked',0)
                 ->where('grade_user.grade_id',$gradeId)
-                ->where('calendar_events.eventType','Teacher Appointment')
+                ->where('calendar_events.eventType','Free Slot')
                 ->whereDate('calendar_events.start',$date)
                 ->get();
+            
             foreach ($calendarEvents as $calendarEvent)
             {
                 $calendarEventId = $calendarEvent->id;

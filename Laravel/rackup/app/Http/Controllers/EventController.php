@@ -62,7 +62,7 @@ class EventController extends Controller
             if($eventType=="Parent Function" || $eventType=="Teacher Function" ){
                 if ($eventType =="Parent Function")
                     $color="Magenta";
-                else
+                else 
                     $color = "BlueViolet";
                 $schoolEvents[$j++] = Calendar::event(
                     $title,
