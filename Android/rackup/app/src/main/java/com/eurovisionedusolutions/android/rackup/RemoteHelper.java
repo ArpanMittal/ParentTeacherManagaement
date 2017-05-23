@@ -121,7 +121,7 @@ public class RemoteHelper {
     /*
     for login activity
      */
-    public void verifyLogin(RemoteCallHandler caller, RemoteCalls functionCalled, String email, String password) {
+    public void verifyLogin(RemoteCallHandler caller, RemoteCalls functionCalled, String email, String password,String GCM_Id) {
         //  verifyLoginurl=R.string.loginurl;
         Map<String, String> params = new HashMap<String, String>();
       /*  params.put("client_id", GlobalConstants.CLIENT_ID);
@@ -129,6 +129,7 @@ public class RemoteHelper {
         params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
         params.put("email", email);
         params.put("password", password);
+        params.put("gcmRegistrationId",GCM_Id);
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/x-www-form-urlencoded");
         new JSONParserAsync(this.context.getResources().getString(R.string.loginurl), params, header, caller, functionCalled);
@@ -144,6 +145,98 @@ public class RemoteHelper {
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/x-www-form-urlencoded");
         new JSONParserAsync(this.context.getResources().getString(R.string.VideoAPIUrl), params, header, caller, functionCalled);
+
+    }
+    public void Slot_Details(RemoteCallHandler caller, RemoteCalls functionCalled, String token) {
+        //  verifyLoginurl=R.string.loginurl;
+        Map<String, String> params = new HashMap<String, String>();
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
+        params.put("client_secret", GlobalConstants.CLINET_SECRET);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("token", token);
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.slot_details), params, header, caller, functionCalled);
+
+    }
+    public void Book_Appointment(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String teacherId, String eventId,String reasonOfAppointment, String parentContact) {
+        //  verifyLoginurl=R.string.loginurl;
+        Map<String, String> params = new HashMap<String, String>();
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
+        params.put("client_secret", GlobalConstants.CLINET_SECRET);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("token", token);
+        params.put("teacherId",teacherId);
+        params.put("eventId",eventId);
+        params.put("reasonOfAppointment",reasonOfAppointment);
+        params.put("parentContact",parentContact);
+
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.Book_Appointment), params, header, caller, functionCalled);
+
+    }
+    public void Update_Event(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String eventId,String status, String contact,int flag) {
+        //  verifyLoginurl=R.string.loginurl;
+        Map<String, String> params = new HashMap<String, String>();
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
+        params.put("client_secret", GlobalConstants.CLINET_SECRET);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("token", token);
+        params.put("eventId",eventId);
+        params.put("status",status);
+        params.put("parentContact",contact);
+
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);
+
+    }
+    public void Update_Event(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String eventId,String status,
+                             String reason) {
+        //  verifyLoginurl=R.string.loginurl;
+        Map<String, String> params = new HashMap<String, String>();
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
+        params.put("client_secret", GlobalConstants.CLINET_SECRET);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("token", token);
+        params.put("eventId",eventId);
+        params.put("status",status);
+        params.put("cancellationReason",reason);
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);
+
+    }
+    public void Edit_profile(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String parentName,String contact,
+                             String address, String dob, String studentName) {
+        //  verifyLoginurl=R.string.loginurl;
+        Map<String, String> params = new HashMap<String, String>();
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
+        params.put("client_secret", GlobalConstants.CLINET_SECRET);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("token", token);
+        params.put("parentName",parentName);
+        params.put("contact",contact);
+        params.put("address",address);
+        params.put("dob",dob);
+        params.put("studentName",studentName);
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);
+
+    }
+    public void FeedActivity(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String lastID) {
+        //  verifyLoginurl=R.string.loginurl;
+        Map<String, String> params = new HashMap<String, String>();
+      /*  params.put("client_id", GlobalConstants.CLIENT_ID);
+        params.put("client_secret", GlobalConstants.CLINET_SECRET);
+        params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
+        params.put("token", token);
+       params.put("lastImageId",lastID);
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.FeedActivity), params, header, caller, functionCalled);
 
     }
 }

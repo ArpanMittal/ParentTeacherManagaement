@@ -7,6 +7,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="com.eurovisionedusolutions.android.rackup.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.eurovisionedusolutions.android.rackup.permission.C2D_MESSAGE" />
 
     <application
         android:name=".VolleyController"
@@ -21,45 +28,99 @@
             android:authorities="com.eurovisionedusolutions.android.rackup"
             android:exported="false" />
 
-        <activity
-        android:name=".Tab_fragment"
-        android:label="navigation tabs"
-        android:theme="@style/AppTheme"
-        android:launchMode="singleTask">
-
-        </activity>
+      <!--  <activity
+            android:name=".Tab_fragment"
+            android:label="navigation tabs"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme" />-->
         <activity
             android:name=".FullscreenDemoActivity"
             android:label="fullscreenactivity"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".MainActivity"
-            android:label="yo_yo_yo_yo_yo"
-            android:theme="@style/AppTheme"
-
-            android:launchMode="singleTask"></activity>
+            android:label="Navigation Activity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".YouTubeAPIDemoActivity"
-            android:label="yo"></activity>
-       <!-- <activity
+            android:label="Youtube player " />
+        <!--
+            <activity
             android:name=".Edit_profile"
             android:label="@string/title_activity_edit_profile"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme" />-->
+            android:theme="@style/AppTheme" />
+        -->
         <activity
             android:name=".LoginActivity"
             android:label="@string/login"
             android:launchMode="singleTask"
             android:noHistory="true"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Splash_Screen">
+        <activity
+            android:name=".Splash_Screen"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Forgot_Password" />
+       <!-- <activity android:name=".video_Call" />-->
+       <!-- <activity android:name=".Events" />-->
+        <activity android:name=".Main_Activity_Appointment" />
+       <!-- <activity
+            android:name=".BasicActivity"
+            android:label="@string/title_activity_basic" />-->
+        <!--
+            <activity
+            android:name=".AsynchronousActivity"
+            android:label="@string/title_activity_asynchronous"></activity>
+        -->
+       <!-- <activity
+            android:name=".AsynchronousActivity"
+            android:label="navigation tabs"
+            android:launchMode="singleTask" />-->
+        <activity
+            android:name=".book_appointment"
+            android:theme="@style/AppTheme"
+            android:label="Confirm Appointment" />
+        <activity android:name=".GCM_Example_mainActivity" />
+        <!-- GCM Receiver -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.gnirt69.gcmexample" />
+            </intent-filter>
+        </receiver>
+
+        <!-- GCM Receiver Service -->
+        <service
+            android:name=".GCMPushReceiverService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <!-- GCM Registration Intent Service -->
+        <service
+            android:name=".GCMRegistrationIntentService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".Notification_activity" />
+        <!--<activity android:name=".Feed_Activity" />-->
+        <activity android:name=".ImageView_for_Feed"></activity>
     </application>
 
 </manifest>

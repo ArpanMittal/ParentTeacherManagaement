@@ -24,6 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CONTACTS_COLUMN_STREET = "street";
     public static final String CONTACTS_COLUMN_CITY = "place";
     public static final String CONTACTS_COLUMN_PHONE = "phone";
+    public static final String token="token";
     private HashMap hp;
 
     public DBHelper(Context context) {
@@ -35,8 +36,9 @@ public class DBHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table contacts " +
-                        "(id integer primary key, name text,contact text)"
+                        "(id integer primary key, name text,contact text,token text)"
         );
+
     }
 
     @Override
@@ -46,12 +48,13 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertContact(String id, String name, String phone) {
+    public boolean insertContact(String id, String name, String phone, String token) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.getAsInteger(id);
-        contentValues.put("name", name);
         contentValues.put("contact", phone);
+        contentValues.put("name", name);
+        contentValues.put("token", token);
 
         db.insert("contacts", null, contentValues);
         return true;

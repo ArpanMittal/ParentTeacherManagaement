@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <group
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never">
+
+
+        <item
+            android:id="@+id/action_month_with_below_events"
+            android:orderInCategory="200"
+            android:title="Events"
+            app:showAsAction="never" />
+
+
+
+        <item
+            android:id="@+id/action_agenda"
+            android:orderInCategory="500"
+            android:title="Agenda"
+            app:showAsAction="never" />
+
+
+        <item
+            android:id="@+id/action_today"
+            android:orderInCategory="600"
+            android:title="Go To"
+            app:showAsAction="never" />
+
+    </group>
+
+</menu>

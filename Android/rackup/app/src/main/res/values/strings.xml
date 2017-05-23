@@ -2,9 +2,10 @@
     <string name="app_name">rackup</string>
     <!-- Strings related to msg -->
     <string name="loadingmsg">loading, please wait</string>
-    <string name="item_1">Item 1</string>
-    <string name="item_2">Item 2</string>
-    <string name="item_3">Item 3</string>
+    <string name="item_1">Videos</string>
+    <string name="item_2">Call</string>
+    <string name="item_3">Profile</string>
+    <string name="item_4">Events</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -479,7 +480,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
-   <!-- //youtube-->
+    <!-- //youtube-->
     <!-- Strings related to msg -->
 
     <string name="youtube_api_demo">YouTube API Demos</string>
@@ -529,7 +530,21 @@
 
     <string name="error_thumbnail_view">There was an error initializing the YouTubeThumbnailView (%1$s)</string>
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
-    <string name="err_msg_contact_notValid">Enter a valid 10 digit contact</string>
+    <string name="err_msg_contact_notValid">Enter a valid 10 digit contact number</string>
     <string name="err_msg_email_Not_valid">Enter a valid email</string>
+
     <string name="VideoAPIUrl">http://web.rackupcambridge.com/api/getContent</string>
+    <string name="slot_details">http://web.rackupcambridge.com/api/slotDetails</string>
+
+    <string name="action_today">Today</string>
+    <string name="action_day_view">Day view</string>
+    <string name="action_three_day_view">3 day view</string>
+    <string name="action_week_view">Week view</string>
+    <string name="title_activity_basic">Basic Example</string>
+    <string name="title_activity_asynchronous">Asynchronous Events</string>
+    <string name="async_error">Could not download events from the internet</string>
+    <string name="Book_Appointment">http://web.rackupcambridge.com/api/bookAppointments</string>
+    <string name="Update_Event">http://web.rackupcambridge.com/api/updateEvent</string>
+    <string name="item_5">Feed</string>
+    <string name="FeedActivity">http://web.rackupcambridge.com/api/activityImages</string>
 </resources>

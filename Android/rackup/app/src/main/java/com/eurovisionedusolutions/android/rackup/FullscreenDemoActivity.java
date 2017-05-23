@@ -91,8 +91,8 @@ public class FullscreenDemoActivity extends YouTubeFailureRecoveryActivity imple
         }
     }
     public void onBackPressed() {
-        Intent nn=new Intent(this,VideoListDemoActivity.class);
-        startActivity(nn);
+
+
         finish();
     }
     @Override

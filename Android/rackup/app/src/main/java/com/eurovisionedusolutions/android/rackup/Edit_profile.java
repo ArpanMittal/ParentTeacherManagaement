@@ -26,6 +26,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -63,8 +64,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -86,12 +89,14 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     int id_To_Update = 0;
     ProgressDialog pd;
     DBHelper mydb;
-    private Calendar calendar;
+    private Calendar calendar, myCalendar;
     private Button done, fetch;
     private String selectedImagePath;
+
     private int year, month, day;
+    private String token="temp";
     private ImageView imageView;
-    private TextInputLayout inputLayoutContact;
+    private TextInputLayout inputLayoutContact,inputLayoutname, inputLayoutaddress,inputLayoutdob,inputLayoutStudent_name;
     private EditText email, name, contact, address, student_name, dateView, student_class, student_address;
     private String UPLOAD_URL = "http://14.192.16.145/celearn/laravel/public/test";
     private DatePickerDialog.OnDateSetListener myDateListener = new
@@ -122,6 +127,8 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
       public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_item_three, container, false);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         done=(Button) view.findViewById(R.id.done);
 
         // mydb = new DBHelper(this);
@@ -143,7 +150,15 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         imageView = (ImageView) view.findViewById(R.id.imageView);
         fetch = (Button) view.findViewById(R.id.done11);
         inputLayoutContact=(TextInputLayout)view.findViewById(R.id.input_layout_contact);
+        inputLayoutname=(TextInputLayout) view.findViewById(R.id.input_layout_name);
+        inputLayoutaddress=(TextInputLayout) view.findViewById(R.id.input_layout_address);
+        inputLayoutStudent_name=(TextInputLayout) view.findViewById(R.id.input_layout_student_name);
+        inputLayoutdob=(TextInputLayout) view.findViewById(R.id.input_layout_birthday);
+
         contact.addTextChangedListener(new MyTextWatcher(contact));
+        name.setEnabled(false);
+        student_name.setEnabled(false);
+        dateView.setEnabled(false);
 
 
 
@@ -176,6 +191,22 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                 }
             }
         });
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(address.getText().toString().isEmpty()==true){
+                    inputLayoutaddress.setErrorEnabled(false);
+                    return;
+                }
+            }
+        });
+        student_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inputLayoutStudent_name.setErrorEnabled(false);
+                return;
+            }
+        });
         /*
          For changing the profile pic
         */
@@ -193,6 +224,39 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         //To retrive information from the local database
         fetchman();
         name.requestFocus();
+
+         myCalendar = Calendar.getInstance();
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+
+        /*dateView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                DatePickerDialog dialog=new DatePickerDialog(getContext(),date,myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH));
+                Calendar l= Calendar.getInstance();
+                dialog.getDatePicker().setMaxDate(l.getTimeInMillis());
+                dialog.show();
+                *//*new DatePickerDialog(getContext(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH))
+                        .show();*//*
+            }
+        });*/
         //imageView.setImageBitmap(StringToBitMap(image1));
        // Toast.makeText(getContext().getApplicationContext(), image1, Toast.LENGTH_LONG).show();
       /*  Picasso.with(this)
@@ -223,7 +287,13 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         else  {imageView.setImageBitmap(getBitmapFromURL("http://res.cloudinary.com/demo/image/upload/q_90/happy_dog.jpg"));}*/
         return view;
     }
+    private void updateLabel() {
 
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        dateView.setText(sdf.format(myCalendar.getTime()));
+    }
     private void logout() {
        /* mydb = new DBHelper(Edit_profile.this);*/
         mydb=new DBHelper(getContext());
@@ -237,7 +307,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         String[] mSelectionArgs = {"1"};
         int mRowsUpdated = getContext().getContentResolver().update(UserContract.BASE_CONTENT_URI_Full, mUpdateValues, mSelectionClause, mSelectionArgs);
         String updatedrows = String.valueOf(mRowsUpdated) + " row(s) successfully updated";
-        Toast.makeText(getContext().getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
+       // Toast.makeText(getContext().getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
         mydb.close();
         Intent intent1=new Intent(getContext(),LoginActivity.class);
         //MainActivity.fa1.finish();
@@ -258,7 +328,10 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                         UserContract.UserDetailEntry.CoLUMN_NAME,  // Contract class constant for the word column name
                         UserContract.UserDetailEntry.CoLUMN_EMAIL, // Contract class constant for the locale column name
                         UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,
-                        UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH
+                        UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH,
+                        UserContract.UserDetailEntry.CoLUMN_TOKEN,
+                        UserContract.UserDetailEntry.CoLUMN_ADDRESS,
+                        UserContract.UserDetailEntry.CoLUMN_STUDENT_NAME
                 };
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
         String[] mSelectionArgs = {"1"};
@@ -295,14 +368,22 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
             int mCursorColumnIndex1 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_NAME);
             int mCursorColumnIndex2 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH);
             int mCursorColumnIndex3 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
+            int mCursorColumnIndex4 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TOKEN);
+            int mCursorColumnIndex5=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_STUDENT_NAME);
+            int mCursorColumnIndex6=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_ADDRESS);
             while (mCursor.moveToNext()) {
 
                 // Insert code here to process the retrieved word.
                 if (mCursor.getInt(mCursorColumnIndex_main) == 1) {
+                    token=mCursor.getString(mCursorColumnIndex4);
                    name.setText(mCursor.getString(mCursorColumnIndex1));
+                    String l=mCursor.getString(mCursorColumnIndex);
                     email.setText(mCursor.getString(mCursorColumnIndex));
                     contact.setText(mCursor.getString(mCursorColumnIndex3));
                     dateView.setText(mCursor.getString(mCursorColumnIndex2));
+                    student_name.setText(mCursor.getString(mCursorColumnIndex5));
+                    address.setText(mCursor.getString(mCursorColumnIndex6));
+                   // Toast.makeText(getContext().getApplicationContext(),mCursor.getString(mCursorColumnIndex4), Toast.LENGTH_LONG).show();
                 }
 
 
@@ -328,72 +409,80 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     private void uploadImage() {
         saveToInternalStorage(bitmap1);
         String contact_check2 = contact.getText().toString().trim();
+
         if(contact_check2!=null || contact_check2.isEmpty()==false){
             if(contact_check2.length()!=10){
                 inputLayoutContact.setErrorEnabled(true);
                 inputLayoutContact.setError(getString(R.string.err_msg_contact_notValid));
-                Toast.makeText(getContext().getApplicationContext(), "Contact not valid,will not be saved", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext().getApplicationContext(), "Check for Errors", Toast.LENGTH_LONG).show();
                 contact_flag=1;
             }
         }
+        if(name.getText().toString().trim().isEmpty()==true ){
+            inputLayoutname.setErrorEnabled(true);
+            inputLayoutname.setError("Enter Your Name");
+            contact_flag=1;
+        }
+        if(address.getText().toString().trim().isEmpty()==true ){
+            inputLayoutaddress.setErrorEnabled(true);
+            inputLayoutaddress.setError("Enter Your Address");
+            contact_flag=1;
+        }
+        if(student_name.getText().toString().trim().isEmpty()==true ){
+            inputLayoutStudent_name.setErrorEnabled(true);
+            inputLayoutStudent_name.setError("Enter Student's Name");
+            contact_flag=1;
+        }
+        if(dateView.getText().toString().trim().isEmpty()==true){
+            inputLayoutdob.setErrorEnabled(true);
+            inputLayoutdob.setError("Enter Your Name");
+            contact_flag=1;
+        }
+
         mydb = new DBHelper(getContext());
         if (bitmap1 == null) {
             name.getText().toString();
             bitmap1 = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         }
         image = getStringImage(bitmap1);
-        pd = new ProgressDialog(getContext());
-        pd.setMessage(getContext().getApplicationContext().getResources().getString(R.string.loadingmsg));
-// upload to server
-       /* new RemoteHelper(getContext().getApplicationContext()).verifyLogin1(this, RemoteCalls.CHECK_LOGIN_CREDENTIALS,
-                image,
-                name.getText().toString(),
-                contact.getText().toString(),
-                address.getText().toString(),
-                student_name.getText().toString(),
-                dateView.getText().toString(),
-                student_class.getText().toString(),
-                student_address.getText().toString()
-        );*/
-// upload to local database
+        /*pd = new ProgressDialog(getContext());
+        pd.setMessage(getContext().getApplicationContext().getResources().getString(R.string.loadingmsg));*/
+        if(contact_flag==0){
+        update(contact.getText().toString(),dateView.getText().toString().trim(),
+                address.getText().toString());
+        new RemoteHelper(getContext().getApplicationContext()).Edit_profile(this, RemoteCalls.EDIT_PROFILE,
+                token,
+                name.getText().toString().trim(),
+                contact.getText().toString().trim(),
+                address.getText().toString().trim(),
+                dateView.getText().toString().trim(),
+                student_name.getText().toString().trim()
+                );}
 
-
-//for sending the data to local server
-
-            /*// Defines a new Uri object that receives the result of the insertion
-            Uri mNewUri;
-// Defines an object to contain the new values to insert
-            ContentValues mNewValues = new ContentValues();
-*//*
- * Sets the values of each column and inserts the word. The arguments to the "put"
- * method are "column name" and "value"
- *//*
-            mNewValues.put(UserContract.UserDetailEntry.COLUMN_ID, 1);
-            mNewValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, email.getText().toString());
-            mNewValues.put(UserContract.UserDetailEntry.CoLUMN_NAME, name.getText().toString());
-            mNewValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH, dateView.getText().toString());
-            mNewValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER, contact.getText().toString());
-
-            mNewUri = getContentResolver().insert(
-                    UserContract.BASE_CONTENT_URI_Full,   // the user dictionary content URI
-                    mNewValues                          // the values to insert
-            );
-            Toast.makeText(getContext().getApplicationContext(), "Changes done locally", Toast.LENGTH_LONG).show();*/
-
-
+    }
+    private int update(String phone_num,String dob,String address) {
+        mydb = new DBHelper(getContext());
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_NAME, name.getText().toString()
-        );
-        if(contact_flag!=1){
-        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER, contact.getText().toString());}
-        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, email.getText().toString());
-        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH, dateView.getText().toString());
-        String[] mSelectionArgs = {"1"};
-        int mRowsUpdated = getContext().getContentResolver().update(UserContract.BASE_CONTENT_URI_Full, mUpdateValues, mSelectionClause, mSelectionArgs);
-        String updatedrows = String.valueOf(mRowsUpdated) + " row(s) successfully updated";
-        Toast.makeText(getContext().getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
+        if(contact_flag!=1 && dob!=null && address!=null){
+            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER, phone_num);
+
+            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH, dob);
+
+            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_ADDRESS,address);
+
+            String[] mSelectionArgs = {"1"};
+            int mRowsUpdated = getContext().getContentResolver().update(UserContract.BASE_CONTENT_URI_Full, mUpdateValues, mSelectionClause, mSelectionArgs);
+            String updatedrows = String.valueOf(mRowsUpdated) + " row(s) successfully updated";
+
+            /*if(updatedrows!=null || updatedrows!=""){
+                return 0;
+            }else {return 1;}*/
+            // Toast.makeText(getContext().getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
+           // Toast.makeText(getContext().getApplicationContext(), "profile updated", Toast.LENGTH_LONG).show();
+        }
         mydb.close();
+        return 0;
     }
 
     public void setDate(View view) {
@@ -529,21 +618,13 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
         String username = null;
         if (isSuccessful) {
-            pd.dismiss();
-            Toast.makeText(getContext().getApplicationContext(), "done", Toast.LENGTH_LONG).show();
+            //pd.dismiss();
+            Toast.makeText(getContext().getApplicationContext(), "Profile Updated", Toast.LENGTH_LONG).show();
 
 
-            try {
-                username = response.getJSONObject(1).getString("username");
-                String name = response.getJSONObject(2).getString("parent_name");
-                Toast.makeText(getContext().getApplicationContext(), name, Toast.LENGTH_LONG).show();
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext().getApplicationContext(), "error", Toast.LENGTH_LONG).show();
-            }
-            byte[] decodedString = Base64.decode(username, Base64.DEFAULT);
+            /*byte[] decodedString = Base64.decode(username, Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            imageView.setImageBitmap(decodedByte);
+            imageView.setImageBitmap(decodedByte);*/
 
 
         } else {
