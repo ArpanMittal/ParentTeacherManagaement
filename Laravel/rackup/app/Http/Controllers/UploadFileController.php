@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rules\In;
 use Mockery\CountValidator\Exception;
 use Symfony\Component\HttpFoundation\File\File;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -77,14 +78,19 @@ class UploadFileController extends Controller
         $userDetails = UserDetails::where('user_id',$id)->first();
         $teacherName = $userDetails->name;
         $rules = array(
-            'title' => 'required'
+            'studentId'=>'required',
+            'title' => 'required',
+            'description'=>'required'
         );
         $this->validate($request,$rules);
 
+        $studentId = Input::get('studentId');
         $title = Input::get('title');
+        $description = Input::get('description');
 
-        if($request->hasFile('fileEntries')){
+        if(($request->hasFile('fileEntries'))&&$request->hasFile('pdfCover')){
             $file=$request->file('fileEntries');
+            $pdfCover = $request->file('pdfCover');
 //            global $file_count;
 //            $file_count= count($files);
 //            global $uploadcount;
@@ -92,25 +98,32 @@ class UploadFileController extends Controller
 //            foreach($files as $file) {
 //                $fileName = $files->getClientOriginalName();
             $fileExtension = $file->getClientOriginalExtension();
-            if ($fileExtension != 'pdf') {
+            $pdfCoverExtension = $pdfCover->getClientOriginalExtension();
+            if ($fileExtension != 'pdf' && $pdfCoverExtension != 'jpg') {
 
-                return redirect(route('uploadPdf.create'))->with('failure', 'Upload files of pdf format only');
+                return redirect(route('uploadPdf.create'))
+                    ->with('failure', 'Upload files of pdf format only and pdf cover photo of jpg format only');
             }
             else {
                 try {
                     \DB::beginTransaction();
                     $type = ContentType::where('name','pdf')->first();
                     $typeId = $type->id;
-                    $fileId = \DB::table('categories')->insertgetId(['name' => $title,'teacherName'=>$teacherName,'type'=>$typeId]);
+                    $fileId = \DB::table('categories')->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId]);
+                    \DB::table('image_students')->insert(['image_id'=>$fileId,'student_id'=>$studentId]);
                     $fileName = $fileId.'_'.$title.'.'.$fileExtension;
-                    $filePath = Storage::putFileAs('public/'.$id,$file,$fileName);
-                    $file_url = asset('storage/'.$id.'/'.$fileId.'_'.$title.'.'.$fileExtension);
-                    $url = Storage::url($id.'/'.$fileId.'_'.$title.'.'.$fileExtension);
+                    $filePath = Storage::putFileAs('public/pdf',$file,$fileName);
+                    $url = Storage::url('pdf/'.$fileId.'_'.$title.'.'.$fileExtension);
                     DB::table('categories')
                         ->where('id', $fileId)
                         ->update([
                             'url'=>$url
                         ]);
+                    $coverName = $fileId.'_'.$title.'.'.$pdfCoverExtension;
+                    $coverPath = Storage::putFileAs('public/pdf',$file,$coverName);
+                    $coverUrl = Storage::url('pdf',$fileId.'_'.$title.'.'.$pdfCoverExtension);
+                    \DB::table('pdf_covers')->insert(['pdf_id'=>$fileId,'cover_url'=>$coverUrl]);
+                    
                 } catch (Exception $e) {
                     \DB::rollBack();
 //                    return "Unable to upload files";

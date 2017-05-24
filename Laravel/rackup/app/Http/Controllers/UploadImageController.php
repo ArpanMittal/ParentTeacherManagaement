@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ImageStudent;
+use App\PdfCover;
 use App\Student;
 use Illuminate\Http\Request;
 use App\UserDetails;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Mockery\CountValidator\Exception;
+use Mockery\Matcher\Type;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
@@ -212,29 +214,51 @@ class UploadImageController extends Controller
             $images = $this->getImages($student_images);
             return Response::json([$images,HttpResponse::HTTP_OK]);
         }
+
     }
     
-    public function getImages($student_images){
+    public function getImages($student_files){
         $i = 0;
-        $images = array();
-        foreach ($student_images as $student_image) {
-            $imageId = $student_image->image_id;
-            $image = Category::where('id', $imageId)->first();
-            $filePath = $image->url;
-            $title = $image->name;
-            $description = $image->description;
-            $type = $image->type;
-            $createdAt = $image->created_at;
-            $images[$i++] = array(
-                'id' => $imageId,
-                'filePath' => $filePath,
-                'title' => $title,
-                'description' => $description,
-                'type' => $type,
-                'created_at' => $createdAt
-            );
+        $files = array();
+        foreach ($student_files as $student_file) {
+            $fileId = $student_file->image_id;
+            $file = Category::where('id', $fileId)->first();
+            $type = $file->type;
+            $typeDetails = ContentType::where('id',$type)->first();
+            if ($typeDetails->name == 'pdf'){
+                $filePath = $file->url;
+                $title = $file->name;
+                $description = $file->description;
+                $createdAt = $file->created_at;
+                $coverDetails = PdfCover::where('pdf_id',$fileId)->first();
+                $cover_url = $coverDetails->cover_url;
+                $files[$i++] = array(
+                    'id' => $fileId,
+                    'filePath' => $filePath,
+                    'title' => $title,
+                    'description' => $description,
+                    'pdfCover'=>$cover_url,
+                    'type' => $type,
+                    'created_at' => $createdAt
+                );
+            }
+            elseif ($typeDetails->name =='jpg'){
+                $filePath = $file->url;
+                $title = $file->name;
+                $description = $file->description;
+                $createdAt = $file->created_at;
+                $files[$i++] = array(
+                    'id' => $fileId,
+                    'filePath' => $filePath,
+                    'title' => $title,
+                    'description' => $description,
+                    'type' => $type,
+                    'created_at' => $createdAt
+                );
+            }
+
         }
-        return $images;
+        return $files;
     }
 
     /**
