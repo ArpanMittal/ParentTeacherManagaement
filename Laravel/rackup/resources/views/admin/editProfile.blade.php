@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <form action="{{ route('updateProfileDetails', $profile_details['id']) }}" method="POST">
+            <form action="{{ route('updateProfileDetails', $profile_details['id']) }}" enctype="multipart/form-data" method="POST">
                 {{--<input type="hidden" name="_method" value="PUT">--}}
                 {{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
 
@@ -58,6 +58,9 @@
                             </span>
                     @endif
                 </div>
+
+                <input id="profilePhoto" type="file" name="profilePhoto">
+                {{--<input type="submit" id="upload" value="Upload Profile Photo">--}}
                 <a class="btn btn-default" href="{{ route('home') }}">Back</a>
                 <button class="btn btn-primary" type="submit" >Save</button>
             </form>

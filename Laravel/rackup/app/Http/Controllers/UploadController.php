@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\ContentType;
 use App\Grade;
-use App\ImageStudent;
-use App\User;
 use App\UserDetails;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
@@ -14,7 +12,6 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rules\In;
 use Mockery\CountValidator\Exception;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -352,187 +349,8 @@ class UploadController extends Controller
             //echo "Permission Denied";
         }
     }
-    //For uploading images
-    public function showUpload(Request $request){
-        $id = $request->session()->get('id');
-        $user = \DB::table('users')->whereId($id)->first();
-        $data['user'] = $user;
-        $studentDetails = Student::all();
-        $i=0;
-        $sudents = array();
-        foreach ($studentDetails as $studentDetail){
-            $studentName = $studentDetail->name;
-            $studentId = $studentDetail->id;
-            $students[$i++]=array(
-                'id'=>$studentId,
-                'name'=>$studentName
-            );
-        }
-        return view('upload.upload',compact('students'),$data);
-    }
-    //Store the image
-    public function store(Request $request)
-    {
-        $id = $request->session()->get('id');
-        $userDetails = UserDetails::where('user_id',$id)->first();
-        $teacherName = $userDetails->name;
-        $rules = array(
-            'title' => 'required',
-            'message' =>'required',
-            'studentId'=>'required'
-        );
-        $this->validate($request,$rules);
-
-        $title = Input::get('title');
-        $description = Input::get('message');
-        $studentId = Input::get('studentId');
-
-        if($request->hasFile('fileEntries')){
-            $file=$request->file('fileEntries');
-//            global $file_count;
-//            $file_count= count($files);
-//            global $uploadcount;
-//            $uploadcount = 0;
-//            foreach($files as $file) {
-//                $fileName = $files->getClientOriginalName();
-            $fileExtension = $file->getClientOriginalExtension();
-            if ($fileExtension != 'jpg') {
-                return "Invalid format. JPG files only";
-//                return redirect(route('uploadFile'))->with('failure', 'Upload images of jpg only');
-            }
-            else {
-                try {
-                    \DB::beginTransaction();
-                    $type = ContentType::where('name','Image')->first();
-                    $typeId = $type->id;
-                    $imageId = \DB::table('categories')->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId]);
-                    \DB::table('image_students')->insert(['image_id'=>$imageId,'student_id'=>$studentId]);
-                    $fileName = $imageId.'_'.$title.'.'.$fileExtension;
-                    $filePath = Storage::putFileAs('public/'.$studentId,$file,$fileName);
-                    $file_url = asset('storage/'.$studentId.'/'.$imageId.'_'.$title.'.'.$fileExtension);
-                    $url = Storage::url($studentId.'/'.$imageId.'_'.$title.'.'.$fileExtension);
-                    DB::table('categories')
-                        ->where('id', $imageId)
-                        ->update([
-                            'url'=>$url
-                        ]);
-                    } catch (Exception $e) {
-                        \DB::rollBack();
-                    return "Unable to upload files";
-//                    return redirect(route('uploadFile'))->with('failure','Unable to upload image')->withInput();
-                    };
-                \DB::commit();
-                return $studentId;
-//                return redirect(route('uploadFile'))->with('success','Successfully Uploaded image');
-            }
-        }
-        else{
-            return "No files selected";
-//            return redirect(route('uploadFile'))->with('failure','No files selected');
-        }
-    }
-    public function sendNotification($studentId){
-        $studentDetails = Student::where('id',$studentId)->first();
-        $parentId = $studentDetails->parent_id;
-        $parentDetails = UserDetails::where('user_id',$parentId)->first();
-        $gcmRegistrationId[0] = $parentDetails->gcmRegistrationId;
-        //Child activities notification type
-        $type = 2;
-        $message = array("message"=>"Student Activities updated","type"=>$type);
-        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
-        return 1;
-    }
-    //API to send daily activity images of specified parent
-    public function sendActivity(Request $request){
-        try {
-            $token = $request->get('token');
-            $user = JWTAuth::toUser($token);
-            $userId = $user->id;
-        }catch (TokenExpiredException $e){
-            return Response::json (['Token expired'],498);
-        }catch (TokenInvalidException $e){
-            return Response::json (['Token invalid']);
-        }
-        $lastImageId = $request->get('lastImageId');
-        if (is_null($lastImageId)){
-            $studentDetails = Student::where('parent_id', $userId)->first();
-            $studentId = $studentDetails->id;
-            $student_images = ImageStudent::orderBy('created_at', 'desc')
-                ->take(10)
-                ->where('student_id',$studentId)
-                ->get();
-            $images = $this->getImages($student_images);
-            return Response::json([$images,HttpResponse::HTTP_OK]);
-        }
-        else{
-            $student_image = ImageStudent::where('image_id',$lastImageId)->first();
-            $student_id = $student_image->student_id;
-            $imageDetail = Category::where('id',$lastImageId)->first();
-            $createdAt = $imageDetail->created_at;
-            $student_images = ImageStudent::orderBy('created_at', 'desc')
-                ->take(10)
-                ->where('student_id',$student_id)
-                ->where('created_at','<',$createdAt)
-                ->get();
-
-            $images = $this->getImages($student_images);
-            return Response::json([$images,HttpResponse::HTTP_OK]);
-        }
-    }
-    public function getImages($student_images){
-        $i = 0;
-        $images = array();
-        foreach ($student_images as $student_image) {
-            $imageId = $student_image->image_id;
-            $image = Category::where('id', $imageId)->first();
-            $filePath = $image->url;
-            $title = $image->name;
-            $description = $image->description;
-            $type = $image->type;
-            $createdAt = $image->created_at;
-            $images[$i++] = array(
-                'id' => $imageId,
-                'filePath' => $filePath,
-                'title' => $title,
-                'description' => $description,
-                'type' => $type,
-                'created_at' => $createdAt
-            );
-        }
-        return $images;
-    }
-    //generic php function to send GCM push notification
-    function sendPushNotificationToGCM($registration_ids, $message) {
-        //Google cloud messaging GCM-API url
-        $url='https://gcm-http.googleapis.com/gcm/send';
-
-        //$url = 'fcm.googleapis.com/fcm/';
-        $fields = array(
-            'registration_ids' => $registration_ids,
-            'data' => $message,
-        );
-        if (!defined('GOOGLE_API_KEY'))
-            define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
-
-        $headers = array(
-            'Authorization: key=' . GOOGLE_API_KEY,
-            'Content-Type: application/json'
-        );
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-        $result = curl_exec($ch);
-        if ($result === FALSE) {
-            die('Curl failed: ' . curl_error($ch));
-        }
-        curl_close($ch);
-        return $result;
-    }
+    
+    
 
     
 //    public function doUpload(Request $request)

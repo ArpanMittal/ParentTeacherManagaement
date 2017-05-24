@@ -22,19 +22,24 @@ Route::get('/logout','HomeController@doLogout')->name('logout');
 
 Route::get('/editProfile','AdminController@editProfileDetails')->name('editProfileDetails')->middleware('check.session');
 Route::post('/editProfile{id}','AdminController@updateProfileDetails')->name('updateProfileDetails');
+Route::get('/assignTeacher','AdminController@getAssignTeacher')->name('getAssignTeacher');
+Route::post('/assignTeacher','AdminController@postAssignTeacher')->name('postAssignTeacher');
+Route::resource('admin','AdminController');
 
 Route::resource('registerParent','RegisterParentController');
 Route::resource('registerTeacher','RegisterTeacherController');
 
-Route::get('/uploadFile','UploadController@showUpload')->middleware('check.session');
+Route::get('/uploadFile','UploadImageController@showUpload')->middleware('check.session');
 Route::post('/uploadFile','UploadController@doUpload')->name('uploadFile');
+Route::get('getImage{fileToken}','UploadImageController@getImage')->name('getImage');
 Route::resource('uploadImage','UploadImageController');
 Route::get('/uploadLink','UploadController@showUploadLink')->middleware('check.session');
 Route::post('/uploadLink','UploadController@doUploadLink')->name('uploadLink');
 Route::post('createCategory','UploadController@createCategory')->name('createCategory');
 Route::get('category{id}','UploadController@getDropdownContent');
-Route::post('sendNotification{id}','UploadController@sendNotification');
+Route::post('sendNotification{id}','UploadImageController@sendNotification');
 Route::resource('upload','UploadController');
+Route::resource('uploadPdf','UploadFileController');
 
 Route::get('/calendar', ['uses' => 'EventController@calendar'])->name('calendar')->middleware('check.session');
 Route::post('/getcalendar', ['uses' => 'EventController@getCalendar'])->name('getCalendar')->middleware('check.session');
@@ -53,19 +58,16 @@ Route::resource('appointments','AppointmentController');
 
 Route::resource('school_events','SchoolEventController');
 
-//Route::get('storage/{filename}', function ($filename)
-//{
-//    $path = storage_path('public/'.$filename);
-//
-//    if (!File::exists($path)) {
-//        abort(404);
-//    }
-//
-//    $file = File::get($path);
-//    $type = File::mimeType($path);
-//
-//    $response = Response::make($file, 200);
-//    $response->header("Content-Type", $type);
-//
-//    return $response;
-//});
+Route::get('storage/{filename}', function ($filename)
+{
+    $path = storage_path('public/'.$filename);
+
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    $file = File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    return $response;
+});

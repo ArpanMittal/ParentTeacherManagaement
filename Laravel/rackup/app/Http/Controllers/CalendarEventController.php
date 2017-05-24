@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AuditAppointments;
 use App\AppointmentRequest;
 use App\CalendarEvent;
 use App\Grade;
@@ -111,14 +112,17 @@ class CalendarEventController extends Controller
 
         $weekday = $today->addDays($addDay);
         $weekday = $weekday->toDateString();
+
         $dayCount = 0;
         $i = 0;
         $calendar_events = array();
         while($dayCount!=6) {
             $calendarEvents = \DB::table('calendar_events')
                 ->whereDATE('start',$weekday)
-                ->where('eventType','Free Slot')
-                ->get();
+                ->where(function($query){
+                    $query->where('eventType','Free Slot')
+                        ->orwhere('eventType','Teacher Appointment');
+                })->get();
             foreach ($calendarEvents as $calendarEvent)
             {
                 $calendarEventId = $calendarEvent->id;
@@ -266,7 +270,6 @@ class CalendarEventController extends Controller
                     $calendar_event->start = $startDateTime;
                     $calendar_event->end = $endDateTime;
                     $calendar_event->is_all_day = 0;
-                    $calendar_event->background_color = "blue";
                     $calendar_event->eventType = "Free Slot";
                     $calendar_event->save();
                     $teacherSlots = new TeacherAppointmentSlots();
@@ -601,8 +604,57 @@ class CalendarEventController extends Controller
             'requestedBy'=>$requestedBy,
             'status'=>$status
         );
+        $eventId = $appointmentDetails['eventId'];
+        $appointmentLogs = AuditAppointments::orderBy('id','asc')
+            ->where('eventId',$eventId)
+            ->get();
+        $appointmentLogCount = count($appointmentLogs);
+        $appointmentLog = array(
+            'initiatedBy'=>"",
+            'confirmedBy'=>"",
+            'cancelledBy'=>"",
+            'initiatedAt'=>"",
+            'confirmedAt'=>"",
+            'cancelledAt'=>"",
+            'expired'=>0,
+            'expiredOn'=>""
+        );
+        for ($i=0;$i<$appointmentLogCount;$i++){
+            $state = $appointmentLogs[$i]->appointmentState;
+            if ($state == 1){
+                $appointmentLog['initiatedBy'] = $appointmentLogs[$i]->triggeredBy;
+                $initiatedAt = $appointmentLogs[$i]->created_at;
+                $initiatedAt =Carbon::parse($initiatedAt)->addHours(5)->addMinutes(30);
+                $appointmentLog['initiatedAt'] = $initiatedAt;
+                $calendarEvent = CalendarEvent::where('id',$eventId)->first();
+                $start = Carbon::parse($calendarEvent->start);
+                $today = Carbon::today();
+                $teacherSlots = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
+                $slotId = $teacherSlots->id;
+                $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$slotId)->first();
+                $confirmed = $appointmentRequest->isCancel;
+                $cancelled = $appointmentRequest->isApproved;
+                if($start<$today && ($confirmed==0 || $cancelled==0)){
+                    $appointmentLog['expired']=1;
+                    $appointmentLog['expiredOn']=$today;
+                }
 
-        return view('calendar_events.showAppointments', compact('appointmentDetails'),$data);
+            }
+            elseif ($state == 2){
+                $appointmentLog['confirmedBy'] = $appointmentLogs[$i]->triggeredBy;
+                $confirmedAt = $appointmentLogs[$i]->created_at;
+                $confirmedAt =Carbon::parse($confirmedAt)->addHours(5)->addMinutes(30);
+                $appointmentLog['confirmedAt'] = $confirmedAt;
+            }
+            else{
+                $appointmentLog['cancelledBy'] = $appointmentLogs[$i]->triggeredBy;
+                $cancelledAt = $appointmentLogs[$i]->created_at;
+                $cancelledAt =Carbon::parse($cancelledAt)->addHours(5)->addMinutes(30);
+                $appointmentLog['cancelledAt'] = $cancelledAt;
+            }
+        }
+
+        return view('calendar_events.showAppointments', compact('appointmentDetails','appointmentLog'),$data);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AuditAppointments;
 use App\Grade;
 use App\Student;
 use Illuminate\Http\Request;
@@ -12,6 +13,8 @@ use Illuminate\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use MaddHatter\LaravelFullcalendar\Calendar;
 use Mockery\CountValidator\Exception;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -134,8 +137,56 @@ class AppointmentController extends Controller
         $data['user'] = $user;
 
         $appointmentDetails = $this->getAppointments($id);
-
-        return view('appointments.show', compact('appointmentDetails'),$data);
+        $eventId = $appointmentDetails['eventId'];
+        $appointmentLogs = AuditAppointments::orderBy('id','asc')
+            ->where('eventId',$eventId)
+            ->get();
+        $appointmentLogCount = count($appointmentLogs);
+        $appointmentLog = array(
+            'initiatedBy'=>"",
+            'confirmedBy'=>"",
+            'cancelledBy'=>"",
+            'initiatedAt'=>"",
+            'confirmedAt'=>"",
+            'cancelledAt'=>"",
+            'expired'=>0,
+            'expiredOn'=>""
+            );
+        for ($i=0;$i<$appointmentLogCount;$i++){
+            $state = $appointmentLogs[$i]->appointmentState;
+            if ($state == 1){
+                $appointmentLog['initiatedBy'] = $appointmentLogs[$i]->triggeredBy;
+                $initiatedAt = $appointmentLogs[$i]->created_at;
+                $initiatedAt =Carbon::parse($initiatedAt)->addHours(5)->addMinutes(30);
+                $appointmentLog['initiatedAt'] = $initiatedAt;
+                $calendarEvent = CalendarEvent::where('id',$eventId)->first();
+                $start = Carbon::parse($calendarEvent->start);
+                $today = Carbon::today();
+                $teacherSlots = TeacherAppointmentSlots::where('calendarEventsId',$eventId)->first();
+                $slotId = $teacherSlots->id;
+                $appointmentRequest = AppointmentRequest::where('teacherAppointmentsSlot_id',$slotId)->first();
+                $confirmed = $appointmentRequest->isCancel;
+                $cancelled = $appointmentRequest->isApproved;
+                if($start<$today && ($confirmed==0 || $cancelled==0)){
+                    $appointmentLog['expired']=1;
+                    $appointmentLog['expiredOn']=$today;
+                }
+                
+            }
+            elseif ($state == 2){
+                $appointmentLog['confirmedBy'] = $appointmentLogs[$i]->triggeredBy;
+                $confirmedAt = $appointmentLogs[$i]->created_at;
+                $confirmedAt =Carbon::parse($confirmedAt)->addHours(5)->addMinutes(30);
+                $appointmentLog['confirmedAt'] = $confirmedAt;
+            }
+            else{
+                $appointmentLog['cancelledBy'] = $appointmentLogs[$i]->triggeredBy;
+                $cancelledAt = $appointmentLogs[$i]->created_at;
+                $cancelledAt =Carbon::parse($cancelledAt)->addHours(5)->addMinutes(30);
+                $appointmentLog['cancelledAt'] = $cancelledAt;
+            }
+        }
+        return view('appointments.show', compact('appointmentDetails','appointmentLog'),$data);
     }
     /*Confirm appointments*/
     public function getConfirm($id,Request $request)
@@ -166,9 +217,7 @@ class AppointmentController extends Controller
         $startTime = $start->toTimeString();
         $end = Carbon::parse($event->end);
         $endTime = $end->toTimeString();
-        $message = array("message"=>"Your appointment with $teacherName on $startDate from $startTime to $endTime has been confirmed.
-        Whatsapp Video Call Number : $contactNo","eventId"=>$eventId);
-        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+        $imageUrl = Storage::url('public/default/confirmed.jpg');
         try {
             DB::beginTransaction();
             DB::table('appointmentRequests')
@@ -177,11 +226,29 @@ class AppointmentController extends Controller
                     ['isApproved' => 1,
                     'isCancel' => 0,
                     'isAwaited' => 0]);
+            DB::table('calendar_events')
+                ->where('id',$eventId)
+                ->update(
+                    [
+                        'imageUrl'=>$imageUrl
+                    ]
+                );
+            $appointmentLog = new AuditAppointments();
+            $appointmentLog->eventId = $eventId;
+            //Appointment Request confirmation state
+            $appointmentLog->Appointmentstate = 2;
+            $appointmentLog->triggeredBy = $teacherName;
+            $appointmentLog->save();
         }catch (Exception $e){
             DB::rollback();
             return Response::json("Insertion failed",HttpResponse::HTTP_PARTIAL_CONTENT);
         }
         DB::commit();
+        $eventDetails = CalendarEvent::where('id',$eventId)->first();
+        $url = $eventDetails->imageUrl;
+        $message = array("message"=>"Your appointment with $teacherName on $startDate from $startTime to $endTime has been confirmed.Whatsapp Video Call Number : $contactNo",
+            "eventId"=>$eventId,"imageUrl"=>$url,"type"=>4);
+        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         return redirect(route('appointments.index'));
 
     }
@@ -268,9 +335,7 @@ class AppointmentController extends Controller
         $end = $calendarEventDetails->end;
         $end = Carbon::parse($end);
         $endTime = $end->toTimeString();
-        $message = array("message"=>"Your appointment with $teacherName on $startDate from $startTime to $endTime
-         has been cancelled due to $cancellationReason","eventId"=>$calendarEventId);
-        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+        $imageUrl = Storage::url('public/default/cancelled.jpg');
         try {
             DB::beginTransaction();
             DB::table('appointmentRequests')
@@ -281,14 +346,32 @@ class AppointmentController extends Controller
                         'isCancel' => 1,
                         'isAwaited' => 0
                 ]);
+            DB::table('calendar_events')
+                ->where('id',$calendarEventId)
+                ->update(
+                    [
+                        'imageUrl'=>$imageUrl
+                    ]
+                );
             DB::table('teacherAppointmentsSlots')
                 ->where('id', $slotId)
                 ->update(['isBooked' => 0]);
+            $appointmentLog = new AuditAppointments();
+            $appointmentLog->eventId = $calendarEventId;
+            //Appointment Request cancellation state
+            $appointmentLog->Appointmentstate = 3;
+            $appointmentLog->triggeredBy = $teacherName;
+            $appointmentLog->save();
         }catch (Exception $e){
             DB::rollback();
             return Response::json("Insertion failed",HttpResponse::HTTP_PARTIAL_CONTENT);
         }
         DB::commit();
+        $eventDetails = CalendarEvent::where('id',$calendarEventId)->first();
+        $url = $eventDetails->imageUrl;
+        $message = array("message"=>"Your appointment with $teacherName on $startDate from $startTime to $endTime has been cancelled due to $cancellationReason",
+            "eventId"=>$calendarEventId,"imageUrl"=>$url,"type"=>4);
+        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         return redirect(route('appointments.index'));
 
     }
@@ -392,6 +475,8 @@ class AppointmentController extends Controller
                         $calendarEvent->start = $startDateTime;
                         $calendarEvent->end = $endDateTime;
                         $calendarEvent->eventType = "Parent Appointment";
+                        $imageUrl = Storage::url('public/default/request.jpg');
+                        $calendarEvent->imageUrl = $imageUrl;
                         $calendarEvent->save();
                         $slot = new TeacherAppointmentSlots();
                         $slot->teacher_id = $id;
@@ -409,14 +494,23 @@ class AppointmentController extends Controller
                         $apppointmentRequest->isApproved = 0;
                         $apppointmentRequest->requestType = "Teacher Request";
                         $apppointmentRequest->save();
-                        $message = array("message"=>"Request of Appointment by $teacherName on $startDate /n from $startTime to $endTime.
-                        Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
-                        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                        $appointmentLog = new AuditAppointments();
+                        $appointmentLog->eventId = $calendarEvent->id;
+                        //Appointment Request initiation state
+                        $appointmentLog->Appointmentstate = 1;
+                        $appointmentLog->triggeredBy = $teacherName;
+                        $appointmentLog->save();
+
                     }catch (Exception $e){
                         \DB::rollback();
                         return redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');
                     }
                     \DB::commit();
+                    $eventDetails = CalendarEvent::where('id',$calendarEvent->id)->first();
+                    $url = $eventDetails->imageUrl;
+                   return $message = array("message"=>"Request of Appointment by $teacherName on $startDate /n from $startTime to $endTime.Whatsapp Video Call Number : $contactNo",
+                        "eventId"=> $calendarEvent->id,"imageUrl"=>$url,"type"=>4);
+                    $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                 }
                 //If existing slot is booked
                 else{
@@ -436,6 +530,8 @@ class AppointmentController extends Controller
                 $calendarEvent->start = $startDateTime;
                 $calendarEvent->end = $endDateTime;
                 $calendarEvent->eventType = "Parent Appointment";
+                $imageUrl = Storage::url('public/default/request.jpg');
+                $calendarEvent->imageUrl = $imageUrl;
                 $calendarEvent->save();
                 $slot = new TeacherAppointmentSlots();
                 $slot->teacher_id = $id;
@@ -453,14 +549,23 @@ class AppointmentController extends Controller
                 $apppointmentRequest->isApproved = 0;
                 $apppointmentRequest->requestType = "Teacher Request";
                 $apppointmentRequest->save();
-                $message =array("message"=> "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.
-                     Whatsapp Video Call Number : $contactNo","eventId"=> $calendarEvent->id);
-                $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
+                $appointmentLog = new AuditAppointments();
+                $appointmentLog->eventId = $calendarEvent->id;
+                //Appointment Request initiation state
+                $appointmentLog->Appointmentstate = 1;
+                $appointmentLog->triggeredBy = $teacherName;
+                $appointmentLog->save();
+
             }catch (Exception $e){
                 \DB::rollback();
-                return redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');
+                redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');
             }
             \DB::commit();
+            $eventDetails = CalendarEvent::where('id',$calendarEvent->id)->first();
+            $url = $eventDetails->imageUrl;
+            $message =array("message"=> "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.Whatsapp Video Call Number : $contactNo",
+                "eventId"=> $calendarEvent->id,"imageUrl"=>$url,"type"=>4);
+            $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
             return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
         }
 
@@ -627,7 +732,8 @@ class AppointmentController extends Controller
         }
 
         $school_events = CalendarEvent::all()
-            ->where('eventType',"Parent Function");
+            ->where('eventType',"Parent Function")
+            ->orWhere('eventType',"Both");
         $k = 0;
         $schoolEvents = array();
         foreach ($school_events as $school_event){
@@ -641,12 +747,15 @@ class AppointmentController extends Controller
             $endDateTime = Carbon::parse($endDateTime);
             $endDate = $endDateTime->toDateString();
             $endTime = $endDateTime->toTimeString();
+            $imageUrl = $school_event->imageUrl;
             $schoolEvents[$k++] = array(
                 'eventId'=>$eventId,
                 'title'=>$title,
+                'type'=>6,
                 'startDate'=>$startDate,
                 'startTime'=>$startTime,
-                'endTime'=>$endTime
+                'endTime'=>$endTime,
+                'imageUrl'=>$imageUrl
             );
         }
 
@@ -671,14 +780,14 @@ class AppointmentController extends Controller
             }
             $parent = JWTAuth::toUser($token);
             $parentId= $parent->id;
+            $parentDetails = UserDetails::where('user_id',$parentId)->first();
+            $parentName = $parentDetails->name;
         }catch (TokenExpiredException $e){
             return Response::json (['Token expired'],498);
         }
         catch (TokenInvalidException $e){
             return Response::json (['Token invalid']);
         }
-
-
             $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
             $contactNo = $teacherDetails->contact;
             $teacherSlot = \DB::table('teacherAppointmentsSlots')
@@ -706,6 +815,11 @@ class AppointmentController extends Controller
                 $appointmentRequest->parentContact = $parentContact;
                 $appointmentRequest->requestType ="Parent Request";
                 $appointmentRequest->save();
+                $appointmentLog = new AuditAppointments();
+                $appointmentLog->eventId = $eventId;
+                $appointmentLog->Appointmentstate = 1;
+                $appointmentLog->triggeredBy = $parentName;
+                $appointmentLog->save();
             }catch (Exception $e){
                 \DB::rollBack();
                 $httpStatus = HttpResponse::HTTP_PARTIAL_CONTENT;
@@ -727,8 +841,10 @@ class AppointmentController extends Controller
                 ||(is_null($status))){
                 return Response::json(["No content. Fill all the details",HttpResponse::HTTP_NO_CONTENT]);
             }
-            $user = JWTAuth::toUser($token);
-            $userId = $user->id;
+            $parent = JWTAuth::toUser($token);
+            $parentId = $parent->id;
+            $parentDetails = UserDetails::where('user_id',$parentId)->first();
+            $parentName = $parentDetails->name;
         }catch (TokenExpiredException $e){
             return Response::json (['Token expired'],498);
         }catch (TokenInvalidException $e){
@@ -754,6 +870,12 @@ class AppointmentController extends Controller
                             'isAwaited' => 0,
                             'parentContact'=>$parentContact
                         ]);
+                $appointmentLog = new AuditAppointments();
+                $appointmentLog->eventId = $eventId;
+                //Appointment Request confirmation state
+                $appointmentLog->Appointmentstate = 2;
+                $appointmentLog->triggeredBy = $parentName;
+                $appointmentLog->save();
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;
@@ -782,7 +904,12 @@ class AppointmentController extends Controller
                 DB::table('teacherAppointmentsSlots')
                     ->where('id', $appointmentSlotId)
                     ->update(['isBooked' => 0]);
-
+                $appointmentLog = new AuditAppointments();
+                $appointmentLog->eventId = $eventId;
+                //Appointment Request cancellation state
+                $appointmentLog->Appointmentstate = 3;
+                $appointmentLog->triggeredBy = $parentName;
+                $appointmentLog->save();
             }catch (Exception $e){
                 DB::rollback();
                 $httpStatus = HttpResponse::HTTP_CONFLICT;
@@ -796,8 +923,7 @@ class AppointmentController extends Controller
             return Response::json(["invalid status"]);
         }
     }
-
-
+    
 //    public function sendEvent(Request $request){
 //        try {
 //            $token = $request->get('token');;

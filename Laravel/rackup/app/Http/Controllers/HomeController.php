@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Grade;
 use App\Student;
+use App\User;
 use App\UserDetails;
 use Illuminate\Http\Request;
 use Mockery\CountValidator\Exception;
@@ -40,6 +42,9 @@ class HomeController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
         return view('home',$data);
     }
 
@@ -51,6 +56,7 @@ class HomeController extends Controller
     //Do login
     public function doLogin(Request $request)
     {
+
         $rules = array(
             'username'    => 'required|email',
             'password' => 'required|alphaNum'
@@ -58,10 +64,10 @@ class HomeController extends Controller
         $username = $request->input('email');
         $password = $request->input('password');
 
-        $user =\DB::table('users')
-            ->where('username','=',$username,'AND','password','=',$password)
-            ->first();
-
+        $user = User::where('username',$username)->where('password',$password)->first();
+        $token = JWTAuth::fromUser($user);
+        $user = JWTAuth::toUser($token);
+        
         if ( !is_null($user) ){
             $request->session()->put('id',$user->id);
             return redirect('home');
@@ -105,16 +111,27 @@ class HomeController extends Controller
                 $user = JWTAuth::toUser($token);
                 $userDetails = UserDetails::where('user_id', $userId)->first();
                 $studentDetails = Student::where('parent_id', $userId)->first();
-
+                $gradeId = $studentDetails->grade_id;
+                $gradeDetails = Grade::where('id',$gradeId)->first();
+                $grade = $gradeDetails->grade_name;
+                $gradeUser = Grade::where('grade_id',$gradeId)
+                    ->where('is_class_teacher',1)
+                    ->first();
+                $teacherId = $gradeUser->user_id;
+                $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
+                $teacherName = $teacherDetails->name;
+                $teacherContact = $teacherDetails->contact;
                 $userdata = array(
                     'token' => $token,
                     'username' => $user->username,
                     'parent_name' => $userDetails->name,
                     'contact' => $userDetails->contact,
                     'address' => $userDetails->address,
-                    'studentName' => $studentDetails->name,
-                   'dob' => $studentDetails->dob
-
+                    'studentName' => $studentDetails->name, 
+                    'dob' => $studentDetails->dob,
+                    'grade'=>$grade,
+                    'teacherName'=>$teacherName,
+                    'teacherContact'=>$teacherContact
                 );
                 $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
                 //return Response::json(HttpResponse::HTTP_OK);

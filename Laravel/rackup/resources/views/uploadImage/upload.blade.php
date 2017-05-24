@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Upload File</h1>
+    <h1>Upload Image</h1>
     <div>
         @if (session('failure'))
             <div class="alert alert-danger">
@@ -32,7 +32,8 @@
         Invalid File format.Upload only jpg images
     </div>
 
-    <form id="uploadImage" action="{{ route('upload.store')}}" enctype="multipart/form-data" method="post" onsubmit="return validate()" >
+    <form id="uploadImage" action="{{ route('uploadImage.store')}}" enctype="multipart/form-data" method="post"
+          onsubmit="return validate()" >
         {{csrf_field()}}
 
         <div class="form-group {{$errors->has('studentId')?'has-error':''}}">
@@ -49,7 +50,7 @@
             @endif
         </div>
 
-        <input id="fileEntries" type="file" name="fileEntries">
+        <input id="fileEntries" type="file" name="fileEntries" required>
         <br>
         <div class="form-group {{$errors->has('title')?'has-error':''}}">
             <label for="title"  class="control-label">Title</label>
@@ -93,7 +94,7 @@
 
 
 <script type="text/javascript">
-    var url = "<?php echo route('upload.store')?>";
+    var url = "<?php echo route('uploadImage.store')?>";
     var flag = 0;
 </script>
 <script type="text/javascript">
@@ -131,16 +132,16 @@
             success: function (returndata) {
                 document.getElementById('status').style.display='block';
                 document.getElementById('invalidFormat').style.display='none';
-                alert("success");
-                alert(returndata+"return data");
+//                alert("success");
+//                alert(returndata+"return data");
                 var studentId = returndata;
                 $('#studentId option:selected').val()+"selected";
                 toastr.success('Image uploaded', 'Success Alert', {timeOut: 5000});
 //                window.location.reload();
             },
             error: function (data) {
-                alert('error');
-                alert(JSON.stringify(data));
+//                alert('error');
+//                alert(JSON.stringify(data));
                 toastr.error('Cannot upload image','Failure Alert', {timeOut: 5000});
 //              window.location.reload();
             }
@@ -150,22 +151,22 @@
     });
 
     $("#sendNotification").click(function(e){
-        alert('on click');
+//        alert('on click');
         e.preventDefault();
         var studentId = $('#studentId option:selected').val();
-        alert(studentId);
+//        alert(studentId);
         $.ajax({
             type:'POST',
             url: 'sendNotification'+studentId,
             success: function( data ) {
-                alert('success');
-                alert(data);
+//                alert('success');
+//                alert(JSON.stringify(data));
                 toastr.success('Child Activity notification sent', 'Success Alert', {timeOut: 5000});
                 window.location.reload();
             },
             error: function(data) {
-                alert('error');
-                alert(data);
+//                alert('error');
+//                alert(JSON.stringify(data));
                 toastr.error('Failed to send notification','Failure Alert', {timeOut: 5000});
                 window.location.reload();
             }

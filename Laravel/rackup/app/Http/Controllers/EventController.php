@@ -59,11 +59,13 @@ class EventController extends Controller
             $start = $databaseEvent->getStart();
             $end = $databaseEvent->getEnd();
             $eventType = $databaseEvent->eventType;
-            if($eventType=="Parent Function" || $eventType=="Teacher Function" ){
+            if($eventType=="Parent Function" || $eventType=="Teacher Function" ||$eventType=="Both" ){
                 if ($eventType =="Parent Function")
                     $color="Magenta";
-                else 
+                elseif ($eventType == "Teacher Function")
                     $color = "BlueViolet";
+                else
+                    $color = "olive" ;
                 $schoolEvents[$j++] = Calendar::event(
                     $title,
                     0,
@@ -103,7 +105,7 @@ class EventController extends Controller
                             'color'=>$color,
                             'url'=>'calendar_events/'.$id,
                         ]
-                    );
+                    );;
                 }
                 else{
                     $appointmentRequestId = $appointmentRequest->id;
@@ -260,30 +262,36 @@ class EventController extends Controller
         $schoolEvents = \DB::table('calendar_events')
             ->where('eventType',"Parent Function")
             ->orWhere('eventType',"Teacher Function")
+            ->orWhere('eventType',"Both")
             ->get();
+        return var_export($schoolEvents);
         $school_events = array();
         $k=0;
         foreach ($schoolEvents as $schoolEvent){
             $eventType = $schoolEvent->eventType;
-            if ($eventType =="Parent Function")
-                $color="Magenta";
-            else
-                $color = "BlueViolet";
-            $id = $schoolEvent->id;
-            $title = $schoolEvent->title;
-            $isallDay = $schoolEvent->is_all_day;
-            $start = $schoolEvent->start;
-            $end = $schoolEvent->end;
-            $school_events[$k++] = Calendar::event(
-                $title,
-                0,
-                $start."+05:30",
-                $end."+05:30",
-                $id,
-                [
-                    'color'=>$color
-                ]
-            );
+            if($eventType=="Parent Function" || $eventType=="Teacher Function" ||$eventType=="Both" ) {
+                if ($eventType == "Parent Function")
+                    $color = "Magenta";
+                elseif ($eventType == "Teacher Function")
+                    $color = "BlueViolet";
+                else
+                    $color = "olive";
+                $id = $schoolEvent->id;
+                $title = $schoolEvent->title;
+                $isallDay = $schoolEvent->is_all_day;
+                $start = $schoolEvent->start;
+                $end = $schoolEvent->end;
+                $school_events[$k++] = Calendar::event(
+                    $title,
+                    0,
+                    $start . "+05:30",
+                    $end . "+05:30",
+                    $id,
+                    [
+                        'color' => $color
+                    ]
+                );
+            }
         }
         $calendar = Calendar::addEvents($freeSlots);
         $calendar = Calendar::addEvents($appointments);

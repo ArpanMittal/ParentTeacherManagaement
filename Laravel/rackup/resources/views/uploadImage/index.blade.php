@@ -41,7 +41,7 @@
                     <tr>
                         <td>{{$uploadedImage['studentName']}}</td>
                         <td>{{$uploadedImage['title']}}</td>
-                        <td><a href="{{$uploadedImage['filePath']}}">{{$uploadedImage['filePath']}}</a></td>
+                        <td><a href="{{ route('getImage', $uploadedImage['filePath']) }}" target="_blank">Show {{$uploadedImage['title']}}</a></td>
                         <td>{{$uploadedImage['description']}}<td>
 
                         <td class="text-right">

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\CalendarEvent;
+use App\ContentType;
 use App\User;
 use App\UserDetails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Mockery\CountValidator\Exception;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
 
 class SchoolEventController extends Controller
 {
@@ -58,6 +60,7 @@ class SchoolEventController extends Controller
         $school_events = \DB::table('calendar_events')
             ->where('eventType',"Parent Function")
             ->orWhere('eventType',"Teacher Function")
+            ->orWhere('eventType',"Both")
             ->orderBy('eventType')
             ->orderBy('id','desc')
             ->get();
@@ -77,7 +80,8 @@ class SchoolEventController extends Controller
 
         $eventTypes = array(
             'Parent Function',
-            'Teacher Function'
+            'Teacher Function',
+            'Both'
         );
         return view('school_events.create',compact('eventTypes'),$data);
     }
@@ -104,51 +108,64 @@ class SchoolEventController extends Controller
         $startDate = Input::get('startDate');
         $startTime =Input::get('startTime');
         $endTime =Input::get("endTime");
-       try{
-           \DB::beginTransaction();
-           $startDate = Carbon::parse($startDate);
-           $endDate = $startDate;
-           $endDate = Carbon::parse($endDate);
-           $startTime = Carbon::parse($startTime);
-           $hours = (double)$startTime->format('H');
-           $minutes = (double)$startTime->format('i');
-           $seconds = (double)$startTime->format('s');
-           $startDateTime = date_time_set($startDate,$hours,$minutes,$seconds);
-           $endTime = Carbon::parse($endTime);
-           $hours = (double)$endTime->format('H');
-           $minutes = (double)$endTime->format('i');
-           $seconds = (double)$endTime->format('s');
-           $endDateTime = date_time_set($endDate,$hours,$minutes,$seconds);
-           $school_event = new CalendarEvent();
+        
+        if($request->hasFile('fileEntries')) {
+            $file = $request->file('fileEntries');
+            $fileExtension = $file->getClientOriginalExtension();
+            if ($fileExtension != 'jpg') {
+                return redirect(route('school_events.create'))->with('failure', 'Upload images of jpg only');
+            } else {
+                try {
+                    
+                    \DB::beginTransaction();
+                    $startDate = Carbon::parse($startDate);
+                    $endDate = $startDate;
+                    $endDate = Carbon::parse($endDate);
+                    $startTime = Carbon::parse($startTime);
+                    $hours = (double)$startTime->format('H');
+                    $minutes = (double)$startTime->format('i');
+                    $seconds = (double)$startTime->format('s');
+                    $startDateTime = date_time_set($startDate, $hours, $minutes, $seconds);
+                    $endTime = Carbon::parse($endTime);
+                    $hours = (double)$endTime->format('H');
+                    $minutes = (double)$endTime->format('i');
+                    $seconds = (double)$endTime->format('s');
+                    $endDateTime = date_time_set($endDate, $hours, $minutes, $seconds);
+                    $eventId = \DB::table('calendar_events')
+                        ->insertgetId(['title' => $title, 'start' => $startDateTime,'end' => $endDateTime,'is_all_day'=>0,'eventType'=>$eventType]);
+                    
+                    $fileName = $eventId . '_' . $title . '.' . $fileExtension;
+                    $filePath = Storage::putFileAs('public/events', $file, $fileName);
+                    $imageUrl = Storage::url('events/' . $eventId . '_' . $title . '.' . $fileExtension);
+                    \DB::table('calendar_events')
+                        ->where('id', $eventId)
+                        ->update([
+                            'imageUrl' => $imageUrl
+                        ]);
+                    
+                    if ($eventType == "Parent Function" || $eventType == "Both") {
+                        $parents = User::all()->where('role_id', 2);
+                        $i = 0;
+                        $gcmRegistrationId = array();
+                        foreach ($parents as $parent) {
+                            $parentId = $parent->id;
+                            $parentDetails = UserDetails::where('user_id', $parentId)->first();
+                            $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
+                            $message = array("message" => "Upcoming Event: $title on $startDate from $startTime to $endTime", 
+                                "eventId" => $eventId,"imageUrl"=>$imageUrl,"type"=>5);
+                            $this->sendPushNotificationToGCM($gcmRegistrationId, $message);
+                        }
+                    }
 
-           $school_event->title            = $title;
-           $school_event->start            = $startDateTime;
-           $school_event->end              = $endDateTime;
-           $school_event->is_all_day       = 0;
-           $school_event->eventType = $eventType;
+                } catch (Exception $e) {
+                    \DB::rollback();
+                    return redirect(route('school_events.create'))->with('failure', 'Adding Event failed');
+                }
+                \DB::commit();
+                return redirect(route('school_events.index'))->with('success', 'Event added successfully.');
+            }
+        }
 
-           $school_event->save();
-           
-           if ($eventType == "Parent Function"){
-               $eventId = $school_event->getId();
-               $parents = User::all()->where('role_id',2);
-               $i = 0;
-               $gcmRegistrationId = array();
-               foreach ($parents as $parent){
-                   $parentId = $parent->id;
-                   $parentDetails = UserDetails::where('user_id',$parentId)->first();
-                   $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
-                   $message = array("message"=>"Upcoming Event: $title on $startDate from $startTime to $endTime","eventId"=>$eventId);
-                   $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
-               }
-           }
-           
-       }catch (Exception $e){
-           \DB::rollback();
-           return redirect(route('school_events.create'))->with('failure', 'Adding Event failed');
-       }
-        \DB::commit();
-        return redirect(route('school_events.index'))->with('success', 'Event added successfully.');
     }
 
     /**
@@ -256,7 +273,7 @@ class SchoolEventController extends Controller
             
             $eventType = $school_event->eventType;
             $title=$school_event->title;
-            if ($eventType == "Parent Function"){
+            if ($eventType == "Parent Function" || $eventType =="Both"){
                 $eventId = $school_event->getId();
                 $parents = User::all()->where('role_id',2);
                 $i=0;
@@ -265,7 +282,8 @@ class SchoolEventController extends Controller
                     $parentId = $parent->id;
                     $parentDetails = UserDetails::where('user_id',$parentId)->first();
                     $gcmRegistrationId[$i++] = $parentDetails->gcmRegistrationId;
-                    $message = array("message"=>"Event Update: $title rescheduled to $startDate from $startTime to $endTime","eventId"=>$eventId);
+                    $imageUrl = Storage::url('public/default/eventUpdate.jpg');
+                    $message = array("message"=>"Event Update: $title rescheduled to $startDate from $startTime to $endTime","eventId"=>$eventId,"imageUrl"=>$imageUrl);
                     $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
                 }
             }

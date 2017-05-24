@@ -17,6 +17,53 @@
                     {{--<label for="teacherId">TEACHER ID</label>--}}
                     {{--<p class="form-control-static">{{$appointmentDetails['teacherId']}}</p>--}}
                 {{--</div>--}}
+                <table class="table ">
+                    <thead>
+                    <tr>
+                        <th>REQUESTED BY</th>
+                        @if($appointmentLog['confirmedBy']!=null)
+                            <th>CONFIRMED BY</th>
+                        @endif
+                        @if($appointmentLog['cancelledBy']!=null)
+                            <th>CANCELLED BY</th>
+                        @endif
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td bgcolor="#00bfff">
+                            <label class="label" for="requestedBy    ">{{$appointmentLog['initiatedBy']}}
+                                <br>Requested At: {{$appointmentLog['initiatedAt']}}</label>
+                        </td>
+                        @if($appointmentLog['confirmedBy']==null && $appointmentLog['cancelledBy']==null )
+                            <td bgcolor="orange">
+                                <label class="label" for="awaited">Appointment Awaited</label>
+                            </td>
+                        @endif
+                        @if($appointmentLog['expired']==1)
+                            <td bgcolor="#808080">
+                                <label class="label" for="expired">Appointment Expired</label>
+                                <label class="label" for="expiredOn">Expired On: $appointmentLog['expiredOn']</label>
+
+                            </td>
+                        @endif
+                        @if($appointmentLog['confirmedBy']!=null)
+                            <td bgcolor="green">
+                                <label class="label" for="confirmed">{{$appointmentLog['confirmedBy']}}
+                                    <br>Confirmed At: {{$appointmentLog['confirmedAt']}}</label>
+                            </td>
+                        @endif
+                        @if($appointmentLog['cancelledBy']!=null)
+                            <td bgcolor="red">
+                                <label class="label" for="cancelled">{{$appointmentLog['cancelledBy']}}
+                                    <br>Cancelled At: {{$appointmentLog['cancelledAt']}}</label>
+                            </td>
+
+                        @endif
+                    </tr>
+                    </tbody>
+                </table>
+
                 <div class="form-group">
                     <label for="teacherName">TEACHER NAME</label>
                     <p class="form-control-static">{{$appointmentDetails['teacherName']}}</p>

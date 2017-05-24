@@ -84,8 +84,18 @@ class RegisterParentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-
-        return view('registerParent.create',$data);
+        $grades = array();
+        $i=0;
+        $gradeDetails = Grade::all();
+        foreach ($gradeDetails as $gradeDetail){
+            $gradeId = $gradeDetail->id;
+            $gradeName = $gradeDetail->grade_name;
+            $grades[$i++] = array(
+                'gradeId'=>$gradeId,
+                'gradeName'=>$gradeName
+            );
+        }
+        return view('registerParent.create',compact('grades'),$data);
     }
     /**
      * Store a newly created parent user.
@@ -124,7 +134,7 @@ class RegisterParentController extends Controller
 
         try {
             \DB::beginTransaction();
-            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => 2]);
+            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2]);
             \DB::table('userDetails')->insert(['name' => $parentName, 'gender' => $parentGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId]);
 
             \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
