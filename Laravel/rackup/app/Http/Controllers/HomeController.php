@@ -66,8 +66,6 @@ class HomeController extends Controller
         $password = $request->input('password');
 
         $user = User::where('username',$username)->where('password',$password)->first();
-        $token = JWTAuth::fromUser($user);
-        $user = JWTAuth::toUser($token);
         
         if ( !is_null($user) ){
             $request->session()->put('id',$user->id);

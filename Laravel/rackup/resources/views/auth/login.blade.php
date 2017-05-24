@@ -65,18 +65,18 @@
     </div>
 @endsection
 
-@section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.2.0/sha1.js"></script>
+{{--@section('script')--}}
+    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.2.0/sha1.js"></script>--}}
 
-    <script >
-        $( "#login_form" ).submit(function( event ) {
-            var password = $('#password').val();
-            var shaObj = new jsSHA("SHA-1", "TEXT");
-            shaObj.update(password);
-            $('#password').val(shaObj.getHash("HEX"));
-        });
-    </script>
-@endsection
+    {{--<script >--}}
+        {{--$( "#login_form" ).submit(function( event ) {--}}
+            {{--var password = $('#password').val();--}}
+            {{--var shaObj = new jsSHA("SHA-1", "TEXT");--}}
+            {{--shaObj.update(password);--}}
+            {{--$('#password').val(shaObj.getHash("HEX"));--}}
+        {{--});--}}
+    {{--</script>--}}
+{{--@endsection--}}
 
 
 
