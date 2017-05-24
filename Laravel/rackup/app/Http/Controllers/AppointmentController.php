@@ -731,9 +731,9 @@ class AppointmentController extends Controller
             );
         }
 
-        $school_events = CalendarEvent::all()
-            ->where('eventType',"Parent Function")
-            ->orWhere('eventType',"Both");
+        $school_events = CalendarEvent::where('eventType',"Parent Function")
+            ->orWhere('eventType',"Both")
+            ->get();
         $k = 0;
         $schoolEvents = array();
         foreach ($school_events as $school_event){
