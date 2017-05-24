@@ -73,6 +73,9 @@ class UploadImageController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $teacherDetails = UserDetails::where('user_id',$id)->first();
         $teacherName = $teacherDetails->name;
@@ -91,6 +94,10 @@ class UploadImageController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+
         $studentDetails = Student::all();
         $i=0;
         $sudents = array();
@@ -242,7 +249,7 @@ class UploadImageController extends Controller
                     'created_at' => $createdAt
                 );
             }
-            elseif ($typeDetails->name =='jpg'){
+            else{
                 $filePath = $file->url;
                 $title = $file->name;
                 $description = $file->description;
