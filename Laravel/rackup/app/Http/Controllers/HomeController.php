@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Grade;
+use App\GradeUser;
 use App\Student;
 use App\User;
 use App\UserDetails;
@@ -114,9 +115,7 @@ class HomeController extends Controller
                 $gradeId = $studentDetails->grade_id;
                 $gradeDetails = Grade::where('id',$gradeId)->first();
                 $grade = $gradeDetails->grade_name;
-                $gradeUser = Grade::where('grade_id',$gradeId)
-                    ->where('is_class_teacher',1)
-                    ->first();
+                $gradeUser = GradeUser::where('grade_id',$gradeId)->where('is_class_teacher',1)->first();
                 $teacherId = $gradeUser->user_id;
                 $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
                 $teacherName = $teacherDetails->name;
