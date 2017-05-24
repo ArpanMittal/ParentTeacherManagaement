@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Grade;
+use App\GradeUser;
 use App\Student;
 use App\User;
 use App\UserDetails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Mockery\CountValidator\Exception;
 use Psy\Exception\ErrorException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
@@ -114,7 +116,7 @@ class HomeController extends Controller
                 $gradeId = $studentDetails->grade_id;
                 $gradeDetails = Grade::where('id',$gradeId)->first();
                 $grade = $gradeDetails->grade_name;
-                $gradeUser = GradeUse::where('grade_id',$gradeId)->where('is_class_teacher',1)->first();
+                $gradeUser = GradeUser::where('grade_id',$gradeId)->where('is_class_teacher',1)->first();
                 $teacherId = $gradeUser->user_id;
                 $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
                 $teacherName = $teacherDetails->name;
@@ -134,7 +136,7 @@ class HomeController extends Controller
                 $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
                 //return Response::json(HttpResponse::HTTP_OK);
                 return response()->json([$userdata, $STATUS_CODE]);
-                //return Response::json(compact('token'));
+                //return Respon se::json(compact('token'));
             } catch (ErrorException $e) {
 
                 return Response::json(['error' => 'Invalid credentials'], HttpResponse::HTTP_UNAUTHORIZED);
@@ -155,34 +157,32 @@ class HomeController extends Controller
         }catch (TokenInvalidException $e){
             return Response::json (['Token invalid']);
         }
-        $parentName = $request->get('parentName');
-//        $parentGender = $request->get('parentGender');
         $contact = $request->get('contact');
         $address = $request->get('address');
-        $studentName  =$request->get('studentName');
-        $dob = $request->get('dob');
-//        $studentGender = $request->get('studentGender');
-        $username = $request->get('username');
-        if(is_null($parentName)||is_null($contact)||is_null($address)||is_null($studentName)||is_null($dob)){
+        $profile_pic = $request->get("profile_pic");
+
+        if(is_null($contact)||is_null($address)||is_null($profile_pic)){
             return Response::json(["Incomplete data",HttpResponse::HTTP_PARTIAL_CONTENT]);
         }
         try{
+            $filePath = 'public/profile';
+            $fileName = $userId.".jpg";
+            $file = $this->base64_to_jpg($profile_pic,$filePath);
+            Storage::putFileAs($filePath,$file,$fileName);
+            $url = Storage::url('profile/'.$fileName);
+
             \DB::beginTransaction();
+
+            \DB::table('userDetails')->where('id',$user->id)
+                ->update([
+                    'profilePhotoPath'=>  $url
+                ]);
+
             \DB::table('userDetails')
                 ->where('user_id',$userId)
                 ->update([
-                        'name'=>$parentName,
-//                        'gender'=>$parentGender,
                         'address'=>$address,
                         'contact' => $contact
-                    ]
-                );
-            \DB::table('students')
-                ->where('parent_id',$userId)
-                ->update([
-                        'name'=>$studentName,
-                        'dob'=>$dob,
-//                        'gender'=>$studentGender
                     ]
                 );
         }catch (Exception $e){
@@ -191,5 +191,12 @@ class HomeController extends Controller
         }
         \DB::commit();
         return Response::json(["Success",HttpResponse::HTTP_OK]);
+    }
+
+    private function base64_to_jpg($base64_string, $output_file) {
+        $ifp = fopen($output_file, "wb");
+        fwrite($ifp, base64_decode($base64_string));
+        fclose($ifp);
+        return $output_file;
     }
 }
