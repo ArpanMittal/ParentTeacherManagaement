@@ -750,8 +750,8 @@ class AppointmentController extends Controller
             $imageUrl = $school_event->imageUrl;
             $schoolEvents[$k++] = array(
                 'eventId'=>$eventId,
-                'title'=>$title,
-                'type'=>6,
+                'title'=>6,
+                'name'=>$title,
                 'startDate'=>$startDate,
                 'startTime'=>$startTime,
                 'endTime'=>$endTime,
