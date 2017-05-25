@@ -44,36 +44,70 @@
 
             <!-- Branding Image -->
             <a class="navbar-brand">
-               <h>Rackup Cambridge</h>
+               Rackup Cambridge
             </a>
         </div>
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
-            <!-- Right Side Of Navbar -->
-            <ul class="nav navbar-nav navbar-right">
-                <!-- Authentication Links -->
-                @if (!isset($user))
-
-                @else
-                    <li><a href="{{ route('home') }}">Home</a></li>
-                    <li><a href="{{ route('logout') }}">Logout</a></li>
-
-                    {{--  <li class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                               {{ $user->username }} <span class="caret"></span>
-                           </a>
-
-                          <ul class="dropdown-menu" role="menu">
-                              <li><a href="{{ route('logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                          </ul>
-                      </li>--}}
+            <ul class="nav navbar-nav navbar-left">
+                @if(isset($user))
+                    {{--Admin--}}
+                    @if($user->role_id==1)
+                        <li><a href="{{ route('registerParent.index')}}">Student's Registration</a></li>
+                        <li><a href="{{ route('registerTeacher.index')}}">Teacher's Registraion</a></li>
+                        <li><a href="{{ route('admin.create')}}">Add New Grade</a></li>
+                        <li><a href="{{ route('getAssignTeacher')}}">Assign Teachers</a></li>
+                        <li><a href="/calendar_events">Free Slots</a></li>
+                        <li><a href="/school_events">School Events</a></li>
+                        <li><a href="{{ route('calendar')}}">Show Calendar</a></li>
+                        <li><a href="{{ route('home') }}">Home</a></li>
+                        <li><a href="{{ route('logout') }}">Logout</a></li>
+                        {{--<li><a href="{{ route('showAppointmentDetails')}}">Show Appointment Details</a></li>--}}
+                        {{--<li><a href="{{ route('insertAppointmentsSlots')}}">Insert Slots</a></li>--}}
+                    @endif
+                    {{--Teacher--}}
+                    @if($user->role_id==4)
+                        <li><a href="{{ route('upload.index')}}">Upload Link</a></li>
+                        <li><a href="{{ route('uploadImage.index')}}">Upload Image</a></li>
+                        <li><a href="{{ route('uploadPdf.index')}}">Upload Pdf</a></li>
+                        <li><a href="{{ route('appointments.index')}}">My Appointments</a></li>
+                        <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
+                        <li><a href="/teacherCalendar">Show Calendar</a></li>
+                        <li><a href="{{ route('home') }}">Home</a></li>
+                        <li><a href="{{ route('logout') }}">Logout</a></li>
+                        {{--<li><a href="{{route('teacherAppointments')}}">Show Appointments</a></li>--}}
+                    @endif
                 @endif
             </ul>
+            {{--<!-- Right Side Of Navbar -->--}}
+            {{--<ul class="nav navbar-nav navbar-right">--}}
+                {{--<!-- Authentication Links -->--}}
+                {{--@if (!isset($user))--}}
+
+                {{--@else--}}
+                    {{--<li><a href="{{ route('home') }}">Home</a></li>--}}
+                    {{--<li><a href="{{ route('logout') }}">Logout</a></li>--}}
+
+                    {{--  <li class="dropdown">--}}
+                           {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">--}}
+                               {{--{{ $user->username }} <span class="caret"></span>--}}
+                           {{--</a>--}}
+
+                          {{--<ul class="dropdown-menu" role="menu">--}}
+                              {{--<li><a href="{{ route('logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>--}}
+                          {{--</ul>--}}
+                      {{--</li>--}}
+                {{--@endif--}}
+            {{--</ul>--}}
         </div>
     </div>
 </nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">@yield('profile')</div>
+    </div>
+</div>
 
-@yield('sidebar')
 <div class="container">
     <div class="row">
         <div class="col-md-12">@yield('content')</div>

@@ -27,7 +27,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    {{--<th>ID</th>--}}
                     <th>Category</th>
                     <th>Content</th>
                     <th>Url</th>
@@ -40,7 +40,7 @@
 
                 @foreach($uploadedContentDetails as $uploadedContentDetail)
                     <tr>
-                        <td>{{$uploadedContentDetail['contentId']}}</td>
+                        {{--<td>{{$uploadedContentDetail['contentId']}}</td>--}}
                         <td>{{$uploadedContentDetail['categoryName']}}</td>
                         <td>{{$uploadedContentDetail['contentName']}}</td>
                         <td>{{$uploadedContentDetail['url']}}</td>
@@ -48,7 +48,11 @@
 
                         <td class="text-right">
                             <a class="btn btn-primary" href="{{ route('upload.show', $uploadedContentDetail['contentId']) }}">View</a>
+                        </td>
+                        <td>
                             <a class="btn btn-warning" href="{{ route('upload.edit', $uploadedContentDetail['contentId']) }}">Edit</a>
+                        </td>
+                        <td>
                             <form action="{{ route('upload.destroy', $uploadedContentDetail['contentId']) }}" method="POST"
                                   style="display: inline;"
                                   onsubmit="if(confirm('Delete? Are you sure?'))

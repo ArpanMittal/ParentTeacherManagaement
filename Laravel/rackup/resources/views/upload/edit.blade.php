@@ -21,10 +21,10 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                <div class="form-group">
-                    <label for="id">ID</label>
-                    <p class="form-control-static">{{$uploadedContentDetails['contentId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="id">ID</label>--}}
+                    {{--<p class="form-control-static">{{$uploadedContentDetails['contentId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="categoryName">Category</label>
                     <p class="form-control-static">{{$uploadedContentDetails['categoryName']}}</p>

@@ -76,11 +76,19 @@
                         </span>
                     @endif
                 </div>
-                <input id="fileEntries" type="file" name="fileEntries" required>
+                <div class="form-group {{$errors->has('fileEntries')?'has-error':''}}">
+                    <label for="fileEntries">Event Picture</label>
+                    <input id="fileEntries" type="file" name="fileEntries" required>
+                    @if ($errors->has('fileEntries'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('fileEntries') }}</strong>
+                        </span>
+                    @endif
+                </div>
                 <br>
 
 
-                <a class="btn btn-default" href="{{ route('school_events.index') }}">Home</a>
+                <a class="btn btn-default" href="{{ route('home') }}">Home</a>
                 <button class="btn btn-primary" type="submit" >Add New Event</button>
             </form>
         </div>

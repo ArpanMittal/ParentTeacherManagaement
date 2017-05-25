@@ -56,6 +56,9 @@ class UploadController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $teacherDetails = UserDetails::where('user_id',$id)->first();
         $teacherName = $teacherDetails->name;
@@ -80,6 +83,10 @@ class UploadController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+
         $uploadedContentDetails = $this->getUploadedContentDetails($id);
         return view('upload.show',compact('uploadedContentDetails'),$data);
     }
@@ -93,6 +100,9 @@ class UploadController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $uploadedContentDetails=$this->getUploadedContentDetails($id);
 
@@ -159,6 +169,10 @@ class UploadController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+
         $gradeDetails = Grade::all();
         $i=0;
         $grades =  array();
@@ -166,8 +180,8 @@ class UploadController extends Controller
             $gradeId = $gradeDetail->id;
             $gradeName = $gradeDetail->grade_name;
             $grades[$i++] = array(
-                'id'=>$gradeId,
-                'name'=>$gradeName
+                'gradeId'=>$gradeId,
+                'gradeName'=>$gradeName
             );
         }
         return view('upload.uploadLink',compact('grades'),$data);
@@ -176,7 +190,7 @@ class UploadController extends Controller
     public function createCategory(Request $request)
     {
         $gradeId = $request->get('grade');
-        $contentName =$request->get('contentName');
+        $contentName =$request->get('contentName'); 
         try {
             \DB::beginTransaction();
             $content = Content::where('name', '=',$contentName)->first();

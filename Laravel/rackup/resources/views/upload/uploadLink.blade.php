@@ -38,20 +38,20 @@
                         <div>
                             <form id="uploadLink" method="post" role="form" action="createCategory" >
                                 {{csrf_field()}}
-                                <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
-                                    <label for="gradeId"  class="control-label ">Grade</label>
-                                    <div >
-                                        <input type="radio" id="grade" name="grade" value="1"/>Playgroup
-                                        <input type="radio" id="grade" name="grade" value="2"/>Nursery
-                                        <input type="radio" id="grade" name="grade" value="3"/>J.K.G.
-                                        <input type="radio" id="grade" name="grade" value="4"/>S.K.G.
-                                        @if ($errors->has('gradeId'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('gradeId') }}</strong>
-                                            </span>
-                                        @endif
-                                    </div>
+                                <div class="form-group {{$errors->has('grade')?'has-error':''}}">
+                                    <label for="grade">Grade</label>
+                                    <select  id="grade" name="grade" class="form-group" required autofocus>
+                                        @foreach($grades as $grade)
+                                            <option value = "{{$grade['gradeId']}}" >{{$grade['gradeName']}}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('grade'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('grade') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
+
                                 <div class="form-group {{$errors->has('contentName')?'has-error':''}}">
                                     <label for="contentName"  class="control-label">New Category</label>
                                     <div>
@@ -105,20 +105,18 @@
                     <form id="uploadLink" method="post" role="form" action="/uploadLink" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
-                            <label for="gradeId"  class="col-md-4 control-label ">Grade</label>
-                            <div class="col-md-6">
-                                <select  id="gradeId"name="gradeId" class="form-control">
-                                    <option value=0>Select grade</option>
-                                    @foreach($grades as $grade)
-                                        <option value = "{{$grade['id']}}">{{$grade['name']}}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('gradeId'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('gradeId') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                            <label for="grade">Grade</label>
+                            <select  id="gradeId" name="gradeId" class="form-group" required autofocus>
+                                <option value="0">Select grade</option>
+                                @foreach($grades as $grade)
+                                    <option value = "{{$grade['gradeId']}}" >{{$grade['gradeName']}}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('gradeId'))
+                                <span class="help-block">
+                            <strong>{{ $errors->first('gradeId') }}</strong>
+                        </span>
+                            @endif
                         </div>
 
                         <div class="col-md-12"></div>
@@ -126,7 +124,7 @@
                         <div id="contents" class="form-group {{$errors->has('contentName')?'has-error':''}}" style="display:none;">
                             <label for="contentName"  class="col-md-4 control-label">Category</label>
                             <div class="col-md-6">
-                                <select  id="contentName"name="contentName" class="form-control">
+                                <select  id="contentName"name="contentName" class="form-group">
 
                                 </select>
 

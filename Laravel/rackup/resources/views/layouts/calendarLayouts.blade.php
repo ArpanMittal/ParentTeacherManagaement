@@ -31,25 +31,41 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+
+            <!-- Branding Image -->
+            <a class="navbar-brand">
+                Rackup Cambridge
+            </a>
+
         </div>
+
         <div id="navbar" class="collapse navbar-collapse">
             @if(isset($user))
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li><a href="{{ route('logout') }}">Logout</a></li>
-            </ul>
+            {{--<ul class="nav navbar-nav navbar-right">--}}
+                {{--<li><a href="{{ route('home') }}">Home</a></li>--}}
+                {{--<li><a href="{{ route('logout') }}">Logout</a></li>--}}
+            {{--</ul>--}}
             <ul class="nav navbar-nav">
-
-
                     @if($user->role_id==1)
-                        <li><a href="/calendar">Show Calendar</a></li>
-                        <li><a href="/calendar_events">Appointment Slots</a></li>
-                        <li><a href="/school_events">School Events</a></li>
+                    <li><a href="{{ route('registerParent.index')}}">Student's Registration</a></li>
+                    <li><a href="{{ route('registerTeacher.index')}}">Teacher's Registraion</a></li>
+                    <li><a href="{{ route('admin.create')}}">Add New Grade</a></li>
+                    <li><a href="{{ route('getAssignTeacher')}}">Assign Teachers</a></li>
+                    <li><a href="/calendar_events">Free Slots</a></li>
+                    <li><a href="/school_events">School Events</a></li>
+                    <li><a href="/calendar">Show Calendar</a></li>
+                    <li><a href="{{ route('home') }}">Home</a></li>
+                    <li><a href="{{ route('logout') }}">Logout</a></li>
                     @endif
                     @if($user->role_id==4)
-                        <li><a href="/teacherCalendar">Show Calendar</a></li>
+                        <li><a href="{{ route('upload.index')}}">Upload Link</a></li>
+                        <li><a href="{{ route('uploadImage.index')}}">Upload Image</a></li>
+                        <li><a href="{{ route('uploadPdf.index')}}">Upload Pdf</a></li>
                         <li><a href="/appointments">My Appointments</a></li>
                         <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
+                        <li><a href="/teacherCalendar">Show Calendar</a></li>
+                        <li><a href="{{ route('home') }}">Home</a></li>
+                        <li><a href="{{ route('logout') }}">Logout</a></li>
                     @endif
             </ul>
             @endif

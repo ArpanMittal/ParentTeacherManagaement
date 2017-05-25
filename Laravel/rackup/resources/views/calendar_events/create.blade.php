@@ -1,8 +1,8 @@
-@extends('layouts.calendarLayouts')
+@extends('layouts.app')
 
 @section('content')
     <div class="page-header">
-        <h1>Add Slots</h1>
+        <h1>Add Free Slots</h1>
     </div>
 
     <div>
@@ -68,7 +68,7 @@
                 </div>
 
 
-                <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Home</a>
+                <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Cancel</a>
                 <button class="btn btn-primary" type="submit" >Add Slots</button>
             </form>
         </div>

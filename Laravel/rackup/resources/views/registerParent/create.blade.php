@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Create New User</h1>
+        <h1>Register New Student</h1>
     </div>
 
     @if (session('failure'))
@@ -66,7 +66,7 @@
                 <div></div>
 
                 <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
-                    <label for="teacher">Grade</label>
+                    <label for="grade">Grade</label>
                     <select  id="gradeId" name="gradeId" class="form-control" required autofocus>
                         @foreach($grades as $grade)
                             <option value = "{{$grade['gradeId']}}" >{{$grade['gradeName']}}</option>
@@ -82,32 +82,32 @@
                 <div></div>
 
                 <label><h2>Parent Details</h2></label>
-                <div class="form-group {{$errors->has('parentName')?'has-error':''}}">
-                    <label for="parentName">Parent Name</label>
+
+                <div class="form-group {{$errors->has('fatherName')?'has-error':''}}">
+                    <label for="fatherName">Father's Name</label>
                     <div>
-                        <input type="text" name="parentName" id="parentName" value="{{ Input::old('parentName') }}" required autofocus>
-                        @if ($errors->has('parentName'))
+                        <input type="text" name="fatherName" id="fatherName" value="{{ Input::old('fatherName') }}" required autofocus>
+                        @if ($errors->has('fatherName'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('parentName') }}</strong>
+                                <strong>{{ $errors->first('fatherName') }}</strong>
                             </span>
                         @endif
                     </div>
                 </div>
 
                 <div></div>
-
-                <div class="form-group {{$errors->has('parentGender')?'has-error':''}}">
-                    <label for="parentGender">Gender</label>
+                <div class="form-group {{$errors->has('motherName')?'has-error':''}}">
+                    <label for="motherName">Mother's Name</label>
                     <div>
-                        <input type="radio" name="parentGender"value="F"/>Female
-                        <input type="radio" name="parentGender"value="M"/>Male
-                        @if ($errors->has('parentGender'))
+                        <input type="text" name="motherName" id="motherName" value="{{ Input::old('motherName') }}" required autofocus>
+                        @if ($errors->has('motherName'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('parentGender') }}</strong>
+                                <strong>{{ $errors->first('motherName') }}</strong>
                             </span>
                         @endif
                     </div>
                 </div>
+
 
                 <div></div>
 
@@ -126,12 +126,26 @@
                 <div></div>
 
                 <div class="form-group {{$errors->has('contact')?'has-error':''}}">
-                    <label for="contact">Contact</label>
+                    <label for="contact">Primary Contact</label>
                     <div>
                         <input type="text" name="contact" id="contact" value="{{ Input::old('contact') }}" required autofocus>
                         @if ($errors->has('contact'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('contact') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <div></div>
+
+                <div class="form-group {{$errors->has('secondaryContact')?'has-error':''}}">
+                    <label for="secondaryContact">Secondary Contact</label>
+                    <div>
+                        <input type="text" name="secondaryContact" id="secondaryContact" value="{{ Input::old('secondaryContact') }}" required autofocus>
+                        @if ($errors->has('secondaryContact'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('secondaryContact') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -165,7 +179,7 @@
                     </div>
                 </div>
                 <a class="btn btn-default" href="{{ route('registerParent.index') }}">Back</a>
-                <button class="btn btn-primary" type="submit" >Create</button>
+                <button class="btn btn-primary" type="submit" >Register</button>
             </form>
         </div>
     </div>

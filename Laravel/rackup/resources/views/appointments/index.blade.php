@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Appointments</h1>
+        <h1>My Appointments</h1>
     </div>
 
 
@@ -62,9 +62,13 @@
                         <td>{{$appointmentDetail['status']}}</td>
                         <td class="text-right">
                             <a class="btn btn-primary" href="{{ route('appointments.show', $appointmentDetail['requestId']) }}">View</a>
+                         </td>
+                        <td>
                             @if(($appointmentDetail['requestedBy']=="Parent") && ($appointmentDetail['status']=="Awaited"))
                                 <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetail['requestId'])}}">Confirm</a>
                             @endif
+                        </td>
+                        <td>
                             @if(($appointmentDetail['status']=="Confirmed" || $appointmentDetail['status']=="Awaited"))
                                 <a class="btn btn-danger" href="{{ route('getCancel',$appointmentDetail['requestId'])}}">Cancel</a>
                             @endif

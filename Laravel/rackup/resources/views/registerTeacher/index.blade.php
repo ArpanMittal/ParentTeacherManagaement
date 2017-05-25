@@ -4,7 +4,7 @@
 
 
     <div class="page-header">
-        <h1>User Details</h1>
+        <h1>Teacher Details</h1>
     </div>
 
     <div>
@@ -28,7 +28,7 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Teacher Name</th>
+                    <th>Teacher's Name</th>
                     <th>Gender</th>
                     <th>Contact</th>
                     <th>Address</th>
@@ -48,9 +48,13 @@
                         <td>{{$teacher_detail['address']}}</td>
                         <td>{{$teacher_detail['username']}}</td>
 
-                        <td class="text-right">
+                        <td>
                             <a class="btn btn-primary" href="{{ route('registerTeacher.show', $teacher_detail['teacherId']) }}">View</a>
+                        </td>
+                        <td>
                             <a class="btn btn-warning " href="{{ route('registerTeacher.edit', $teacher_detail['teacherId']) }}">Edit</a>
+                        </td>
+                        <td>
                             <form action="{{ route('registerTeacher.destroy', $teacher_detail['teacherId']) }}" method="POST" style="display: inline;"
                                   onsubmit="if(confirm('Delete? Are you sure?'))
                                   {
@@ -72,7 +76,7 @@
                 </tbody>
             </table>
 
-            <a class="btn btn-success" href="{{ route('registerTeacher.create') }}">Create New User</a>
+            <a class="btn btn-success" href="{{ route('registerTeacher.create') }}">Register New Teacher</a>
         </div>
     </div>
 

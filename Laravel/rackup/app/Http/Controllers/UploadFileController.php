@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\UserDetails;
 use App\ContentType;
 use App\Category;
+use App\Student;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Response;
@@ -45,6 +46,9 @@ class UploadFileController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $teacherDetails = UserDetails::where('user_id',$id)->first();
         $teacherName = $teacherDetails->name;
@@ -68,8 +72,23 @@ class UploadFileController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
-        return view('uploadFile.create',$data);
+        $studentDetails = Student::all();
+        $i=0;
+        $sudents = array();
+        foreach ($studentDetails as $studentDetail){
+            $studentName = $studentDetail->name;
+            $studentId = $studentDetail->id;
+            $students[$i++]=array(
+                'id'=>$studentId,
+                'name'=>$studentName
+            );
+        }
+
+        return view('uploadFile.create',compact('students'),$data);
     }
     //Store the file
     public function store(Request $request)
@@ -149,6 +168,10 @@ class UploadFileController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         $uploadedFiles = $this->getUploadedFileDetails($id);
         return view('uploadFile.show',compact('uploadedFiles'),$data);
     }

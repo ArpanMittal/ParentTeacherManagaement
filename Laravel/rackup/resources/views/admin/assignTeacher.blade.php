@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Add new Grade</h1>
+        <h1>Assign Teachers to Grades</h1>
     </div>
 
     @if (session('failure'))
@@ -74,9 +74,6 @@
                         @endif
                     </div>
                 </div>
-
-
-
 
                 <button class="btn btn-primary" type="submit" >Assign</button>
             </form>

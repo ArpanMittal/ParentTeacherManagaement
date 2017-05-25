@@ -41,6 +41,9 @@ class AppointmentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
         //Retrieve all the appointment requests of the logged in teacher
         $appointmentRequests = AppointmentRequest::where('teacher_id',$id)
             ->orderBy('requestType')
@@ -135,6 +138,9 @@ class AppointmentController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $appointmentDetails = $this->getAppointments($id);
         $eventId = $appointmentDetails['eventId'];
@@ -194,6 +200,9 @@ class AppointmentController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $appointmentDetails = $this->getAppointments($id);
         return view('appointments.confirm',compact('appointmentDetails'),$data);
@@ -306,6 +315,9 @@ class AppointmentController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $appointmentDetails = $this->getAppointments($id);
         return view('appointments.cancel',compact('appointmentDetails'),$data);
@@ -385,6 +397,9 @@ class AppointmentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $userDetails = UserDetails::where('user_id',$id)->first();
         $contactNo = $userDetails->contact;
@@ -576,6 +591,10 @@ class AppointmentController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         $i = 0;
         $calendarEvent = CalendarEvent::where('id',$id)->first();
         $title = $calendarEvent->title;

@@ -20,7 +20,7 @@
 
             </form>
 
-            <a class="btn btn-default" href="{{ route('uploadPdf.index') }}">Home</a>
+            <a class="btn btn-default" href="{{ route('uploadPdf.index') }}">Back</a>
             <form action="#/$uploadedFiles['fileId']" method="DELETE" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?'))
              {
              return true

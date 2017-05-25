@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Appointment</h1>
+        <h1>Appointment Details</h1>
     </div>
 
     <div class="row">
@@ -54,7 +54,6 @@
                                 <label class="label" for="cancelled">{{$appointmentLog['cancelledBy']}}
                                     <br>Cancelled At: {{$appointmentLog['cancelledAt']}}</label>
                             </td>
-
                         @endif
                     </tr>
                     </tbody>
@@ -112,7 +111,7 @@
                     <label for="status">STATUS</label>
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
-                <a class="btn btn-default" href="{{ route('appointments.index') }}">Home</a>
+                <a class="btn btn-default" href="{{ route('home') }}">Home</a>
                 @if(($appointmentDetails['requestedBy']=="Parent") &&
                 ($appointmentDetails['status']=="Awaited"))
                     <a class="btn btn-success" href="{{ route('getConfirm',$appointmentDetails['requestId'])}}">Confirm Appointment</a>

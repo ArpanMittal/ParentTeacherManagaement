@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Show User Details</h1>
+        <h1>Show Teacher Details</h1>
+        <img src="{{$teacherDetails['profilePhoto']}}" alt="HTML5 Icon" style="width:128px;height:128px;">
     </div>
 
 
@@ -10,16 +11,16 @@
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group">
-                    <label for="teacherId">Teacher Id</label>
-                    <p class="form-control-static">{{$teacher_details['teacherId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="teacherId">Teacher Id</label>--}}
+                    {{--<p class="form-control-static">{{$teacher_details['teacherId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="username">Username</label>
                     <p class="form-control-static">{{$teacher_details['username']}}</p>
                 </div>
                 <div class="form-group">
-                    <label for="teacherName">Teacher Name</label>
+                    <label for="teacherName">Teacher's Name</label>
                     <p class="form-control-static">{{$teacher_details['teacherName']}}</p>
                 </div>
                 <div class="form-group">
@@ -35,8 +36,6 @@
                     <p class="form-control-static">{{$teacher_details['address']}}</p>
                 </div>
             </form>
-
-
 
             <a class="btn btn-default" href="{{ route('registerTeacher.index') }}">Back</a>
             <a class="btn btn-warning" href="{{ route('registerTeacher.edit', $teacher_details['teacherId']) }}">Edit</a>

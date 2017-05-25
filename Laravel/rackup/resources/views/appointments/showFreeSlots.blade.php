@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Slot Details</h1>
+        <h1>Free Slot Details</h1>
     </div>
 
     <div class="row">
@@ -26,7 +26,7 @@
                     <p class="form-control-static">{{$calendar_event['endTime']}}</p>
                 </div>
 
-                <a class="btn btn-default" href="{{ route('appointments.index') }}">Home</a>
+                <a class="btn btn-default" href="{{ route('home') }}">Home</a>
 
             </form>
         </div>

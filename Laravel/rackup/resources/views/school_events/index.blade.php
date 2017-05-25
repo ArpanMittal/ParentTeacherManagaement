@@ -44,7 +44,9 @@
                         <td>{{$school_event->end}}</td>
                         <td class="text-right">
                             <a class="btn btn-primary" href="{{ route('school_events.show', $school_event->id) }}">View</a>
+
                             <a class="btn btn-warning " href="{{ route('school_events.edit', $school_event->id) }}">Edit</a>
+
                             <form action="{{ route('school_events.destroy', $school_event->id) }}" method="POST" style="display: inline;"
                                   onsubmit="if(confirm('Delete? Are you sure?'))
                                   {

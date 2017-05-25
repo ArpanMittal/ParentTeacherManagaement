@@ -4,7 +4,7 @@
 
 
     <div class="page-header">
-        <h1>User Details</h1>
+        <h1>Student Details</h1>
     </div>
 
     <div>
@@ -27,14 +27,14 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Student Name</th>
                     <th>Student Gender</th>
                     <th>DOB</th>
                     <th>Grade Name</th>
-                    <th>Parent Name</th>
-                    <th>Parent Gender</th>
-                    <th>Contact</th>
+                    <th>Father's Name</th>
+                    <th>Mother's Name</th>
+                    <th>Primary Contact</th>
+                    <th>Secondary Contact</th>
                     <th>Address</th>
                     <th>Username</th>
                     <th class="text-right">OPTIONS</th>
@@ -45,22 +45,26 @@
 
                 @foreach($parent_details as $parent_detail)
                     <tr>
-                        <td>{{$parent_detail['studentId']}}</td>
                         <td>{{$parent_detail['studentName']}}</td>
                         <td>{{$parent_detail['studentGender']}}</td>
                         <td>{{$parent_detail['dob']}}</td>
                         <td>{{$parent_detail['gradeName']}}</td>
-                        <td>{{$parent_detail['parentName']}}</td>
-                        <td>{{$parent_detail['parentGender']}}</td>
+                        <td>{{$parent_detail['fatherName']}}</td>
+                        <td>{{$parent_detail['motherName']}}</td>
                         <td>{{$parent_detail['contact']}}</td>
+                        <td>{{$parent_detail['secondaryContact']}}</td>
                         <td>{{$parent_detail['address']}}</td>
                         <td>{{$parent_detail['username']}}</td>
 
-                        <td class="text-right">
+                        <td>
                             <a class="btn btn-primary" href="{{ route('registerParent.show', $parent_detail['parentId']) }}">View</a>
+                        </td>
+                        <td>
                             <a class="btn btn-warning " href="{{ route('registerParent.edit', $parent_detail['parentId']) }}">Edit</a>
-                            <form action="{{ route('registerParent.destroy', $parent_detail['parentId']) }}" method="POST" style="display: inline;"
-                                  onsubmit="if(confirm('Delete? Are you sure?'))
+                        </td>
+
+                        <td>
+                            <form action="{{ route('registerParent.destroy', $parent_detail['parentId']) }}" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?'))
                                   {
                                   return true
                                   }

@@ -85,6 +85,9 @@ class CalendarEventController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $today =Carbon::today();
         $dayNo=date('w', strtotime($today));
@@ -185,6 +188,9 @@ class CalendarEventController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $teacherUsers = User::all()->where('role_id', 4);
         $i = 0;
@@ -307,6 +313,9 @@ class CalendarEventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
         $i = 0;
@@ -360,6 +369,9 @@ class CalendarEventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $appointmentSlot = TeacherAppointmentSlots::where('calendarEventsId',$id)->first();
         $i = 0;
@@ -538,6 +550,9 @@ class CalendarEventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $appointmentRequest = AppointmentRequest::where('id',$id)->first();
         $appointmentRequestId=$appointmentRequest->id;

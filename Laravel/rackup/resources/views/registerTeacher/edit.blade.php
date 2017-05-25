@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Edit User Details</h1>
+        <h1>Edit Teacher Details</h1>
+        <img src="{{$teacherDetails['profilePhoto']}}" alt="HTML5 Icon" style="width:128px;height:128px;">
     </div>
 
 
@@ -14,16 +15,16 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 
-                <div class="form-group">
-                    <label for="teacherId">Teacher Id</label>
-                    <p class="form-control-static">{{$teacher_details['teacherId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="teacherId">Teacher Id</label>--}}
+                    {{--<p class="form-control-static">{{$teacher_details['teacherId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="username">Username</label>
                     <p class="form-control-static">{{$teacher_details['username']}}</p>
                 </div>
                 <div class="form-group {{$errors->has('teacherName')?'has-error':''}}">
-                    <label for="teacherName">Teacher Name</label>
+                    <label for="teacherName">Teacher's Name</label>
                     <input type="text" name="teacherName" class="form-control" value="{{$teacher_details['teacherName']}}"/>
                     @if ($errors->has('teacherName'))
                         <span class="help-block">

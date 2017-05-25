@@ -3,6 +3,7 @@
 @section('content')
     <div class="page-header">
         <h1>Edit School Event</h1>
+        <img src="{{$school_event['imageUrl']}}" alt="HTML5 Icon" style="width:128px;height:128px;">
     </div>
 
 
@@ -49,7 +50,7 @@
                     @endif
                 </div>
 
-                <a class="btn btn-default" href="{{ route('school_events.index') }}">Home</a>
+                <a class="btn btn-default" href="{{ route('home') }}">Home</a>
                 <button class="btn btn-primary" type="submit" >Save</button>
             </form>
         </div>

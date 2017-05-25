@@ -278,7 +278,7 @@ class UploadImageController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
-        $uploadedImages = $this->getUploadedImageDetails($id);
+        $uploadedImages = $this->getUploadedImageDetails($id,$user_id);
         return view('uploadImage.show',compact('uploadedImages'),$data);
     }
 

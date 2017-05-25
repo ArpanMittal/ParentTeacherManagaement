@@ -24,13 +24,15 @@ class RegisterTeacherController extends Controller
         $teacherGender = $teacherDetails->gender;
         $contact = $teacherDetails->contact;
         $address = $teacherDetails->address;
+        $profilePhoto = $teacherDetails->profilePhotoPath;
         $teacher_details=array(
             'teacherId'=>$teacherId,
             'teacherName'=>$teacherName,
             'teacherGender'=>$teacherGender,
             'contact'=>$contact,
             'address'=>$address,
-            'username'=>$username
+            'username'=>$username,
+            'profilePhoto'=>$profilePhoto
         );
         return $teacher_details;
     }
@@ -45,6 +47,10 @@ class RegisterTeacherController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         //Role Id of teacher is 4
         $teachers = User::all()->where('role_id',4);
         $teacher_details = array();
@@ -67,6 +73,9 @@ class RegisterTeacherController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         return view('registerTeacher.create',$data);
     }
@@ -125,6 +134,9 @@ class RegisterTeacherController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $teacher_details = $this->getTeacherDetails($id);
         
@@ -142,6 +154,10 @@ class RegisterTeacherController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         $teacher_details = $this->getTeacherDetails($id);
         return view('registerTeacher.edit', compact('teacher_details'),$data);
     }

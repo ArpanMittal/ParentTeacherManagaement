@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Edit User Details</h1>
+        <h1>Edit Profile Details</h1>
     </div>
 
     <div>
@@ -28,10 +28,10 @@
                 {{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
 
 
-                <div class="form-group">
-                    <label for="id">User ID</label>
-                    <p class="form-control-static">{{$profile_details['id']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="id">User ID</label>--}}
+                    {{--<p class="form-control-static">{{$profile_details['id']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="username">Username</label>
                     <p class="form-control-static">{{$profile_details['username']}}</p>
@@ -58,8 +58,16 @@
                             </span>
                     @endif
                 </div>
+                <div class="form-group $errors->has('profilePhoto')?'has-error':''}}">
+                    <label for="profilePhoto">Profile Photo</label>
+                    <input id="profilePhoto" type="file" name="profilePhoto">
+                    @if ($errors->has('profilePhoto'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('profilePhoto') }}</strong>
+                            </span>
+                    @endif
+                </div>
 
-                <input id="profilePhoto" type="file" name="profilePhoto">
                 {{--<input type="submit" id="upload" value="Upload Profile Photo">--}}
                 <a class="btn btn-default" href="{{ route('home') }}">Back</a>
                 <button class="btn btn-primary" type="submit" >Save</button>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Add new Grade</h1>
+        <h1>Add New Grade</h1>
     </div>
 
     <div>

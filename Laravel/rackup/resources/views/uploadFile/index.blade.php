@@ -40,6 +40,8 @@
                         <td>{{$uploadedFile['url']}}</td>
                         <td class="text-right">
                             <a class="btn btn-primary" href="{{ route('uploadPdf.show', $uploadedFile['fileId']) }}">View</a>
+                        </td>
+                        <td>
                             <form action="{{ route('uploadPdf.destroy', $uploadedFile['fileId']) }}" method="POST" style="display: inline;"
                                   onsubmit="if(confirm('Delete? Are you sure?'))
                                   {

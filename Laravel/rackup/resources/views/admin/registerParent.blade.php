@@ -62,18 +62,17 @@
                         <div class="col-md-12"></div>
 
                         <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
-                            <label for="gradeId"  class="col-md-4 control-label">Grade</label>
-                            <div class="col-md-6">
-                                <input type="radio" name="gradeId"value="1"/>Playgroup
-                                <input type="radio" name="gradeId"value="2"/>Nursery
-                                <input type="radio" name="gradeId"value="3"/>J.K.G.
-                                <input type="radio" name="gradeId"value="4"/>S.K.G.
-                                @if ($errors->has('gradeId'))
-                                    <span class="help-block">
-                                            <strong>{{ $errors->first('gradeId')}}</strong>
-                                        </span>
-                                @endif
-                            </div>
+                            <label for="grade">Grade</label>
+                            <select  id="gradeId" name="gradeId" class="form-control" required autofocus>
+                                @foreach($grades as $grade)
+                                    <option value = "{{$grade['gradeId']}}" >{{$grade['gradeName']}}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('gradeId'))
+                                <span class="help-block">
+                            <strong>{{ $errors->first('gradeId') }}</strong>
+                        </span>
+                            @endif
                         </div>
 
                         <div class="col-md-12"></div>

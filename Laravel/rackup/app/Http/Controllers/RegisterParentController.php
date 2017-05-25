@@ -22,9 +22,10 @@ class RegisterParentController extends Controller
         $parent = User::where('id',$parentId)->first();
         $username = $parent->username;
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
-        $parentName = $parentDetails->name;
-        $parentGender = $parentDetails->gender;
+        $fatherName = $parentDetails->name;
+        $motherName = $parentDetails->motherName;
         $contact = $parentDetails->contact;
+        $secondaryContact = $parentDetails->secondaryContact;
         $address = $parentDetails->address;
         $students = Student::where('parent_id',$parentId)->first();
         $studentId = $students->id;
@@ -41,9 +42,10 @@ class RegisterParentController extends Controller
             'dob'=>$dob,
             'gradeName'=>$gradeName,
             'parentId'=>$parentId,
-            'parentName'=>$parentName,
-            'parentGender'=>$parentGender,
+            'fatherName'=>$fatherName,
+            'motherName'=>$motherName,
             'contact'=>$contact,
+            'secondaryContact'=>$secondaryContact,
             'address'=>$address,
             'username'=>$username
         );
@@ -62,6 +64,9 @@ class RegisterParentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
         //Role Id of parent is 2
         $parents = User::all()->where('role_id',2);
         $parent_details = array();
@@ -71,6 +76,7 @@ class RegisterParentController extends Controller
             $parentId = $parent->id;
             $parent_details[$i++] = $this->getParentDetails($parentId);
         }
+
 
         return view('registerParent.index',compact('parent_details'),$data);
     }
@@ -84,6 +90,10 @@ class RegisterParentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         $grades = array();
         $i=0;
         $gradeDetails = Grade::all();
@@ -112,10 +122,11 @@ class RegisterParentController extends Controller
             'dob' => 'required|date',
             'studentGender'=>'required',
             'gradeId'=>'required',
-            'parentName'=>'required',
-            'parentGender'=>'required',
+            'fatherName'=>'required',
+            'motherName'=>'required',
             'address' => 'required',
             'contact'=>'required|digits:10',
+            'secondaryContact'=>'required|digits:10',
             'username'=>'required|email|unique:users',
             'password'=>'required|min:6|regex:/^[a-zA-Z0-9]*$/'
         );
@@ -125,17 +136,18 @@ class RegisterParentController extends Controller
         $dob = Input::get('dob');
         $studentGender = Input::get('studentGender');
         $gradeId   = Input::get('gradeId');
-        $parentName = Input::get('parentName');
-        $parentGender = Input::get('parentGender');
+        $fatherName = Input::get('fatherName');
+        $motherName = Input::get('motherName');
         $address = Input::get('address');
         $contact = Input::get('contact');
+        $secondaryContact = Input::get('secondaryContact');
         $username = Input::get('username');
         $password = Input::get('password');
 
         try {
             \DB::beginTransaction();
             $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2]);
-            \DB::table('userDetails')->insert(['name' => $parentName, 'gender' => $parentGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId]);
+            \DB::table('userDetails')->insert(['name' => $fatherName, 'motherName'=>$motherName, 'address' => $address,'contact'=>$contact,'secondaryContact'=>$secondaryContact,'user_id'=> $userId]);
 
             \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
 
@@ -159,6 +171,10 @@ class RegisterParentController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         $parent_details=$this->getParentDetails($id);
         return view('registerParent.show', compact('parent_details'),$data);
     }
@@ -174,6 +190,11 @@ class RegisterParentController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
+        
 
         $parent_details=$this->getParentDetails($id);
         
@@ -195,29 +216,29 @@ class RegisterParentController extends Controller
         );
         $this->validate($request,$rules);
         
-        $parentName = $request->input("parentName");
-//        $parentGender = $request->input("parentGender");
+        $fatherName = $request->input("fatherName");
+        $motherName = $request->input("motherName");
         $parentAddress = $request->input("address");
         $contact = $request->input("contact");
+        $secondaryContact = $request->input('secondaryContact');
         $studentName = $request->input("studentName");
         $dob =  $request->input("dob");
-//        $studentGender =  $request->input("studentGender");
         try{
             \DB::beginTransaction();
             DB::table('userDetails')
                 ->where('user_id', $id)
                 ->update([
-                    'name'=>$parentName,
-//                    'gender' => $parentGender,
+                    'name'=>$fatherName,
+                    'motherName' => $motherName,
                     'address' => $parentAddress,
-                    'contact' => $contact
+                    'contact' => $contact,
+                    'secondaryContact'=>$secondaryContact
                 ]);
             DB::table('students')
                 ->where('parent_id', $id)
                 ->update([
                     'name'=>$studentName,
                     'dob'=>$dob
-//                    'gender' => $studentGender
                 ]);
         }catch (Exception $e){
             \DB::rollback();

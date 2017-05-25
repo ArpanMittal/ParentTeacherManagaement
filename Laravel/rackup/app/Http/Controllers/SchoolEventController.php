@@ -56,6 +56,9 @@ class SchoolEventController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $school_events = \DB::table('calendar_events')
             ->where('eventType',"Parent Function")
@@ -77,6 +80,9 @@ class SchoolEventController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $eventTypes = array(
             'Parent Function',
@@ -179,6 +185,9 @@ class SchoolEventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $school_event = CalendarEvent::findOrFail($id);
 
@@ -191,6 +200,9 @@ class SchoolEventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $school_event = CalendarEvent::findOrFail($id);
 
@@ -209,6 +221,10 @@ class SchoolEventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         $schoolEvent = CalendarEvent::findOrFail($id);
         $eventType = $schoolEvent->eventType;
         $title = $schoolEvent->title;
@@ -219,6 +235,7 @@ class SchoolEventController extends Controller
         $endDateTime = $schoolEvent->end;
         $endDateTime = Carbon::parse($endDateTime);
         $endTime = $endDateTime->toTimeString();
+        $imageUrl = $schoolEvent->imageUrl;
 
         $school_event = array(
             'id'=>$id,
@@ -226,7 +243,8 @@ class SchoolEventController extends Controller
             'title'=>$title,
             'startDate'=>$startDate,
             'startTime'=>$startTime,
-            'endTime'=>$endTime
+            'endTime'=>$endTime,
+            'imageUrl'=>$imageUrl
         );
 
         return view('school_events.edit', compact('school_event'),$data);

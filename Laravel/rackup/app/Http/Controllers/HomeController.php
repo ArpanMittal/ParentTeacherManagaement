@@ -47,6 +47,7 @@ class HomeController extends Controller
         $userDetails = UserDetails::where('id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
+        $data['background'] = Storage::url("public/default/rackupCambridge.png");
         return view('home',$data);
     }
 
@@ -67,9 +68,9 @@ class HomeController extends Controller
         $password = $request->input('password');
 
         $user = User::where('username',$username)->where('password',$password)->first();
-        $token = JWTAuth::fromUser($user);
-        $user = JWTAuth::toUser($token);
-        
+//        $token = JWTAuth::fromUser($user);
+//        $user = JWTAuth::toUser($token);
+//
         if ( !is_null($user) ){
             $request->session()->put('id',$user->id);
             return redirect('home');
@@ -111,7 +112,12 @@ class HomeController extends Controller
             try {
                 $token = JWTAuth::fromUser($user);
                 $user = JWTAuth::toUser($token);
-                $userDetails = UserDetails::where('user_id', $userId)->first();
+                $parentDetails = UserDetails::where('user_id', $userId)->first();
+                $fatherName = $parentDetails->name;
+                $motherName = $parentDetails->motherName;
+                $primaryContact = $parentDetails->contact;
+                $secondaryContact = $parentDetails->secondaryContact;
+                $address = $parentDetails->address;
                 $studentDetails = Student::where('parent_id', $userId)->first();
                 $gradeId = $studentDetails->grade_id;
                 $gradeDetails = Grade::where('id',$gradeId)->first();
@@ -124,9 +130,11 @@ class HomeController extends Controller
                 $userdata = array(
                     'token' => $token,
                     'username' => $user->username,
-                    'parent_name' => $userDetails->name,
-                    'contact' => $userDetails->contact,
-                    'address' => $userDetails->address,
+                    'fatherName' => $fatherName,
+                    'motherName'=>$motherName,
+                    'primartContact' => $primaryContact,
+                    'secondaryContact'=>$secondaryContact,
+                    'address' => $address,
                     'studentName' => $studentDetails->name, 
                     'dob' => $studentDetails->dob,
                     'grade'=>$grade,
@@ -157,11 +165,12 @@ class HomeController extends Controller
         }catch (TokenInvalidException $e){
             return Response::json (['Token invalid']);
         }
-        $contact = $request->get('contact');
+        $primaryContact = $request->get('primaryContact');
+        $secondaryContact = $request->get('secondaryContact');
         $address = $request->get('address');
         $profile_pic = $request->get("profile_pic");
 
-        if(is_null($contact)||is_null($address)||is_null($profile_pic)){
+        if(is_null($primaryContact)||is_null($secondaryContact)||is_null($address)||is_null($profile_pic)){
             return Response::json(["Incomplete data",HttpResponse::HTTP_PARTIAL_CONTENT]);
         }
         try{
@@ -182,7 +191,8 @@ class HomeController extends Controller
                 ->where('user_id',$userId)
                 ->update([
                         'address'=>$address,
-                        'contact' => $contact
+                        'contact' =>$primaryContact,
+                        'secondaryContact'=>$secondaryContact
                     ]
                 );
         }catch (Exception $e){

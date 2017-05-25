@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Edit User Details</h1>
+        <h1>Edit Student Details</h1>
     </div>
 
     @if (session('failure'))
@@ -19,11 +19,6 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-
-                <div class="form-group">
-                    <label for="studentId">Student Id</label>
-                    <p class="form-control-static">{{$parent_details['studentId']}}</p>
-                </div>
                 <div class="form-group {{$errors->has('studentName')?'has-error':''}}">
                     <label for="studentName">Student Name</label>
                     <input type="text" name="studentName" class="form-control" value="{{$parent_details['studentName']}}"/>
@@ -33,11 +28,6 @@
                             </span>
                     @endif
                 </div>
-                {{--<div class="form-group">--}}
-                    {{--<label for="studentGender">Student Gender</label>--}}
-                    {{--<input type="radio" name="studentGender"value="F"/>Female--}}
-                    {{--<input type="radio" name="studentGender"value="M"/>Male--}}
-                {{--</div>--}}
                 <div class="form-group {{$errors->has('dob')?'has-error':''}}">
                     <label for="dob">DOB</label>
                     <input type="date" name="dob" class="form-control" value="{{$parent_details['dob']}}"/>
@@ -51,26 +41,39 @@
                     <label for="gradeName">Grade</label>
                     <p class="form-control-static">{{$parent_details['gradeName']}}</p>
                 </div>
-                <div class="form-group {{$errors->has('parentName')?'has-error':''}}">
-                    <label for="parentName">Parent Name</label>
-                    <input type="text" name="parentName" class="form-control" value="{{$parent_details['parentName']}}"/>
-                    @if ($errors->has('parentName'))
+                <div class="form-group {{$errors->has('fatherName')?'has-error':''}}">
+                    <label for="fatherName">Father's Name</label>
+                    <input type="text" name="fatherName" class="form-control" value="{{$parent_details['fatherName']}}"/>
+                    @if ($errors->has('fatherName'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('fatherName') }}</strong>
+                            </span>
+                    @endif
+                </div>
+                <div class="form-group {{$errors->has('motherName')?'has-error':''}}">
+                    <label for="motherName">Mother's Name</label>
+                    <input type="text" name="motherName" class="form-control" value="{{$parent_details['motherName']}}"/>
+                    @if ($errors->has('motherName'))
                         <span class="help-block">
                                 <strong>{{ $errors->first('parentName') }}</strong>
                             </span>
                     @endif
                 </div>
-                {{--<div class="form-group">--}}
-                    {{--<label for="parentGender">Parent Gender</label>--}}
-                    {{--<input type="radio" name="parentGender"value="F"/>Female--}}
-                    {{--<input type="radio" name="parentGender"value="M"/>Male--}}
-                {{--</div>--}}
                 <div class="form-group {{$errors->has('contact')?'has-error':''}}">
-                    <label for="contact">Contact</label>
+                    <label for="contact">Primary Contact</label>
                     <input type="text" name="contact" class="form-control" value="{{$parent_details['contact']}}"/>
                     @if ($errors->has('contact'))
                         <span class="help-block">
                                 <strong>{{ $errors->first('contact') }}</strong>
+                            </span>
+                    @endif
+                </div>
+                <div class="form-group {{$errors->has('secondaryContact')?'has-error':''}}">
+                    <label for="secondaryContact">Secondary Contact</label>
+                    <input type="text" name="secondaryContact" class="form-control" value="{{$parent_details['secondaryContact']}}"/>
+                    @if ($errors->has('secondaryContact'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('secondaryContact') }}</strong>
                             </span>
                     @endif
                 </div>

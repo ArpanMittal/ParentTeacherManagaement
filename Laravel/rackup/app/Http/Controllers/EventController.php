@@ -32,6 +32,10 @@ class EventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         if ($request->has("month")){
            $monthYear  = $request->get("month");
             $year = substr($monthYear,2);
@@ -39,7 +43,8 @@ class EventController extends Controller
             $data['month'] = $month;
             $data['year1'] = $year;
         }
-        $calendar = $this->genCal();
+            $calendar = $this->genCal();
+        
         return view('calendar_events.calendar', compact('calendar'),$data);
     }
 
@@ -162,7 +167,10 @@ class EventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
-
+        $userDetails = UserDetails::where('id', $user_id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         if ($request->has("month")){
             $monthYear  = $request->get("month");
             $year = substr($monthYear,2);
@@ -170,6 +178,7 @@ class EventController extends Controller
             $data['month'] = $month;
             $data['year1'] = $year;
         }
+        
         $calendar = $this->teacherCal($user_id);
 
         return view('appointments.calendar', compact('calendar'),$data);
@@ -264,7 +273,6 @@ class EventController extends Controller
             ->orWhere('eventType',"Teacher Function")
             ->orWhere('eventType',"Both")
             ->get();
-        return var_export($schoolEvents);
         $school_events = array();
         $k=0;
         foreach ($schoolEvents as $schoolEvent){
@@ -299,10 +307,10 @@ class EventController extends Controller
 
         return $calendar;
     }
-    public function getCalendar(Request $request){
-        $month = $request->get('month');
-        $calendar = $this->genCal();
-        $calendar->calendar($month) ;
-        return view('calendar_events.cal', compact('calendar'));;
-    }
+//    public function getCalendar(Request $request){
+//        $month = $request->get('month');
+//        $calendar = $this->genCal();
+//        $calendar->calendar($month) ;
+//        return view('calendar_events.cal', compact('calendar'));;
+//    }
 }

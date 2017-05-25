@@ -2,17 +2,17 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Slot Details</h1>
+        <h1>Content Details</h1>
     </div>
 
     <div class="row">
         <div class="col-md-12">
 
             <form action="#">
-                <div class="form-group">
-                    <label for="id">ID</label>
-                    <p class="form-control-static">{{$uploadedContentDetails['contentId']}}</p>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="id">ID</label>--}}
+                    {{--<p class="form-control-static">{{$uploadedContentDetails['contentId']}}</p>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="categoryName">Category</label>
                     <p class="form-control-static">{{$uploadedContentDetails['categoryName']}}</p>

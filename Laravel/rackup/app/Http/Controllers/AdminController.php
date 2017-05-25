@@ -33,7 +33,10 @@ class AdminController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+        
         return view('admin.create',$data);
     }
     /**
@@ -71,9 +74,13 @@ class AdminController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
 
         $teacherUsers = User::all()->where('role_id', 4);
         $i = 0;
+        $teacherData=array();
         foreach ($teacherUsers as $teacherUser) {
             $teacherId = $teacherUser->id;
             $teacherDetails = UserDetails::where('user_id', $teacherId)->first();
@@ -94,7 +101,6 @@ class AdminController extends Controller
                 'gradeName'=>$gradeName
             );
         }
-
         return view('admin.assignTeacher',compact('teacherData','grades'),$data);
     }
 
@@ -127,6 +133,9 @@ class AdminController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
         
         $username = $user->username;
         $userDetails = UserDetails::where('user_id',$id)->first();

@@ -3,7 +3,7 @@
 @section('content')
     <div>
         <select  id="month" name="month" class="form-control">
-            <option value="00">Select Month</option>
+            <option value="00">Select Month-Year</option>
             <option value={{'01'.$year = date('Y')-1}}>January{{date('Y')-1}}</option>
             <option value={{'02'.$year = date('Y')-1}}>February{{date('Y')-1}}</option>
             <option value={{'03'.$year = date('Y')-1}}>March{{date('Y')-1}}</option>

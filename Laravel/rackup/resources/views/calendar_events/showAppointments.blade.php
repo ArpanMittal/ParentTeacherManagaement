@@ -1,8 +1,8 @@
-@extends('layouts.calendarLayouts')
+@extends('layouts.app')
 
 @section('content')
     <div class="page-header">
-        <h1>Appointment</h1>
+        <h1>Appointment Details</h1>
     </div>
 
     <div class="row">
@@ -124,7 +124,7 @@
                     <label for="status">STATUS</label>
                     <p class="form-control-static">{{$appointmentDetails['status']}}</p>
                 </div>
-                <a class="btn btn-default" href="{{ route('calendar_events.index') }}">Home</a>
+                <a class="btn btn-default" href="{{ route('home') }}">Home</a>
             </form>
         </div>
     </div>

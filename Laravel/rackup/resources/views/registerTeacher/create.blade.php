@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Create New User</h1>
+        <h1>Register New Teacher</h1>
     </div>
 
 
@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <a class="btn btn-default" href="{{ route('registerTeacher.index') }}">Back</a>
-                <button class="btn btn-primary" type="submit" >Create</button>
+                <button class="btn btn-primary" type="submit" >Register</button>
             </form>
         </div>
     </div>
