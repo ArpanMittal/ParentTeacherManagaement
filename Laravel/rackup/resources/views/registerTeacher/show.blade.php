@@ -3,7 +3,7 @@
 @section('content')
     <div class="page-header">
         <h1>Show Teacher Details</h1>
-        <img src="{{$teacherDetails['profilePhoto']}}" alt="HTML5 Icon" style="width:128px;height:128px;">
+        <img src="{{$teacher_details['profilePhoto']}}" alt="HTML5 Icon" style="width:128px;height:128px;">
     </div>
 
 
