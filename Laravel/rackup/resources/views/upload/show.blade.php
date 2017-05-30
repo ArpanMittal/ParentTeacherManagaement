@@ -23,7 +23,13 @@
                 </div>
                 <div class="form-group">
                     <label for="url">URL</label>
-                    <p class="form-control-static">{{$uploadedContentDetails['url']}}</p>
+                    <p class="form-control-static">
+                        <a href="{{$uploadedContentDetails['url']}}" target="_blank">View {{$uploadedContentDetails['contentName']}}</a>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <p class="form-control-static">{{$uploadedContentDetails['description']}}</p>
                 </div>
                 <div class="form-group">
                     <label for="gradeName">Grade</label>

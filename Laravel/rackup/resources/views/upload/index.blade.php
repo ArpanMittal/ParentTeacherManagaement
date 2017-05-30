@@ -31,6 +31,7 @@
                     <th>Category</th>
                     <th>Content</th>
                     <th>Url</th>
+                    <th>Description</th>
                     <th>Grade</th>
                     <th class="text-right">OPTIONS</th>
                 </tr>
@@ -43,7 +44,8 @@
                         {{--<td>{{$uploadedContentDetail['contentId']}}</td>--}}
                         <td>{{$uploadedContentDetail['categoryName']}}</td>
                         <td>{{$uploadedContentDetail['contentName']}}</td>
-                        <td>{{$uploadedContentDetail['url']}}</td>
+                        <td><a href="{{$uploadedContentDetail['url']}}" target="_blank">View {{$uploadedContentDetail['contentName']}}</a></td>
+                        <td>{{$uploadedContentDetail['description']}}</td>
                         <td>{{$uploadedContentDetail['gradeName']}}</td>
 
                         <td class="text-right">

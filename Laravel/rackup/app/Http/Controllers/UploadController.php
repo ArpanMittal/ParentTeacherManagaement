@@ -30,6 +30,7 @@ class UploadController extends Controller
         $contentDetails = Category::where('id',$id)->first();
         $contentName = $contentDetails->name;
         $url = $contentDetails->url;
+        $description = $contentDetails->description;
         $contentGradeId = $contentDetails->contentGradeId;
         $contentGrade = ContentGrade::where('id',$contentGradeId)->first();
         $categoryId = $contentGrade->content_id;
@@ -43,6 +44,7 @@ class UploadController extends Controller
             'categoryName'=>$categoryName,
             'contentName'=>$contentName,
             'url'=>$url,
+            'description'=>$description,
             'gradeName'=>$gradeName
         );
         return $uploadedContentDetails;
@@ -121,12 +123,14 @@ class UploadController extends Controller
 
             $contentName = $request->input("contentName");
             $url = $request->input("url");
+            $description = $request->input("description");
             if(str_contains($url,"youtu.be")||str_contains($url,"v=")){
                 DB::table('categories')
                     ->where('id', $id)
                     ->update([
                         'name'=>$contentName,
-                        'url' => $url
+                        'url' => $url,
+                        'description'=>$description
                     ]);
             }
             else{
