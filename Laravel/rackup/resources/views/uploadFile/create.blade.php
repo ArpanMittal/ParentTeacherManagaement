@@ -169,14 +169,14 @@
                     url: form_action,
                     data:{studentId:studentId, gradeId:gradeId,title:title, description:description,fileEntry:fileEntry},
                     success: function( data ) {
-                        alert('success');
-                        alert(JSON.stringify(data));
+//                        alert('success');
+//                        alert(JSON.stringify(data));
                         toastr.success('File uploaded', 'Success Alert', {timeOut: 5000});
                         window.location.reload();
                     },
                     error: function(data) {
-                        alert('error');
-                        alert(JSON.stringify(data));
+//                        alert('error');
+//                        alert(JSON.stringify(data));
                         toastr.error('Cannot upload file','Failure Alert', {timeOut: 5000});
                         window.location.reload();
                     }
