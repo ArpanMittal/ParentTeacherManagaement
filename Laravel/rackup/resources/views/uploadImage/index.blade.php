@@ -41,16 +41,18 @@
                     <tr>
                         <td>{{$uploadedImage['studentName']}}</td>
                         <td>{{$uploadedImage['title']}}</td>
-                        <td><a href="{{ route('getImage', $uploadedImage['filePath']) }}" target="_blank">Show {{$uploadedImage['title']}}</a></td>
+                        <td><a href="{{ route('getFile', $uploadedImage['filePath']) }}" target="_blank">Show {{$uploadedImage['title']}}</a></td>
                         <td>{{$uploadedImage['description']}}<td>
-
                         <td class="text-right">
-                            <a class="btn btn-primary" href="{{ route('uploadImage.show', $uploadedImage['imageId']) }}">View</a>
-                            <form action="{{ route('uploadImage.destroy', $uploadedImage['imageId']) }}" method="POST"
-                                  style="display: inline;"
+                            <form action="{{ route('uploadImage.destroy', $uploadedImage['imageId']) }}" method="POST" style="display: inline;"
                                   onsubmit="if(confirm('Delete? Are you sure?'))
-                                   { return true }
-                                   else {return false };">
+                                  {
+                                  return true
+                                  }
+                                  else
+                                  {
+                                  return false
+                                  };">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <button class="btn btn-danger" type="submit">Delete</button>

@@ -28,6 +28,7 @@
                 <tr>
                     <th>TITLE</th>
                     <th>URL</th>
+                    <th>DESCRIPTION</th>
                     <th class="text-right">OPTIONS</th>
                 </tr>
                 </thead>
@@ -37,11 +38,9 @@
                 @foreach($uploadedFiles as $uploadedFile)
                     <tr>
                         <td>{{$uploadedFile['title']}}</td>
-                        <td>{{$uploadedFile['url']}}</td>
+                        <td><a href="{{ route('getFile', $uploadedFile['filePath']) }}" target="_blank">Show {{$uploadedFile['title']}}</a></td>
+                        <td>{{$uploadedFile['description']}}</td>
                         <td class="text-right">
-                            <a class="btn btn-primary" href="{{ route('uploadPdf.show', $uploadedFile['fileId']) }}">View</a>
-                        </td>
-                        <td>
                             <form action="{{ route('uploadPdf.destroy', $uploadedFile['fileId']) }}" method="POST" style="display: inline;"
                                   onsubmit="if(confirm('Delete? Are you sure?'))
                                   {

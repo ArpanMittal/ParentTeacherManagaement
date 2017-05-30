@@ -24,6 +24,9 @@ Route::get('/editProfile','AdminController@editProfileDetails')->name('editProfi
 Route::post('/editProfile{id}','AdminController@updateProfileDetails')->name('updateProfileDetails');
 Route::get('/assignTeacher','AdminController@getAssignTeacher')->name('getAssignTeacher');
 Route::post('/assignTeacher','AdminController@postAssignTeacher')->name('postAssignTeacher');
+Route::get('/showAll','AdminController@showAll')->name('showAll');
+//Route::get('/showAllFiles','AdminController@showAllFiles')->name('showPdf');
+//Route::get('/showAllVideos','AdminController@showAllVideos')->name('showVideos');
 Route::resource('admin','AdminController');
 
 Route::resource('registerParent','RegisterParentController');
@@ -31,7 +34,7 @@ Route::resource('registerTeacher','RegisterTeacherController');
 
 Route::get('/uploadFile','UploadImageController@showUpload')->middleware('check.session');
 Route::post('/uploadFile','UploadController@doUpload')->name('uploadFile');
-Route::get('getImage{fileToken}','UploadImageController@getImage')->name('getImage');
+Route::get('getFile{fileToken}','UploadImageController@getFile')->name('getFile');
 Route::resource('uploadImage','UploadImageController');
 Route::get('/uploadLink','UploadController@showUploadLink')->middleware('check.session');
 Route::post('/uploadLink','UploadController@doUploadLink')->name('uploadLink');

@@ -15,7 +15,11 @@
                 </div>
                 <div class="form-group">
                     <label for="start">URL</label>
-                    <p class="form-control-static">{{$uploadedFiles['url']}}</p>
+                    <p class="form-control-static"><a href="{{ route('getFile', $uploadedFiles['filePath']) }}" target="_blank">
+                            Show {{$uploadedFiles['filePath']}}
+                    </a>
+                    </p>
+
                 </div>
 
             </form>

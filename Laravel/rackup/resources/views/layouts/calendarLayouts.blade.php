@@ -9,6 +9,10 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!-- Custom styles for this template -->
     <!-- <link href="starter-template.css" rel="stylesheet"> -->
@@ -46,27 +50,80 @@
                 {{--<li><a href="{{ route('logout') }}">Logout</a></li>--}}
             {{--</ul>--}}
             <ul class="nav navbar-nav">
-                    @if($user->role_id==1)
-                    <li><a href="{{ route('registerParent.index')}}">Student's Registration</a></li>
-                    <li><a href="{{ route('registerTeacher.index')}}">Teacher's Registraion</a></li>
-                    <li><a href="{{ route('admin.create')}}">Add New Grade</a></li>
-                    <li><a href="{{ route('getAssignTeacher')}}">Assign Teachers</a></li>
-                    <li><a href="/calendar_events">Free Slots</a></li>
-                    <li><a href="/school_events">School Events</a></li>
-                    <li><a href="/calendar">Show Calendar</a></li>
-                    <li><a href="{{ route('home') }}">Home</a></li>
-                    <li><a href="{{ route('logout') }}">Logout</a></li>
-                    @endif
-                    @if($user->role_id==4)
-                        <li><a href="{{ route('upload.index')}}">Upload Link</a></li>
-                        <li><a href="{{ route('uploadImage.index')}}">Upload Image</a></li>
-                        <li><a href="{{ route('uploadPdf.index')}}">Upload Pdf</a></li>
-                        <li><a href="/appointments">My Appointments</a></li>
-                        <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
-                        <li><a href="/teacherCalendar">Show Calendar</a></li>
-                        <li><a href="{{ route('home') }}">Home</a></li>
-                        <li><a href="{{ route('logout') }}">Logout</a></li>
-                    @endif
+                {{--Admin--}}
+                @if($user->role_id==1)
+                    <div class="btn-group" style="text-align:left; float: left;">
+                        <a  class="btn btn-default" href="{{ route('home') }}" style="float: right;">Home</a>
+                    </div>
+                    <div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle"
+                                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Registration<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('registerParent.index')}}">Student's Registration</a></li>
+                            <li><a href="{{ route('registerTeacher.index')}}">Teacher's Registraion</a></li>
+                            <li><a href="{{ route('admin.create')}}">Add New Grade</a></li>
+                            <li><a href="{{ route('getAssignTeacher')}}">Assign Teachers</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Appointments<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
+                            <li><a href="{{ route('appointments.index')}}">My Appointments</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Slots and School Events <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="/calendar_events">Free Slots</a></li>
+                            <li><a href="/school_events">School Events</a></li>
+                            <li><a href="{{ route('calendar')}}">Show Calendar</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn btn-default" href="{{ route('showAll')}}">Show Uploads</a>
+                    </div>
+                    <div class="btn-group" style="text-align: right; float: right;">
+                        <a class="btn btn-default" href="{{ route('logout') }}" style="float: right;">Logout</a>
+                    </div>
+                @endif
+                {{--Teacher--}}
+                @if($user->role_id==4)
+                    <div class="btn-group" style="text-align:left; float: left;">
+                        <a  class="btn btn-default" href="{{ route('home') }}" style="float: right;">Home</a>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Uploads<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('upload.index')}}">Video Links</a></li>
+                            <li><a href="{{ route('uploadImage.index')}}">Images</a></li>
+                            <li><a href="{{ route('uploadPdf.index')}}">Files</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Appointments<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
+                            <li><a href="{{ route('appointments.index')}}">My Appointments</a></li>
+                            <li><a href="/teacherCalendar">Show Calendar</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-group" style="text-align: right; float: right;">
+                        <a class="btn btn-default" href="{{ route('logout') }}" style="float: right;">Logout</a>
+                    </div>
+                    {{--<li><a href="{{route('teacherAppointments')}}">Show Appointments</a></li>--}}
+                @endif
             </ul>
             @endif
         </div><!--/.nav-collapse -->

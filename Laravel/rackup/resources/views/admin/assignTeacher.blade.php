@@ -5,13 +5,6 @@
         <h1>Assign Teachers to Grades</h1>
     </div>
 
-    @if (session('failure'))
-        <div class="alert alert-danger">
-            {{ session('failure') }}
-        </div>
-    @endif
-
-
     <div class="row">
         <div class="col-md-12">
 
@@ -49,7 +42,7 @@
                 </div>
 
                 <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
-                    <label for="teacher">Grade</label>
+                    <label for="gradeId">Grade</label>
                     <select  id="gradeId" name="gradeId" class="form-control" required autofocus>
                         @foreach($grades as $grade)
                             <option value = "{{$grade['gradeId']}}" >{{$grade['gradeName']}}</option>

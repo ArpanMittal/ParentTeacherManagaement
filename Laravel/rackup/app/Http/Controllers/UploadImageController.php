@@ -50,7 +50,7 @@ class UploadImageController extends Controller
         return $uploadedImages;
     }
     //To secure url
-    public function getImage($fileToken,Request $request){
+    public function getFile($fileToken,Request $request){
         $fileToken = decrypt($fileToken);
         try {
             $token = $fileToken['token'];
@@ -181,11 +181,11 @@ class UploadImageController extends Controller
         //Child activities notification type
         $type = 2;
         $imageUrl = Storage::url('public/default/activity.jpg');
-        $message = array("message"=>"Student Activities updated","type"=>$type,"imageUrl"=>$imageUrl);
+        $message = array("message"=>"Student Activities update","type"=>$type,"imageUrl"=>$imageUrl);
         $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         return 1;
     }
-    //API to send daily activity images of specified parent
+    //API to send daily activity images and files of a specified student
     public function sendActivity(Request $request){
         try {
             $token = $request->get('token');
@@ -200,31 +200,30 @@ class UploadImageController extends Controller
         if (is_null($lastImageId)){
             $studentDetails = Student::where('parent_id', $userId)->first();
             $studentId = $studentDetails->id;
-            $student_images = ImageStudent::orderBy('created_at', 'desc')
+            $student_files = ImageStudent::orderBy('created_at', 'desc')
                 ->take(10)
                 ->where('student_id',$studentId)
                 ->get();
-            $images = $this->getImages($student_images);
-            return Response::json([$images,HttpResponse::HTTP_OK]);
+            $files = $this->getFiles($student_files);
+            return Response::json([$files,HttpResponse::HTTP_OK]);
         }
         else{
-            $student_image = ImageStudent::where('image_id',$lastImageId)->first();
-            $student_id = $student_image->student_id;
-            $imageDetail = Category::where('id',$lastImageId)->first();
-            $createdAt = $imageDetail->created_at;
-            $student_images = ImageStudent::orderBy('created_at', 'desc')
+            $student_file = ImageStudent::where('image_id',$lastImageId)->first();
+            $student_id = $student_file->student_id;
+            $fileDetail = Category::where('id',$lastImageId)->first();
+            $createdAt = $fileDetail->created_at;
+            $student_files = ImageStudent::orderBy('created_at', 'desc')
                 ->take(10)
                 ->where('student_id',$student_id)
                 ->where('created_at','<',$createdAt)
                 ->get();
 
-            $images = $this->getImages($student_images);
+            $images = $this->getFiles($student_files);
             return Response::json([$images,HttpResponse::HTTP_OK]);
         }
-
     }
-    
-    public function getImages($student_files){
+    //Get the details of files for the timeline feed
+    public function getFiles($student_files){
         $i = 0;
         $files = array();
         foreach ($student_files as $student_file) {
@@ -232,24 +231,8 @@ class UploadImageController extends Controller
             $file = Category::where('id', $fileId)->first();
             $type = $file->type;
             $typeDetails = ContentType::where('id',$type)->first();
-            if ($typeDetails->name == 'pdf'){
-                $filePath = $file->url;
-                $title = $file->name;
-                $description = $file->description;
-                $createdAt = $file->created_at;
-                $coverDetails = PdfCover::where('pdf_id',$fileId)->first();
-                $cover_url = $coverDetails->cover_url;
-                $files[$i++] = array(
-                    'id' => $fileId,
-                    'filePath' => $filePath,
-                    'title' => $title,
-                    'description' => $description,
-                    'pdfCover'=>$cover_url,
-                    'type' => $type,
-                    'created_at' => $createdAt
-                );
-            }
-            else{
+            $typeName = $typeDetails->name;
+            if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "image" )
                 $filePath = $file->url;
                 $title = $file->name;
                 $description = $file->description;
@@ -260,10 +243,9 @@ class UploadImageController extends Controller
                     'title' => $title,
                     'description' => $description,
                     'type' => $type,
+                    'typeName'=>$typeName,
                     'created_at' => $createdAt
                 );
-            }
-
         }
         return $files;
     }

@@ -14,16 +14,18 @@ $("#create-category").click(function(e){
             // alert('success');
             // alert(JSON.stringify(data));
             toastr.success('Created', 'Success Alert', {timeOut: 5000});
-            $("#newContent").modal('hide');
+
             window.location.reload();
+            $("#newContent").modal('hide');
             //console.log(JSON.stringify(data));
 
         },
         error: function(data) {
 
             toastr.error('Category already exits','Failure Alert', {timeOut: 5000});
-            $("#newContent").modal('hide');
             window.location.reload();
+            $("#newContent").modal('hide');
+
             //console.log(JSON.stringify(data));
             // alert('error');
             // alert(JSON.stringify(data));

@@ -31,10 +31,21 @@
                 <div class="form-group {{$errors->has('gradeId')?'has-error':''}}">
                     <label for="gradeId">Grade</label>
                     <div>
-                        <input type="radio" name="gradeId"value="Playgroup"/>Playgroup
-                        <input type="radio" name="gradeId"value="Nursery"/>Nursery
-                        <input type="radio" name="gradeId"value="J.K.G."/>J.K.G.
-                        <input type="radio" name="gradeId"value="S.K.G."/>S.K.G.
+                        <select id="gradeId" name="gradeId" class="form-group"
+                                onchange="if (this.value=='other'){
+                                this.form['other'].style.visibility='visible'
+                                }
+                                else {
+                                this.form['other'].style.visibility='hidden'
+                                };"
+                                required autofocus>
+                            <option  value="Playgroup"/>Playgroup</option>
+                            <option value="Nursery"/>Nursery</option>
+                            <option value="J.K.G."/>J.K.G.</option>
+                            <option value="S.K.G."/>S.K.G.</option>
+                            <option value="other"/>Other</option>
+                        </select>
+                        <input type="textbox" name="other" style="visibility:hidden;"/>
                         @if ($errors->has('gradeId'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('gradeId')}}</strong>
@@ -45,13 +56,13 @@
 
                 <div></div>
 
-                <div class="form-group {{$errors->has('roomNo')?'has-error':''}}">
-                    <label for="roomNo">Room Number</label>
+                <div class="form-group {{$errors->has('room_number')?'has-error':''}}">
+                    <label for="room_number">Room Number</label>
                     <div>
-                        <input type="text" name="roomNo" id="roomNo" value="{{ Input::old('roomNo') }}" required autofocus>
-                        @if ($errors->has('roomNo'))
+                        <input type="text" name="room_number" id="room_number" value="{{ Input::old('room_number') }}" required autofocus>
+                        @if ($errors->has('room_number'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('roomNo') }}</strong>
+                                <strong>{{ $errors->first('room_number') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -61,6 +72,5 @@
             </form>
         </div>
     </div>
-
 
 @endsection

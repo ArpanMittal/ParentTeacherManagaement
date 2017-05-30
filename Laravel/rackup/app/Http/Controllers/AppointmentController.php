@@ -430,6 +430,7 @@ class AppointmentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $roleId = $user->role_id;
         $rules = array(
             'parentId' => 'required',
             'startDate' => 'required|date|after:today',
@@ -507,7 +508,13 @@ class AppointmentController extends Controller
                         $apppointmentRequest->isAwaited = 1;
                         $apppointmentRequest->isCancel = 0;
                         $apppointmentRequest->isApproved = 0;
-                        $apppointmentRequest->requestType = "Teacher Request";
+                        //Admin or Principal's request
+                        if ($roleId ==1){
+                            $apppointmentRequest->requestType = "Principal Request";
+                        }
+                        else{
+                            $apppointmentRequest->requestType = "Teacher Request";
+                        }
                         $apppointmentRequest->save();
                         $appointmentLog = new AuditAppointments();
                         $appointmentLog->eventId = $calendarEvent->id;

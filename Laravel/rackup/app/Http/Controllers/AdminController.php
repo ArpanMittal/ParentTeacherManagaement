@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
+use App\ContentType;
+use App\GradeUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http;
@@ -47,29 +50,38 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
+
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
 
         $rules = array('gradeId' => 'required',
-            'roomNo' => 'required'
+            'room_number' => 'required|unique:grades'
         );
         $this->validate($request,$rules);
 
         $gradeId = Input::get('gradeId');
-        $roomNo = Input::get('roomNo');
-        try {
-            \DB::beginTransaction();
-            \DB::table('grades')->insert(['grade_name'=>$gradeId,'room_number'=>$roomNo]);
-
-        }catch (Exception $e){
-            \DB::rollBack();
-            return redirect(route('admin.create'))->with('failure', 'Cannot add grade');
+        if ($gradeId == 'other'){
+            $gradeId = Input::get('other');
         }
-        \DB::commit();
+        $roomNo = Input::get('room_number');
+        if(Grade::where('grade_name','=',$gradeId)->exists()){
+            return redirect(route('admin.create'))->with('failure', 'Grade already exists');
+        }
+        else{
+            try {
+                \DB::beginTransaction();
+                \DB::table('grades')->insert(['grade_name'=>$gradeId,'room_number'=>$roomNo]);
 
-        return redirect(route('admin.create'))->with('success', 'Grade added successfully.');
+            }catch (Exception $e){
+                \DB::rollBack();
+                return redirect(route('admin.create'))->with('failure', 'Cannot add grade');
+            }
+            \DB::commit();
+
+            return redirect(route('admin.create'))->with('success', 'Grade added successfully.');
+        }
     }
-
+    //Assign registered teachers to grades
     public function getAssignTeacher(Request $request){
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
@@ -114,19 +126,25 @@ class AdminController extends Controller
         $gradeId = Input::get('gradeId');
         $teacherId = Input::get('teacherId');
         $isClassTeacher = Input::get('isClassTeacher');
-        try {
-            \DB::beginTransaction();
-            \DB::table('grade_user')->insert(['user_id'=>$teacherId,'grade_id'=>$gradeId,'is_class_teacher'=>$isClassTeacher]);
 
-        }catch (Exception $e){
-            \DB::rollBack();
-            return redirect(route('getAssignTeacher'))->with('failure', 'Cannot add grade')->withInput();
+        $gradeUser = GradeUser::where('user_id','=',$teacherId)->where('grade_id','=',$gradeId)->first();
+        if ($gradeUser != null){
+            return redirect(route('getAssignTeacher'))->with('failure','Teacher already assigned to selected grade');
         }
-        \DB::commit();
+        else{
+            try {
+                \DB::beginTransaction();
+                \DB::table('grade_user')->insert(['user_id'=>$teacherId,'grade_id'=>$gradeId,'is_class_teacher'=>$isClassTeacher]);
 
-        return redirect(route('getAssignTeacher'))->with('success', 'Grade added successfully.')->withInput();
+            }catch (Exception $e){
+                \DB::rollBack();
+                return redirect(route('getAssignTeacher'))->with('failure', 'Cannot add grade')->withInput();
+            }
+            \DB::commit();
+
+            return redirect(route('getAssignTeacher'))->with('success', 'Grade added successfully.')->withInput();
+        }
     }
-    
     //Show edit profile page for logged in teacher user
     public function editProfileDetails (Request $request){
 
@@ -206,5 +224,63 @@ class AdminController extends Controller
         \DB::commit();
         var_export($flag);
         return redirect(route('editProfileDetails'))->with('success', 'Profile Details Updated Successfully.');
+    }
+
+
+    //Function to show all uploaded contents (videos, images,files)
+    public function showAll(Request $request)
+    {
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+        $token = JWTAuth::fromUser($user);
+        $user = JWTAuth::toUser($token);
+        $data['user'] = $user;
+        $userDetails = UserDetails::where('id', $id)->first();
+        $data['profilePath'] = $userDetails->profilePhotoPath;
+        $data['name'] = $userDetails->name;
+
+        $videoType = ContentType::where('name','Video')->first();
+        $videoTypeId = $videoType->id;
+        
+        $imageType = ContentType::where('name','Image')->first();
+        $imageTypeId = $imageType->id;
+
+        $htmlType = ContentType::where('name','html')->first();
+        $htmlTypeId = $htmlType->id;
+        
+        $gradeHtmlType = ContentType::where('name','grade_html')->first();
+        $gradeHtmlTypeId = $gradeHtmlType->id;
+        
+        $schoolHtmlType = ContentType::where('name','school_html')->first();
+        $schoolHtmlTypeId = $schoolHtmlType->id;
+        
+        $uploadedFileDetails = Category::where('type',$htmlTypeId)
+            ->orwhere('type',$gradeHtmlTypeId)
+            ->orwhere('type',$schoolHtmlTypeId)
+            ->orwhere('type',$videoTypeId)
+            ->orwhere('type',$imageTypeId)
+            ->get();
+        $uploadedFiles = array();
+        $i= 0;
+        foreach ($uploadedFileDetails as $uploadedFileDetail){
+            $title = $uploadedFileDetail->name;
+            $url = $uploadedFileDetail->url;
+            $file_token = array("filePath"=>$url,"token"=>$token);
+            $file_token=encrypt($file_token);
+            $description = $uploadedFileDetail->description;
+            $uploadedBy = $uploadedFileDetail->teacherName;
+            $type = $uploadedFileDetail->type;
+            $typeDetails = ContentType::where('id',$type)->first();
+            $typeName = $typeDetails->name;
+            $uploadedFiles[$i++] = array(
+                'title'=>$title,
+                'url'=>$file_token,
+                'description'=>$description,
+                'uploadedBy'=>$uploadedBy,
+                'type'=>$typeName
+            );
+        }
+
+        return view('admin.showAll',compact('uploadedFiles'),$data);
     }
 }
