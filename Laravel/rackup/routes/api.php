@@ -17,7 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login','HomeController@returnToken');
+Route::post('/login','HomeController@returnToken')->name('login');
+Route::post('/editProfile','HomeController@editProfile')->name('editProfile');
 Route::post('/getContent','UploadController@getContent')->name('getContent');
-
+Route::post('/activityImages','UploadImageController@sendActivity')->name('activityImages');
+Route::post('/slotDetails','AppointmentController@sendAppointmentSlotDetails')->name('slotDetails');
+Route::post('/bookAppointments','AppointmentController@bookAppointments')->name('bookAppointments');
+Route::post('/sendEvent','AppointmentController@sendEvent')->name('sendEvent');
+Route::post('/updateEvent','AppointmentController@updateEvent')->name('updateEvent');
 //Route::post('/uploadLink','UploadController@returnUploadLink');

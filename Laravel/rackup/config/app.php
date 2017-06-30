@@ -168,6 +168,7 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -229,6 +230,7 @@ return [
         'JWTAuth'=>Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory'=> Tymon\JWTAuth\Facades\JWTFactory::class,
         'Input' => Illuminate\Support\Facades\Input::class,
+        'Calender'=> MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
 
     ],
 

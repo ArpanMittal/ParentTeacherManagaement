@@ -18,7 +18,7 @@ class CheckSession
     {
         if (!$request->session()->has('id'))
         {
-            return Redirect::to('login')
+            return redirect('login')
                 ->withInput();
         }
         return $next($request);
