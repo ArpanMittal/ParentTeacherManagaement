@@ -157,15 +157,43 @@ public class EventListAdapter_extended  extends RecyclerView.Adapter<RecyclerVie
 
            /* Intent d=new Intent(context,Main2Activity.class);
             context.startActivity(d);*/
-                Intent i = new Intent(context, book_appointment.class);
+          String name= eventModelList.get(position).getStrName();
 
-                i.putExtra("startTime", eventModelList.get(position).getStrStartTime());
-                i.putExtra("endTime",eventModelList.get(position).getStrEndTime() );
-                i.putExtra("Id","");
-                i.putExtra("Name", eventModelList.get(position).getStrName());
+                String title,imageURL="",Name = null;
+                int title_int=99;
+                if(name!=null){
+                    String name2  = name;
+                    int position2=name2.indexOf("@");
+                    int position=name2.indexOf("/");
+                    int position3=name2.indexOf("#");
+                    imageURL=name.substring(position+1,position2);
+                    //Id=Name1.substring(position3+1);
+                    title=name.substring(position2+1,position3);
+                    title_int=Integer.parseInt(title);
+                    Name=name.substring(0,position);
+
+                   }
+                if(title_int==6){
+                Intent i = new Intent(context, ImageView_for_Feed.class);
+                i.putExtra("imageURL", imageURL);
+                i.putExtra("title",Name);
+                i.putExtra("date",eventModelList.get(position).getStrDate());
+                i.putExtra("description", "");
                // showEventsViewHolder.tv_event_name.setText(eventModelList.get(position).getStrName());
-                i.putExtra("Date", eventModelList.get(position).getStrDate());
                 context.startActivity(i);
+                }
+                else {
+                    Intent i = new Intent(context,book_appointment.class);
+                    i.putExtra("startTime", eventModelList.get(position).getStrStartTime());
+                    i.putExtra("endTime",eventModelList.get(position).getStrEndTime() );
+                    i.putExtra("Id","");
+                    i.putExtra("Name", eventModelList.get(position).getStrName());
+                    // showEventsViewHolder.tv_event_name.setText(eventModelList.get(position).getStrName());
+                    i.putExtra("Date", eventModelList.get(position).getStrDate());
+
+                    context.startActivity(i);
+
+                }
 
 
                 //list.notify();

@@ -28,11 +28,13 @@
             android:authorities="com.eurovisionedusolutions.android.rackup"
             android:exported="false" />
 
-      <!--  <activity
+        <!--
+            <activity
             android:name=".Tab_fragment"
             android:label="navigation tabs"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme" />-->
+            android:theme="@style/AppTheme" />
+        -->
         <activity
             android:name=".FullscreenDemoActivity"
             android:label="fullscreenactivity"
@@ -68,25 +70,28 @@
             </intent-filter>
         </activity>
         <activity android:name=".Forgot_Password" />
-       <!-- <activity android:name=".video_Call" />-->
-       <!-- <activity android:name=".Events" />-->
-        <activity android:name=".Main_Activity_Appointment" />
-       <!-- <activity
+        <!-- <activity android:name=".video_Call" /> -->
+        <!-- <activity android:name=".Events" /> -->
+        <!--
+             <activity
             android:name=".BasicActivity"
-            android:label="@string/title_activity_basic" />-->
+            android:label="@string/title_activity_basic" />
+        -->
         <!--
             <activity
             android:name=".AsynchronousActivity"
             android:label="@string/title_activity_asynchronous"></activity>
         -->
-       <!-- <activity
+        <!--
+            <activity
             android:name=".AsynchronousActivity"
             android:label="navigation tabs"
-            android:launchMode="singleTask" />-->
+            android:launchMode="singleTask" />
+        -->
         <activity
             android:name=".book_appointment"
-            android:theme="@style/AppTheme"
-            android:label="Confirm Appointment" />
+            android:label="Confirm Appointment"
+            android:theme="@style/AppTheme" />
         <activity android:name=".GCM_Example_mainActivity" />
         <!-- GCM Receiver -->
         <receiver
@@ -119,8 +124,18 @@
         </service>
 
         <activity android:name=".Notification_activity" />
-        <!--<activity android:name=".Feed_Activity" />-->
-        <activity android:name=".ImageView_for_Feed"></activity>
+        <!-- <activity android:name=".Feed_Activity" /> -->
+        <activity
+            android:name=".ImageView_for_Feed"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".MyAppointments_CardView"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".WebviewActivity"
+            android:label="@string/title_activity_webview"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Main1"></activity>
     </application>
 
 </manifest>

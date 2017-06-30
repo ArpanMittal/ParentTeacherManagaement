@@ -21,6 +21,7 @@
 package com.eurovisionedusolutions.android.rackup;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -87,7 +88,8 @@ public class MainActivity extends AppCompatActivity{
                                 selectedFragment = video_Call.newInstance();
                                 break;
                             case R.id.action_item3:
-                                selectedFragment =Edit_profile.newInstance();
+
+                               selectedFragment =Edit_profile.newInstance();
                                 break;
                             case R.id.action_item4:
                                 selectedFragment =Calendar_fragment.newInstance();

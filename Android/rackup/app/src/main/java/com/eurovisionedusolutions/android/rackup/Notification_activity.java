@@ -1,6 +1,11 @@
 package com.eurovisionedusolutions.android.rackup;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,9 +22,9 @@ import org.w3c.dom.Text;
 
 public class Notification_activity extends AppCompatActivity implements RemoteCallHandler{
     private EditText mstartTime,mendTime,mName,mId,mdate,mWhatsapp,mWhatsapp1,mstatus,mreason_teacher;
-    private TextView mWhatsappView,mWhatsappView1,mStatusView,mreason_teacherView;
+    private TextView mWhatsappView,mWhatsappView1,mStatusView,mreason_teacherView,delete;
     private Button mButton_Cancel,mButton_Confirm;
-
+   private Toolbar toolbar;
     public String reason="", contact="",token="";
     private int title_int=4;
     private int alertbox_flag=0;
@@ -30,9 +35,10 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_activity);
         mButton_Confirm=(Button) findViewById(R.id.button5);
+      //  delete=(EditText)findViewById(R.id.editText3);
         //mStatusView=(TextView)findViewById(R.id.textView4);
         mButton_Cancel=(Button)findViewById(R.id.button4);
-
+        toolbar=(Toolbar)findViewById(R.id.toolbar);
         mName =(EditText) findViewById(R.id.editText7);
         mstatus =(EditText) findViewById(R.id.editText4);
         mstartTime =(EditText) findViewById(R.id.editText5);
@@ -46,7 +52,15 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
                 //mWhatsappView=(TextView)findViewById(R.id.textView18);
         //mWhatsapp=(EditText) findViewById(R.id.editText10);
         mdate=(EditText) findViewById(R.id.editText8);
-        
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigate_before_black_24dp));
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         //mstatus=(EditText)findViewById(R.id.editText);
         Bundle extras = getIntent().getExtras();
@@ -68,7 +82,18 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
         mendTime.setEnabled(false);
         mdate.setEnabled(false);
         mstatus.setEnabled(false);
-        mWhatsapp.setEnabled(false);
+        mWhatsapp.setFocusable(false);
+        mWhatsapp.setClickable(true);
+        mWhatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(title_int==2){
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:"+teacher_contact));
+                    startActivity(intent);
+                }
+            }
+        });
         mreason_teacher.setEnabled(false);
 
         mWhatsapp.setVisibility(View.GONE);
@@ -121,6 +146,12 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
             mWhatsapp.setVisibility(View.VISIBLE);
             mWhatsapp.setText(teacher_contact);
             mWhatsappView.setVisibility(View.VISIBLE);
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("",teacher_contact);
+            clipboard.setPrimaryClip(clip);
+            mWhatsapp.setClickable(true);
+            Toast.makeText(this,"Whatsapp Number Copied to clipboard",Toast.LENGTH_SHORT);
+
 
         }
         else if (title_int==3 ){

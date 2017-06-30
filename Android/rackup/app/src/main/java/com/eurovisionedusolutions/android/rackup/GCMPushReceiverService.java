@@ -36,10 +36,14 @@ public static String  token="";
     @Override
     public void onMessageReceived(String from, Bundle data) {
         //Getting the message from the bundle
-        if(data!=null){
-        message = data.getString("message");
-        event=data.getString("eventId");
-        api_event_int=Integer.parseInt(event);}
+        int d= data.getInt("type");
+        if(data!=null) {
+                message = data.getString("message");
+                event = data.getString("eventId");
+                api_event_int = Integer.parseInt(event);
+
+
+        }
         //api_event_int=Integer.valueOf("event");
         //message_int=Integer.valueOf(message);
         //Displaying a notiffication with the message
@@ -63,6 +67,7 @@ public static String  token="";
         intent.putExtra("Name", teacherName);
         intent.putExtra("Date", startDate);
         intent.putExtra("teacherId",teacherId);
+
         startActivity(intent);
        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

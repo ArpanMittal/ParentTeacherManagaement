@@ -75,15 +75,15 @@ public class ImageViewHelper extends android.support.v7.widget.AppCompatImageVie
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
 
-//        Drawable drawable = this.getDrawable();
-//        Rect rectDrawable = drawable.getBounds();
-//        float leftOffset = (this.getMeasuredWidth() - rectDrawable.width()) / 2f;
-//        float topOffset = (this.getMeasuredHeight() - rectDrawable.height()) / 2f;
-//
-//        this.matrix.set(this.getImageMatrix());
-//        matrix.postTranslate(leftOffset, topOffset);
-//
-//        this.setImageMatrix(matrix);
+       Drawable drawable = this.getDrawable();
+       Rect rectDrawable = drawable.getBounds();
+       float leftOffset = (this.getMeasuredWidth() - rectDrawable.width()) / 2f;
+        float topOffset = (this.getMeasuredHeight() - rectDrawable.height()) / 2f;
+
+        this.matrix.set(this.getImageMatrix());
+     matrix.postTranslate(leftOffset, topOffset);
+
+    this.setImageMatrix(matrix);
 
 
     }

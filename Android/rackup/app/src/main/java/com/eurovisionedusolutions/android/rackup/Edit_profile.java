@@ -43,8 +43,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -92,25 +94,17 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     private Calendar calendar, myCalendar;
     private Button done, fetch;
     private String selectedImagePath;
-
+  private Button myapp;
     private int year, month, day;
     private String token="temp";
     private ImageView imageView;
-    private TextInputLayout inputLayoutContact,inputLayoutname, inputLayoutaddress,inputLayoutdob,inputLayoutStudent_name;
-    private EditText email, name, contact, address, student_name, dateView, student_class, student_address;
+    private CircularProgressButton circularButton1 ;
+    private TextInputLayout studentName_layout,studentGrade_layout,studentDOB_layout, fatherName_layout,motherName_layout,
+                            primaryContact_layout, secondaryContact_layout, address_layout, teacherName_layout,teacherContact_layout;
+    private EditText studentName,studentGrade,studentDOB,fatherName, motherName,primaryContact,secondaryContact, address, teacherName,
+                     teacherContact;
     private String UPLOAD_URL = "http://14.192.16.145/celearn/laravel/public/test";
-    private DatePickerDialog.OnDateSetListener myDateListener = new
-            DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker arg0,
-                                      int arg1, int arg2, int arg3) {
-                    // TODO Auto-generated method stub
-                    // arg1 = year
-                    // arg2 = month
-                    // arg3 = day
-                    showDate(arg1, arg2 + 1, arg3);
-                }
-            };
+
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -126,41 +120,74 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     @Override
       public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_item_three, container, false);
+        View view =inflater.inflate(R.layout.edit_profile, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         done=(Button) view.findViewById(R.id.done);
-
+        myapp=(Button) view.findViewById(R.id.cancelled_events);
         // mydb = new DBHelper(this);
     /*    done = (Button) findViewById(R.id.done);*/
-        email = (EditText) view.findViewById(R.id.email);
-        name = (EditText) view.findViewById(R.id.name);
-        contact = (EditText) view.findViewById(R.id.contact);
-        address = (EditText) view.findViewById(R.id.address);
-        student_name = (EditText) view.findViewById(R.id.student_name);
-        dateView = (EditText) view.findViewById(R.id.dob);
-        student_class = (EditText) view.findViewById(R.id.student_class);
-        student_address = (EditText) view.findViewById(R.id.student_address);
-        dateView = (EditText) view.findViewById(R.id.dob);
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDate(year, month + 1, day);
+        studentName = (EditText) view.findViewById(R.id.studentName1);
+        studentDOB = (EditText) view.findViewById(R.id.DOB);
+        studentGrade = (EditText) view.findViewById(R.id.grade1);
+        fatherName = (EditText) view.findViewById(R.id.fatherName);
+        motherName = (EditText) view.findViewById(R.id.motherName);
+        primaryContact = (EditText) view.findViewById(R.id.primaryNumber);
+        secondaryContact = (EditText) view.findViewById(R.id.secondaryNumber);
+        address = (EditText) view.findViewById(R.id.address1);
+        teacherName =(EditText) view.findViewById(R.id.teacherName1);
+        teacherContact = (EditText) view.findViewById(R.id.teacherContact1);
+         primaryContact_layout=(TextInputLayout) view.findViewById(R.id.primaryNumber_layout);
+        secondaryContact_layout=(TextInputLayout) view.findViewById(R.id.secondaryNumber_layout);
+        address_layout=(TextInputLayout) view.findViewById(R.id.address_layout1);
+        circularButton1 = (CircularProgressButton) view.findViewById(R.id.done);
+        fatherName.setFocusable(false);
+        fatherName.setClickable(false);
+        motherName.setFocusable(false);
+        motherName.setClickable(false);
+        studentName.setFocusable(false);
+        studentName.setClickable(false);
+        studentDOB.setFocusable(false);
+        studentDOB.setClickable(false);
+        studentGrade.setFocusable(false);
+        studentGrade.setClickable(false);
+        teacherContact.setFocusable(false);
+        teacherContact.setClickable(false);
+        teacherName.setFocusable(false);
+        teacherName.setClickable(false);
+
         imageView = (ImageView) view.findViewById(R.id.imageView);
         fetch = (Button) view.findViewById(R.id.done11);
-        inputLayoutContact=(TextInputLayout)view.findViewById(R.id.input_layout_contact);
-        inputLayoutname=(TextInputLayout) view.findViewById(R.id.input_layout_name);
+        /*inputL=(TextInputLayout)view.findViewById(R.id.input_layout_contact);
+        primaryContac=(TextInputLayout) view.findViewById(R.id.input_layout_name);
         inputLayoutaddress=(TextInputLayout) view.findViewById(R.id.input_layout_address);
         inputLayoutStudent_name=(TextInputLayout) view.findViewById(R.id.input_layout_student_name);
-        inputLayoutdob=(TextInputLayout) view.findViewById(R.id.input_layout_birthday);
+        inputLayoutdob=(TextInputLayout) view.findViewById(R.id.input_layout_birthday);*/
 
-        contact.addTextChangedListener(new MyTextWatcher(contact));
-        name.setEnabled(false);
+        primaryContact.addTextChangedListener(new MyTextWatcher(primaryContact_layout));
+        secondaryContact.addTextChangedListener(new MyTextWatcher(secondaryContact_layout));
+        address.addTextChangedListener(new MyTextWatcher(address_layout));
+        //secondaryContact.addTextChangedListener(new MyTextWatcher(secondaryContact_layout));
+        /*.setEnabled(false);
         student_name.setEnabled(false);
-        dateView.setEnabled(false);
+        dateView.setEnabled(false);*/
 
+        circularButton1.setIndeterminateProgressMode(true);
+        circularButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //fetchman();
 
+                if (circularButton1.getProgress() == 0) {
+                    circularButton1.setProgress(50);
+                } else if (circularButton1.getProgress() == 100) {
+                    circularButton1.setProgress(0);
+                } else {
+                    circularButton1.setProgress(100);
+                }
+               // uploadImage();
+            }
+        });
 
 
 
@@ -170,6 +197,14 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
             public void onClick(View v) {
                 //fetchman();
                 logout();
+            }
+        });
+        myapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent l=new Intent(getContext(),MyAppointments_CardView.class);
+                startActivity(l);
+
             }
         });
            /*
@@ -182,11 +217,20 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                 uploadImage();
             }
         });
-        contact.setOnClickListener(new View.OnClickListener() {
+        primaryContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!validateContact()) {
+                if (!validateContact1()) {
+                    return;
+                }
+            }
+        });
+        secondaryContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!validateContact2()) {
                     return;
                 }
             }
@@ -195,18 +239,12 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
             @Override
             public void onClick(View v) {
                 if(address.getText().toString().isEmpty()==true){
-                    inputLayoutaddress.setErrorEnabled(false);
+                    address_layout.setErrorEnabled(false);
                     return;
                 }
             }
         });
-        student_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                inputLayoutStudent_name.setErrorEnabled(false);
-                return;
-            }
-        });
+
         /*
          For changing the profile pic
         */
@@ -223,9 +261,9 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         });
         //To retrive information from the local database
         fetchman();
-        name.requestFocus();
+        studentName.requestFocus();
 
-         myCalendar = Calendar.getInstance();
+       /*  myCalendar = Calendar.getInstance();
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
@@ -239,7 +277,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                 updateLabel();
             }
 
-        };
+        };*/
 
         /*dateView.setOnClickListener(new View.OnClickListener() {
 
@@ -287,19 +325,24 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         else  {imageView.setImageBitmap(getBitmapFromURL("http://res.cloudinary.com/demo/image/upload/q_90/happy_dog.jpg"));}*/
         return view;
     }
-    private void updateLabel() {
+   /* private void updateLabel() {
 
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         dateView.setText(sdf.format(myCalendar.getTime()));
-    }
+    }*/
     private void logout() {
        /* mydb = new DBHelper(Edit_profile.this);*/
         mydb=new DBHelper(getContext());
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_NAME);
+        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
+        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_MOTHER);
+        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT);
+        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
+        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHER);
+        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_GRADE);
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL,"temp");
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
@@ -325,13 +368,19 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         String[] mProjection =
                 {
                         UserContract.UserDetailEntry.COLUMN_ID,    // Contract class constant for the _ID column name
-                        UserContract.UserDetailEntry.CoLUMN_NAME,  // Contract class constant for the word column name
+                        UserContract.UserDetailEntry.CoLUMN_FATHER,  // Contract class constant for the word column name
                         UserContract.UserDetailEntry.CoLUMN_EMAIL, // Contract class constant for the locale column name
                         UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,
                         UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH,
                         UserContract.UserDetailEntry.CoLUMN_TOKEN,
                         UserContract.UserDetailEntry.CoLUMN_ADDRESS,
-                        UserContract.UserDetailEntry.CoLUMN_STUDENT_NAME
+                        UserContract.UserDetailEntry.CoLUMN_STUDENT_NAME,
+                        UserContract.UserDetailEntry.CoLUMN_MOTHER,
+                        UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT,
+                        UserContract.UserDetailEntry.CoLUMN_GRADE,
+                        UserContract.UserDetailEntry.CoLUMN_TEACHER,
+                        UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT
+
                 };
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
         String[] mSelectionArgs = {"1"};
@@ -365,24 +414,36 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
             // Insert code here to do something with the results
             int mCursorColumnIndex_main = mCursor.getColumnIndex(UserContract.UserDetailEntry.COLUMN_ID);
             int mCursorColumnIndex = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_EMAIL);
-            int mCursorColumnIndex1 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_NAME);
+            int mCursorColumnIndex1 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_FATHER);
             int mCursorColumnIndex2 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH);
             int mCursorColumnIndex3 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
             int mCursorColumnIndex4 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TOKEN);
             int mCursorColumnIndex5=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_STUDENT_NAME);
             int mCursorColumnIndex6=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_ADDRESS);
+            int mCursorColumnIndex7=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_MOTHER);
+            int mCursorColumnIndex8=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT);
+            int mCursorColumnIndex9=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_GRADE);
+            int mCursorColumnIndex10=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHER);
+            int mCursorColumnIndex11=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
             while (mCursor.moveToNext()) {
 
                 // Insert code here to process the retrieved word.
                 if (mCursor.getInt(mCursorColumnIndex_main) == 1) {
                     token=mCursor.getString(mCursorColumnIndex4);
-                   name.setText(mCursor.getString(mCursorColumnIndex1));
+                   studentName.setText(mCursor.getString(mCursorColumnIndex1));
                     String l=mCursor.getString(mCursorColumnIndex);
-                    email.setText(mCursor.getString(mCursorColumnIndex));
-                    contact.setText(mCursor.getString(mCursorColumnIndex3));
-                    dateView.setText(mCursor.getString(mCursorColumnIndex2));
-                    student_name.setText(mCursor.getString(mCursorColumnIndex5));
+                    //email.setText(mCursor.getString(mCursorColumnIndex));
+                    fatherName.setText(mCursor.getString(mCursorColumnIndex1));
+                    primaryContact.setText(mCursor.getString(mCursorColumnIndex3));
+                    secondaryContact.setText(mCursor.getString(mCursorColumnIndex8));
+                    motherName.setText(mCursor.getString(mCursorColumnIndex7));
+                    studentGrade.setText(mCursor.getString(mCursorColumnIndex9));
+                    teacherName.setText(mCursor.getString(mCursorColumnIndex10));
+                    teacherContact.setText(mCursor.getString(mCursorColumnIndex11));
+                    studentDOB.setText(mCursor.getString(mCursorColumnIndex2));
+                    studentName.setText(mCursor.getString(mCursorColumnIndex5));
                     address.setText(mCursor.getString(mCursorColumnIndex6));
+
                    // Toast.makeText(getContext().getApplicationContext(),mCursor.getString(mCursorColumnIndex4), Toast.LENGTH_LONG).show();
                 }
 
@@ -408,66 +469,58 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
 
     private void uploadImage() {
         saveToInternalStorage(bitmap1);
-        String contact_check2 = contact.getText().toString().trim();
+        String contact_check1="",contact_check2="",address_check1="";
+         contact_check1 = primaryContact.getText().toString().trim();
+         contact_check2 = secondaryContact.getText().toString().trim();
+         address_check1 = address.getText().toString().trim();
 
-        if(contact_check2!=null || contact_check2.isEmpty()==false){
-            if(contact_check2.length()!=10){
-                inputLayoutContact.setErrorEnabled(true);
-                inputLayoutContact.setError(getString(R.string.err_msg_contact_notValid));
+       if(contact_check1.isEmpty()==true || contact_check1.length()!=10){
+                primaryContact_layout.setErrorEnabled(true);
+                primaryContact_layout.setError(getString(R.string.err_msg_contact_notValid));
                 //Toast.makeText(getContext().getApplicationContext(), "Check for Errors", Toast.LENGTH_LONG).show();
                 contact_flag=1;
-            }
         }
-        if(name.getText().toString().trim().isEmpty()==true ){
-            inputLayoutname.setErrorEnabled(true);
-            inputLayoutname.setError("Enter Your Name");
-            contact_flag=1;
-        }
-        if(address.getText().toString().trim().isEmpty()==true ){
-            inputLayoutaddress.setErrorEnabled(true);
-            inputLayoutaddress.setError("Enter Your Address");
-            contact_flag=1;
-        }
-        if(student_name.getText().toString().trim().isEmpty()==true ){
-            inputLayoutStudent_name.setErrorEnabled(true);
-            inputLayoutStudent_name.setError("Enter Student's Name");
-            contact_flag=1;
-        }
-        if(dateView.getText().toString().trim().isEmpty()==true){
-            inputLayoutdob.setErrorEnabled(true);
-            inputLayoutdob.setError("Enter Your Name");
+         if(contact_check2.isEmpty()==true || contact_check2.length()!=10){
+           secondaryContact_layout.setErrorEnabled(true);
+           secondaryContact_layout.setError(getString(R.string.err_msg_contact_notValid));
+           //Toast.makeText(getContext().getApplicationContext(), "Check for Errors", Toast.LENGTH_LONG).show();
+           contact_flag=1;
+       }
+       if(address_check1.isEmpty()==true){
+            address_layout.setErrorEnabled(true);
+           address_layout.setError(getString(R.string.address_is_empty));
+            //Toast.makeText(getContext().getApplicationContext(), "Check for Errors", Toast.LENGTH_LONG).show();
             contact_flag=1;
         }
 
         mydb = new DBHelper(getContext());
         if (bitmap1 == null) {
-            name.getText().toString();
+            studentName.getText().toString();
             bitmap1 = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         }
         image = getStringImage(bitmap1);
         /*pd = new ProgressDialog(getContext());
         pd.setMessage(getContext().getApplicationContext().getResources().getString(R.string.loadingmsg));*/
         if(contact_flag==0){
-        update(contact.getText().toString(),dateView.getText().toString().trim(),
+        update(primaryContact.getText().toString(),secondaryContact.getText().toString().trim(),
                 address.getText().toString());
         new RemoteHelper(getContext().getApplicationContext()).Edit_profile(this, RemoteCalls.EDIT_PROFILE,
                 token,
-                name.getText().toString().trim(),
-                contact.getText().toString().trim(),
+                studentName.getText().toString().trim(),
+                primaryContact.getText().toString().trim(),
                 address.getText().toString().trim(),
-                dateView.getText().toString().trim(),
-                student_name.getText().toString().trim()
+                studentDOB.getText().toString().trim(),
+                studentName.getText().toString().trim()
                 );}
-
     }
-    private int update(String phone_num,String dob,String address) {
+    private int update(String phone_num,String scontact,String address) {
         mydb = new DBHelper(getContext());
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-        if(contact_flag!=1 && dob!=null && address!=null){
+        if(scontact!=null && address!=null && phone_num!=null){
             mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER, phone_num);
 
-            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH, dob);
+            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT, scontact);
 
             mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_ADDRESS,address);
 
@@ -485,32 +538,8 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         return 0;
     }
 
-    public void setDate(View view) {
-        showDialog(999);
-        Toast.makeText(getContext().getApplicationContext(), "Choose a date",
-                Toast.LENGTH_SHORT)
-                .show();
-    }
 
-    //@Override
-    protected Dialog showDialog(int id) {
-        // TODO Auto-generated method stub
-        if (id == 999) {
 
-            DatePickerDialog dialog=new DatePickerDialog(getContext(),
-                    myDateListener, year, month, day);
-            Calendar c=Calendar.getInstance();
-            dialog.getDatePicker().setMaxDate(c.getTimeInMillis());
-
-            return dialog;
-        }
-        return null;
-    }
-
-    private void showDate(int year, int month, int day) {
-        dateView.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
-    }
 
     /*
    convert image to bitmap, set bitmap image to imageview as a profile pic
@@ -618,9 +647,10 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
         String username = null;
         if (isSuccessful) {
+            circularButton1.setProgress(100);
             //pd.dismiss();
+            contact_flag=0;
             Toast.makeText(getContext().getApplicationContext(), "Profile Updated", Toast.LENGTH_LONG).show();
-
 
             /*byte[] decodedString = Base64.decode(username, Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -628,22 +658,61 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
 
 
         } else {
-            Toast.makeText(getContext().getApplicationContext(), "connection to server failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext().getApplicationContext(), String.valueOf(response), Toast.LENGTH_LONG).show();
         }
 
     }
-    private boolean validateContact() {
-        String contact_check=contact.getText().toString().trim();
-          inputLayoutContact.setErrorEnabled(false);
+    private boolean validateContact1() {
+        String contact_check=primaryContact.getText().toString().trim();
+          primaryContact_layout.setErrorEnabled(false);
          if (contact_check.length()==10){
-           // inputLayoutContact.setError(getString(R.string.err_msg_contact_notValid));
-             contact.setTextColor(Color.GREEN);
-             requestFocus(contact);
-             return false;}
-         else {contact.setTextColor(Color.RED);
-             requestFocus(contact);
+            // inputLayoutContact.setError(getString(R.string.err_msg_contact_notValid));
+            primaryContact.setTextColor(Color.GREEN);
+            requestFocus(primaryContact);
+            return false;}
+         else if (contact_check.length()==0){
+             primaryContact_layout.setErrorEnabled(true);
+             primaryContact_layout.setError("Contact field can't be blank");
+             requestFocus(primaryContact);
              return false;
          }
+        else {primaryContact.setTextColor(Color.RED);
+            requestFocus(primaryContact);
+            return false;
+        }
+    }
+    private boolean validateContact2() {
+        String scontact_check=secondaryContact.getText().toString().trim();
+        secondaryContact_layout.setErrorEnabled(false);
+        if (scontact_check.length()==10){
+            // inputLayoutContact.setError(getString(R.string.err_msg_contact_notValid));
+            secondaryContact.setTextColor(Color.GREEN);
+            requestFocus(secondaryContact);
+            return false;}
+        else if (scontact_check.length()==0){
+            secondaryContact_layout.setErrorEnabled(true);
+            secondaryContact_layout.setError("Contact field can't be blank");
+            requestFocus(secondaryContact);
+            return false;
+        }
+        else {secondaryContact.setTextColor(Color.RED);
+            requestFocus(secondaryContact);
+            return false;
+        }
+    }
+    private boolean validateAddress() {
+        String saddress=address.getText().toString().trim();
+        address_layout.setErrorEnabled(false);
+        if (saddress.length()==0){
+            // inputLayoutContact.setError(getString(R.string.err_msg_contact_notValid));
+            address_layout.setErrorEnabled(true);
+            address_layout.setError("Address field can't be blank");
+            requestFocus(address);
+            return false;}
+        else {
+            requestFocus(address);
+            return false;
+        }
     }
 
 
@@ -675,8 +744,14 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
 
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
-                case R.id.contact:
-                  validateContact();
+                case R.id.primaryNumber_layout:
+                  validateContact1();
+                    break;
+                case R.id.secondaryNumber_layout:
+                    validateContact2();
+                    break;
+                case R.id.address_layout1:
+                    validateAddress();
                     break;
             }
         }

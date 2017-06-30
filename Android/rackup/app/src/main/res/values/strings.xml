@@ -547,4 +547,8 @@
     <string name="Update_Event">http://web.rackupcambridge.com/api/updateEvent</string>
     <string name="item_5">Feed</string>
     <string name="FeedActivity">http://web.rackupcambridge.com/api/activityImages</string>
+    <string name="title_activity_web_view">WebView</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_webview">WebviewActivity</string>
+    <string name="address_is_empty">Enter a valid address</string>
 </resources>

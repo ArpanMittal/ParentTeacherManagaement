@@ -292,7 +292,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
      */
     @Override
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
-           int status=0;String name, contact, dob;
+           int status=0;String name, primaryContact,secondaryContact,dob;
+           String fatherName,motherName,grade,teacherName,teacherContact;
         pd.dismiss();
         if (isSuccessful) {
 
@@ -300,21 +301,31 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 status=response.getJSONObject(1).getInt("original");
                 email = response.getJSONObject(0).getString("username");
                 token =response.getJSONObject(0).getString("token");
-                 name=response.getJSONObject(0).getString("parent_name");
-                 contact=response.getJSONObject(0).getString("contact");
+                 name=response.getJSONObject(0).getString("fatherName");
+                 primaryContact=response.getJSONObject(0).getString("primartContact");
                 student_name=response.getJSONObject(0).getString("studentName");
                 address=response.getJSONObject(0).getString("address");
                  dob=response.getJSONObject(0).getString("dob");
+                fatherName=response.getJSONObject(0).getString("fatherName");
+                motherName=response.getJSONObject(0).getString("motherName");
+                secondaryContact=response.getJSONObject(0).getString("secondaryContact");
+                grade=response.getJSONObject(0).getString("grade");
+                teacherName=response.getJSONObject(0).getString("teacherName");
+                teacherContact=response.getJSONObject(0).getString("teacherContact");
                // Tab_fragment.pd.show();
 
                 if(status==200){
-                    update(email, password1,token,name, contact, dob,address,student_name);
+                    update(email, password1,token,student_name,grade,dob,fatherName,motherName,primaryContact,secondaryContact ,
+                            address,teacherName,teacherContact);
                     vid.api_Call();
                     int position= email.indexOf("@");
                     email="welcome "+email.substring(0,position);
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();}
+                else if(status==204){
+
+                }
                 else {
                     Toast.makeText(getApplicationContext(), "Username/password incorrect", Toast.LENGTH_LONG).show();}
 
@@ -352,18 +363,24 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         startActivity(sendIntent);*/
 
         //forget password action
-        Intent intent5=new Intent(this,Feed_Activity.class);
+        Intent intent5=new Intent(this,MyAppointments_CardView.class);
         startActivity(intent5);
     }
 
 
-    private void update(String email, String password,String token,String name, String phone_num,String dob,String address,
-                        String student_name) {
+    private void update(String email, String password,String token,String student_name,String grade,String dob,String fatherName,
+                        String motherName,String primaryContact,String secondaryContact,String address,String teacherName,
+            String teacherContact) {
         mydb = new DBHelper(this);
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_NAME,name);
-        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,phone_num);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_FATHER,fatherName);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_MOTHER,motherName);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT,secondaryContact);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_TEACHER,teacherName);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_GRADE,grade);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT,teacherContact);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,primaryContact);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, email);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH,dob);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PASSWORD, password);

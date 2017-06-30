@@ -198,12 +198,12 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
 //        myCalendar.setHolidayCellTextColor(R.color.black);
 
         myCalendar.setHolidayCellClickable(false);
-        myCalendar.addHoliday("2-11-2016");
+        /*myCalendar.addHoliday("2-11-2016");
         myCalendar.addHoliday("8-11-2016");
         myCalendar.addHoliday("12-11-2016");
         myCalendar.addHoliday("13-11-2016");
         myCalendar.addHoliday("8-10-2016");
-        myCalendar.addHoliday("10-12-2016");
+        myCalendar.addHoliday("10-12-2016");*/
 
 
 //        myCalendar.setCalendarDate(5, 10, 2016);
@@ -396,6 +396,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
                         String api_startTime = response.getJSONArray(j).getJSONObject(i).getString("startTime");
                         String api_endTime = response.getJSONArray(j).getJSONObject(i).getString("endTime");
                         Long api_id_long = Long.valueOf(api_id);
+                        int api_title_int=Integer.parseInt(api_title);
                         int api_startTime_HOUR = Integer.valueOf(api_startTime.substring(0, 2));
                         int api_endTime_HOUR = Integer.valueOf(api_endTime.substring(0, 2));
                         int api_startDate_Year = Integer.valueOf(api_startDate.substring(0, 4));
@@ -445,6 +446,10 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
                                 api_endTime_HOUR+":"+api_endTime_MINUTE,
                                 api_teacherName+"/"+api_teacherid+"@"+api_title+"#"+api_id ,R.mipmap.ic_launcher);
 
+
+
+
+
                        // myCalendar.addEvent("14-05-2017", "8:30", "8:45", "Today Event 3",R.mipmap.ic_launcher);
 
 
@@ -454,6 +459,23 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
 
 
                     }}
+                for (int k=0;k<response.getJSONArray(2).length();k++){
+                    String name=response.getJSONArray(2).getJSONObject(k).getString("name");
+                    String imageURL=response.getJSONArray(2).getJSONObject(k).getString("imageUrl");
+                    String api_title1 = response.getJSONArray(2).getJSONObject(k).getString("title");
+                    String api_startDate1 = response.getJSONArray(2).getJSONObject(k).getString("startDate");
+                    String api_startTime1 = response.getJSONArray(2).getJSONObject(k).getString("startTime");
+                    String api_endTime1 = response.getJSONArray(2).getJSONObject(k).getString("endTime");
+                    String api_eventId1 = response.getJSONArray(2).getJSONObject(k).getString("eventId");
+                    int api_startTime_HOUR1 = Integer.valueOf(api_startTime1.substring(0, 2));
+                    int api_endTime_HOUR1 = Integer.valueOf(api_endTime1.substring(0, 2));
+
+                    int api_startTime_MINUTE1 = Integer.valueOf(api_startTime1.substring(3, 5));
+                    int api_endTime_MINUTE1 = Integer.valueOf(api_endTime1.substring(3, 5));
+                    myCalendar.addEvent(date_format(api_startDate1),api_startTime_HOUR1+":"+api_startTime_MINUTE1,
+                            api_endTime_HOUR1+":"+api_endTime_MINUTE1,
+                            name+"/"+imageURL+"@"+api_title1+"#"+api_eventId1 ,R.mipmap.ic_launcher);
+                }
                 //Toast.makeText(getActivity(), "and here we go ", Toast.LENGTH_SHORT).show();}
 
 
