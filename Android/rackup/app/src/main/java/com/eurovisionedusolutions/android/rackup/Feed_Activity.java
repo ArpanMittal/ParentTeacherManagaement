@@ -325,7 +325,7 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler{
                 myCalendar1.set(Calendar.YEAR, year);
                 myCalendar1.set(Calendar.MONTH, monthOfYear);
                 myCalendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
+                //updateLabel();
             }
         };
 
@@ -345,11 +345,7 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler{
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         sdf.setCalendar(myCalendar1);
-        for  (int  i=0;i<ModelList.size();i++){
-            SimpleDateFormat df1=new SimpleDateFormat("dd/MM/yyyy");
-            Date timeline = df1.parse(ModelList.get(i).getDate());
-        if(sdf=timeline)
-        }
+
         //Toast.makeText(, myCalendar1, Toast.LENGTH_SHORT).show();
 
         //dateView.setText(sdf.format(myCalendar.getTime()));
