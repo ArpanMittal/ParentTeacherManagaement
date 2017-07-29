@@ -9,7 +9,17 @@
         android:icon="@drawable/ic_perm_identity_black_24dp"
         android:title="@string/item_2"/>
     <item
+        android:id="@+id/action_item5"
+        android:icon="@drawable/ic_class_black_24dp"
+        android:title="@string/item_5"/>
+    <item
         android:id="@+id/action_item3"
         android:icon="@drawable/ic_class_black_24dp"
         android:title="@string/item_3"/>
+    <item
+        android:id="@+id/action_item4"
+        android:icon="@drawable/ic_class_black_24dp"
+        android:title="@string/item_4"/>
+
+
 </menu>

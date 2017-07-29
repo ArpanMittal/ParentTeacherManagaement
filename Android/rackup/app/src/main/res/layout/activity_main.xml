@@ -25,5 +25,6 @@
         android:background="@color/colorPrimary"
         app:itemIconTint="@color/colorAccent"
         app:itemTextColor="@color/black"
+
         app:menu="@menu/bottom_navigation_items"/>
 </RelativeLayout>
