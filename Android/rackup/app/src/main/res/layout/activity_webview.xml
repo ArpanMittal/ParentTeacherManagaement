@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:src="@drawable/common_google_signin_btn_icon_dark"
-        android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
 
     <Button
