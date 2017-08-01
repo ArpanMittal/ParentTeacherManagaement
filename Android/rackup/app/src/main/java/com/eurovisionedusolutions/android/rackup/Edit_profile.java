@@ -337,12 +337,12 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         mydb=new DBHelper(getContext());
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_MOTHER);
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT);
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHER);
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_GRADE);
+//        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
+//        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_MOTHER);
+//        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT);
+//        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
+//        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHER);
+//        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_GRADE);
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL,"temp");
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
@@ -368,18 +368,18 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         String[] mProjection =
                 {
                         UserContract.UserDetailEntry.COLUMN_ID,    // Contract class constant for the _ID column name
-                        UserContract.UserDetailEntry.CoLUMN_FATHER,  // Contract class constant for the word column name
+//                        UserContract.UserDetailEntry.CoLUMN_FATHER,  // Contract class constant for the word column name
                         UserContract.UserDetailEntry.CoLUMN_EMAIL, // Contract class constant for the locale column name
                         UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,
                         UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH,
                         UserContract.UserDetailEntry.CoLUMN_TOKEN,
                         UserContract.UserDetailEntry.CoLUMN_ADDRESS,
                         UserContract.UserDetailEntry.CoLUMN_STUDENT_NAME,
-                        UserContract.UserDetailEntry.CoLUMN_MOTHER,
-                        UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT,
-                        UserContract.UserDetailEntry.CoLUMN_GRADE,
-                        UserContract.UserDetailEntry.CoLUMN_TEACHER,
-                        UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT
+//                        UserContract.UserDetailEntry.CoLUMN_MOTHER,
+//                        UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT,
+//                        UserContract.UserDetailEntry.CoLUMN_GRADE,
+//                        UserContract.UserDetailEntry.CoLUMN_TEACHER,
+//                        UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT
 
                 };
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
@@ -414,32 +414,32 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
             // Insert code here to do something with the results
             int mCursorColumnIndex_main = mCursor.getColumnIndex(UserContract.UserDetailEntry.COLUMN_ID);
             int mCursorColumnIndex = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_EMAIL);
-            int mCursorColumnIndex1 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_FATHER);
+//            int mCursorColumnIndex1 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_FATHER);
             int mCursorColumnIndex2 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH);
             int mCursorColumnIndex3 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
             int mCursorColumnIndex4 = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TOKEN);
             int mCursorColumnIndex5=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_STUDENT_NAME);
             int mCursorColumnIndex6=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_ADDRESS);
-            int mCursorColumnIndex7=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_MOTHER);
-            int mCursorColumnIndex8=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT);
-            int mCursorColumnIndex9=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_GRADE);
-            int mCursorColumnIndex10=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHER);
-            int mCursorColumnIndex11=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
+//            int mCursorColumnIndex7=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_MOTHER);
+//            int mCursorColumnIndex8=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT);
+//            int mCursorColumnIndex9=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_GRADE);
+//            int mCursorColumnIndex10=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHER);
+//            int mCursorColumnIndex11=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
             while (mCursor.moveToNext()) {
 
                 // Insert code here to process the retrieved word.
                 if (mCursor.getInt(mCursorColumnIndex_main) == 1) {
                     token=mCursor.getString(mCursorColumnIndex4);
-                   studentName.setText(mCursor.getString(mCursorColumnIndex1));
+//                   studentName.setText(mCursor.getString(mCursorColumnIndex1));
                     String l=mCursor.getString(mCursorColumnIndex);
                     //email.setText(mCursor.getString(mCursorColumnIndex));
-                    fatherName.setText(mCursor.getString(mCursorColumnIndex1));
+//                    fatherName.setText(mCursor.getString(mCursorColumnIndex1));
                     primaryContact.setText(mCursor.getString(mCursorColumnIndex3));
-                    secondaryContact.setText(mCursor.getString(mCursorColumnIndex8));
-                    motherName.setText(mCursor.getString(mCursorColumnIndex7));
-                    studentGrade.setText(mCursor.getString(mCursorColumnIndex9));
-                    teacherName.setText(mCursor.getString(mCursorColumnIndex10));
-                    teacherContact.setText(mCursor.getString(mCursorColumnIndex11));
+//                    secondaryContact.setText(mCursor.getString(mCursorColumnIndex8));
+//                    motherName.setText(mCursor.getString(mCursorColumnIndex7));
+//                    studentGrade.setText(mCursor.getString(mCursorColumnIndex9));
+//                    teacherName.setText(mCursor.getString(mCursorColumnIndex10));
+//                    teacherContact.setText(mCursor.getString(mCursorColumnIndex11));
                     studentDOB.setText(mCursor.getString(mCursorColumnIndex2));
                     studentName.setText(mCursor.getString(mCursorColumnIndex5));
                     address.setText(mCursor.getString(mCursorColumnIndex6));
@@ -520,7 +520,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         if(scontact!=null && address!=null && phone_num!=null){
             mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER, phone_num);
 
-            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT, scontact);
+//            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT, scontact);
 
             mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_ADDRESS,address);
 

@@ -68,8 +68,9 @@ public class VideoAPI_Call implements RemoteCallHandler {
     }
 
     private String getviewkey(String viewkey) {
+        int position;
         if (viewkey.contains("youtu.be")) {
-            int position = viewkey.indexOf("e/") + 2;
+            position = viewkey.indexOf("e/") + 2;
             return viewkey.substring(position, position + 11);
         }
         position = viewkey.indexOf("v=") + 2;

@@ -35,8 +35,8 @@ private ImageView imageview;
         mdate.setText(date);
         mdesc.setText(description);
         Picasso.with(getApplicationContext()).load("http://web.rackupcambridge.com"+url)
-                .placeholder(R.drawable.no_thumbnail)
-                .error(R.drawable.no_thumbnail)
+                .placeholder(R.drawable.nav_item_state_list)
+                .error(R.drawable.ic_navigate_before_black_24dp)
                 .into(imageview);
 
 

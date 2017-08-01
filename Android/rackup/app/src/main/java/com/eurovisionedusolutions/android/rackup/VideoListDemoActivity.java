@@ -346,7 +346,7 @@ public final class VideoListDemoActivity extends Fragment implements OnFullscree
         } else {
           // 3) The view is already created and already initialized. Simply set the right videoId
           //    on the loader.
-          thumbnail.setImageResource(R.drawable.loading_thumbnail);
+//          thumbnail.setImageResource(R.drawable.loading_thumbnail);
           loader.setVideo(entry.videoId);
         }
       }
@@ -365,7 +365,7 @@ public final class VideoListDemoActivity extends Fragment implements OnFullscree
               YouTubeThumbnailView view, YouTubeThumbnailLoader loader) {
         loader.setOnThumbnailLoadedListener(this);
         thumbnailViewToLoaderMap.put(view, loader);
-        view.setImageResource(R.drawable.loading_thumbnail);
+//        view.setImageResource(R.drawable.loading_thumbnail);
         String videoId = (String) view.getTag();
         loader.setVideo(videoId);
       }
@@ -373,7 +373,7 @@ public final class VideoListDemoActivity extends Fragment implements OnFullscree
       @Override
       public void onInitializationFailure(
               YouTubeThumbnailView view, YouTubeInitializationResult loader) {
-        view.setImageResource(R.drawable.loading_thumbnail);
+//        view.setImageResource(R.drawable.loading_thumbnail);
       }
 
       @Override
@@ -382,7 +382,7 @@ public final class VideoListDemoActivity extends Fragment implements OnFullscree
 
       @Override
       public void onThumbnailError(YouTubeThumbnailView view, ErrorReason errorReason) {
-        view.setImageResource(R.drawable.no_thumbnail);
+//        view.setImageResource(R.drawable.no_thumbnail);
       }
     }
 

@@ -234,7 +234,7 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
         mNewValues.put(UserContract.UserDetailEntry.COLUMN_ID, 1);
         mNewValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, "temp");
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
-        mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
+//        mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_TOKEN);
@@ -300,7 +300,7 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
         mydb = new DBHelper(this);
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_FATHER,name);
+//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_FATHER,name);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,phone_num);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, email);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH,dob);

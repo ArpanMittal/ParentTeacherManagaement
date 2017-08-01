@@ -48,7 +48,7 @@ public class YouTubeAPIDemoActivity extends AppCompatActivity implements OnItemC
                     getPackageName(), PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA);
 
         } catch (NameNotFoundException e) {
-            Log.e(getString(R.string.loggingTag), "Could not find package with name " + getPackageName());
+//            Log.e(getString(R.string.loggingTag), "Could not find package with name " + getPackageName());
             finish();
         }
 

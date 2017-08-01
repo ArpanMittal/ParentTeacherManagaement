@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity{
                                 selectedFragment = Tab_fragment.newInstance();
                                 break;
                             case R.id.action_item2:
-                                selectedFragment = video_Call.newInstance();
+                                selectedFragment = Video_Call.newInstance();
                                 break;
                             case R.id.action_item3:
 
