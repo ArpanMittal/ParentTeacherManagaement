@@ -21,8 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-import com.eurovisionedusolutions.android.rackup.adapter.DemoListViewItem;
-import com.eurovisionedusolutions.android.rackup.adapter.DemoArrayAdapter;
+import com.eurovisionedusolutions.android.rackup.DemoListViewItem;
+import com.eurovisionedusolutions.android.rackup.DemoArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
