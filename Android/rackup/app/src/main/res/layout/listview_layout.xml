@@ -13,8 +13,7 @@
         android:contentDescription="hello world"
         android:paddingBottom="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:src="@drawable/nav_item_state_list" />
+        android:paddingTop="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

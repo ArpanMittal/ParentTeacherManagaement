@@ -9,6 +9,7 @@
     tools:layout_editor_absoluteY="0dp"
     tools:layout_editor_absoluteX="0dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="384dp"

@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 public class ImageView_for_Feed extends AppCompatActivity {
-private ImageView imageview;
+    private ImageView imageview;
     private TextView mtitle, mdesc,mdate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ private ImageView imageview;
         mtitle=(TextView)findViewById(R.id.textView5);
         mdate=(TextView)findViewById(R.id.textView6);
         mdesc=(TextView)findViewById(R.id.textView7);
-       // imageview.setImageResource(R.drawable.large_image);
+        // imageview.setImageResource(R.drawable.large_image);
         String url="",description="",title="",date="";
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -35,14 +35,14 @@ private ImageView imageview;
         mdate.setText(date);
         mdesc.setText(description);
         Picasso.with(getApplicationContext()).load("http://web.rackupcambridge.com"+url)
-                .placeholder(R.drawable.nav_item_state_list)
-                .error(R.drawable.ic_navigate_before_black_24dp)
+                .placeholder(R.drawable.no_thumbnail)
+                .error(R.drawable.no_thumbnail)
                 .into(imageview);
 
 
     }
     public void onBackPressed() {
-            finish();
+        finish();
     }
 
 }
