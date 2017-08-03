@@ -94,13 +94,20 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         remotecall();
-        setHasOptionsMenu(true);
+      //  setHasOptionsMenu(false);
+
 
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.activity_feed_, container, false);
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitle("ImageFeed");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
         this.ModelList=createItems();
 
         initViews(view);
@@ -113,7 +120,7 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler{
         });
         initRecyclerView();
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        setHasOptionsMenu(true);
+      //  setHasOptionsMenu(true);
         return view;
     }
     @Override

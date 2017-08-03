@@ -42,7 +42,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".MainActivity"
-            android:label="Navigation Activity"
+            android:label="Video"
             android:launchMode="singleTask" />
         <activity
             android:name=".YouTubeAPIDemoActivity"
@@ -125,9 +125,9 @@
 
         <activity android:name=".Notification_activity" />
         <!-- <activity android:name=".Feed_Activity" /> -->
-        <activity
-            android:name=".ImageView_for_Feed"
-            android:launchMode="singleTask" />
+        <!--<activity-->
+            <!--android:name=".ImageView_for_Feed"-->
+            <!--android:launchMode="singleTask" />-->
         <activity
             android:name=".MyAppointments_CardView"
             android:launchMode="singleTask" />

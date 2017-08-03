@@ -98,6 +98,8 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.calendar, container, false);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitle("Calendar");
         myCalendar = (MyDynamicCalendar_Extended) view.findViewById(R.id.myCalendar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         myCalendar.showMonthView();

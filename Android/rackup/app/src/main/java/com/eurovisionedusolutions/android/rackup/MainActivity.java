@@ -75,8 +75,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        bottomNavigationView.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         Fragment selectedFragment = null;
@@ -99,17 +98,25 @@ public class MainActivity extends AppCompatActivity{
                                 break;
 
                         }
+                        if(item.getItemId() == R.id.action_item5)
+                            getSupportActionBar().setTitle("ImageFeed");
+//                        else if(item.getItemId() == R.id.action_item4)
+//                            getSupportActionBar().setTitle("Calendar");
+//                        else if(item.getItemId() == R.id.action_item1)
+//                            getSupportActionBar().setTitle("Video");
+
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.frame_layout, selectedFragment);
                         transaction.commit();
                         return true;
                     }
                 });
-
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, Tab_fragment.newInstance());
         transaction.commit();
+
+
 
         //Used to select an item programmatically
         bottomNavigationView.getMenu().getItem(1).setChecked(true);

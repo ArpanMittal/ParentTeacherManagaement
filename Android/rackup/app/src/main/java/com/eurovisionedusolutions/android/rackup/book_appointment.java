@@ -54,7 +54,8 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         mWhatsapp=(EditText)findViewById(R.id.editText10);
 
         setSupportActionBar(toolbar);
-       toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigate_before_black_24dp));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+       toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
