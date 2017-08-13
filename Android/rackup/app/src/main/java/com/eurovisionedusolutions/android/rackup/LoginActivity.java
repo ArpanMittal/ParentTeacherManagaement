@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        button = (Button) findViewById(R.id.button2);
+//        button = (Button) findViewById(R.id.button2);
         mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_Email);
@@ -143,12 +143,12 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         /*
         forgot password button on click
          */
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                forgotpassword();
-            }
-        });
+//        button.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                forgotpassword();
+//            }
+//        });
 
     }
     //Registering receiver on activity resume
