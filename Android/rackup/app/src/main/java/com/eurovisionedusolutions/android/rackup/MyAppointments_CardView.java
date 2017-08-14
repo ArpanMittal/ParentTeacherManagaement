@@ -116,6 +116,7 @@ public class MyAppointments_CardView extends AppCompatActivity implements Remote
         this.ModelList = createItems();
         initViews();
         initRecyclerView();
+        toolbar.setTitle("Appointments");
         setSupportActionBar(toolbar);
         remotecall();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

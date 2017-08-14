@@ -1,6 +1,7 @@
 package com.eurovisionedusolutions.android.rackup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,9 +55,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        holder.tvItem.setText(itemText+","+ String.valueOf(position));
-        /*Intent l= new Intent(MyAdapter.this,ImageView_for_Feed.class);
-        context.startActivity(l);*/
+        Intent act = new Intent(MyAdapter.this.context, ImageView_for_Feed.class);
+        act.putExtra("imageURL", ((EventModel_Feed) MyAdapter.this.items.get(position)).getImage_url());
+        act.putExtra("date", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTime());
+        act.putExtra("description", ((EventModel_Feed) MyAdapter.this.items.get(position)).getDescription());
+        act.putExtra("title", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTitle());
+        MyAdapter.this.context.startActivity(act);
+        MyAdapter.this.context.startActivity(act);
+//        holder.tvItem.setText(itemText+","+ String.valueOf(position));
+//        Intent l= new Intent(context,ImageView_for_Feed.class);
+//        context.startActivity(l);
 
       }
     });

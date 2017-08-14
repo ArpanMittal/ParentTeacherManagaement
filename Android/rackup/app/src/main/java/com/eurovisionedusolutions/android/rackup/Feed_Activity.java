@@ -66,6 +66,10 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_feed_, container, false);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitle("ImageFeed");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         this.ModelList = createItems();
         initViews(view);
         this.mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {

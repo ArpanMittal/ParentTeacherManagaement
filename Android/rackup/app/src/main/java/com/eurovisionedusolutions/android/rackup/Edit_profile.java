@@ -187,7 +187,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                 } else {
                     circularButton1.setProgress(100);
                 }
-               // uploadImage();
+                uploadImage();
             }
         });
 
