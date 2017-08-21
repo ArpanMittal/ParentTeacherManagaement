@@ -12,6 +12,12 @@ public class UserContract {
 
     public static final class UserDetailEntry implements BaseColumns {
         public static final String COLUMN_ID = "_id";
+        public static final String CoLUMN_FATHER = "father";
+        public static final String CoLUMN_MOTHER = "mother";
+        public static final String CoLUMN_TEACHER = "teacher";
+        public static final String CoLUMN_GRADE = "grade";
+        public static final String CoLUMN_TEACHERCONTACT = "teacherContact";
+        public static final String CoLUMN_SECONDARYCONTACT = "secondaryContact";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/com.eurovisionedusolutions.android.rackup/userdetail1";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/com.eurovisionedusolutions.android.rackup/userdetail1";
         public static final Uri CONTENT_URI = UserContract.BASE_CONTENT_URI.buildUpon().appendPath("userdetail1").build();

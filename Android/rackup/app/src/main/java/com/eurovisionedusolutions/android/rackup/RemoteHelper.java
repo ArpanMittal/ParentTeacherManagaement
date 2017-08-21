@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.eurovisionedusolutions.android.rackup.R.id.address;
+
 /**
  * Created by sushant on 2/2/2017.
  */
@@ -208,8 +210,8 @@ public class RemoteHelper {
         new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);
 
     }
-    public void Edit_profile(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String parentName,String contact,
-                             String address, String dob, String studentName) {
+    public void Edit_profile(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String parentName,String contact,String secondryContact,
+                             String address, String dob, String studentName, String path) {
         //  verifyLoginurl=R.string.loginurl;
         Map<String, String> params = new HashMap<String, String>();
       /*  params.put("client_id", GlobalConstants.CLIENT_ID);
@@ -219,8 +221,10 @@ public class RemoteHelper {
         params.put("parentName",parentName);
         params.put("contact",contact);
         params.put("address",address);
+        params.put("secondryContact",secondryContact);
         params.put("dob",dob);
         params.put("studentName",studentName);
+        params.put("profile_pic",path);
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/x-www-form-urlencoded");
         new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);

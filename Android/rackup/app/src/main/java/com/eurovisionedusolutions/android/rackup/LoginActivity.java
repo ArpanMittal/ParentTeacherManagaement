@@ -292,7 +292,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
      */
     @Override
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
-           int status=0;String name, primaryContact,secondaryContact,dob;
+           int status=0;
+        String name, primaryContact,secondaryContact,dob;
            String fatherName,motherName,grade,teacherName,teacherContact;
         pd.dismiss();
         if (isSuccessful) {
@@ -306,6 +307,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 student_name=response.getJSONObject(0).getString("studentName");
                 address=response.getJSONObject(0).getString("address");
                  dob=response.getJSONObject(0).getString("dob");
+
                 fatherName=response.getJSONObject(0).getString("fatherName");
                 motherName=response.getJSONObject(0).getString("motherName");
                 secondaryContact=response.getJSONObject(0).getString("secondaryContact");
@@ -374,12 +376,12 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         mydb = new DBHelper(this);
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_FATHER,fatherName);
-//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_MOTHER,motherName);
-//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT,secondaryContact);
-//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_TEACHER,teacherName);
-//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_GRADE,grade);
-//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT,teacherContact);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_FATHER,fatherName);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_MOTHER,motherName);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT,secondaryContact);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_TEACHER,teacherName);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_GRADE,grade);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT,teacherContact);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,primaryContact);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, email);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH,dob);
