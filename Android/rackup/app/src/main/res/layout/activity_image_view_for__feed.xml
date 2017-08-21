@@ -6,37 +6,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.eurovisionedusolutions.android.rackup.ImageView_for_Feed"
     android:background="@color/black"
-    tools:layout_editor_absoluteY="0dp"
-    tools:layout_editor_absoluteX="0dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="384dp"
-        android:layout_height="61dp"
-        android:background="@color/colorPrimary"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="-9dp"
-        app:layout_constraintHorizontal_bias="0.375">
+    <!--<com.eurovisionedusolutions.android.rackup.ImageViewHelper-->
+        <!--android:id="@+id/imageView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="0dp"-->
+        <!--android:scaleType="matrix"-->
 
-    </android.support.v7.widget.Toolbar>
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="parent"-->
+        <!--app:srcCompat="@drawable/all_cell" />-->
 
-    <com.eurovisionedusolutions.android.rackup.ImageViewHelper
+    <com.jsibbold.zoomage.ZoomageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:scaleType="matrix"
 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/all_cell"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
-        app:srcCompat="@drawable/all_cell" />
+        app:zoomage_restrictBounds="true"
+        app:zoomage_animateOnReset="true"
+        app:zoomage_autoResetMode="UNDER"
+        app:zoomage_autoCenter="true"
+        app:zoomage_zoomable="true"
+        app:zoomage_translatable="false"
+        app:zoomage_minScale="0.6"
+        app:zoomage_maxScale="8"
+        />
 
     <TextView
         android:id="@+id/textView5"

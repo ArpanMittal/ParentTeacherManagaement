@@ -593,7 +593,7 @@
                     android:textSize="14sp"
                     android:background="@drawable/login_background"
                     android:layout_margin="16dp"
-                    android:text="upload"
+                    android:text="Done"
                     android:padding="8dp"
                      />
 
