@@ -40,10 +40,10 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_appointment);
+        setContentView(R.layout.activity_main_notificationactivity);
       toolbar=(Toolbar)findViewById(R.id.toolbar);
-        mReasonView=(TextView)findViewById(R.id.textView17);
-        mWhatsappView=(TextView)findViewById(R.id.textView18);
+//        mReasonView=(TextView)findViewById(R.id.textView17);
+//        mWhatsappView=(TextView)findViewById(R.id.textView18);
         mButton=(Button) findViewById(R.id.button5);
         mName =(EditText) findViewById(R.id.editText7);
         mstatus =(EditText) findViewById(R.id.editText4);
@@ -109,8 +109,8 @@ if(Name1!=null){
         if(title!=null || title!="" ) {
             title_int=Integer.valueOf(title);}
        // mreason.setHint("Reason for the appointment");
-           mreason.setBackgroundResource(R.color.edittext_background);
-        mWhatsapp.setBackgroundResource(R.color.edittext_background);
+//           mreason.setBackgroundResource(R.color.edittext_background);
+//        mWhatsapp.setBackgroundResource(R.color.edittext_background);
         //mId.setText(Id);
         mstartTime.setText(startTime);
         mendTime.setText(endTime);
@@ -119,8 +119,8 @@ if(Name1!=null){
         mdate.setText(date);
         mreason.setVisibility(View.VISIBLE);
         mWhatsapp.setVisibility(View.VISIBLE);
-        mWhatsappView.setVisibility(View.VISIBLE);
-        mReasonView.setVisibility(View.VISIBLE);
+//        mWhatsappView.setVisibility(View.VISIBLE);
+//        mReasonView.setVisibility(View.VISIBLE);
         if (currentTime>timeInMilliseconds){
             isghostappointment=true;
         }
@@ -144,8 +144,8 @@ mButton.setText("Cancel");
             mButton.setEnabled(true);}
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+//            mWhatsappView.setVisibility(View.GONE);
+//            mReasonView.setVisibility(View.GONE);
 
         }
         else if(title_int==5){
@@ -155,8 +155,8 @@ mButton.setText("Cancel");
                 mButton.setEnabled(true);}
             mreason.setVisibility(View.VISIBLE);
             mWhatsapp.setVisibility(View.VISIBLE);
-            mWhatsappView.setVisibility(View.VISIBLE);
-            mReasonView.setVisibility(View.VISIBLE);
+//            mWhatsappView.setVisibility(View.VISIBLE);
+//            mReasonView.setVisibility(View.VISIBLE);
         }
         else if(title_int==3){
             mstatus.setText("Cancelled");
@@ -164,8 +164,8 @@ mButton.setText("Cancel");
             mButton.setEnabled(false);
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+//            mWhatsappView.setVisibility(View.GONE);
+//            mReasonView.setVisibility(View.GONE);
         }
         else if(title_int==4){
             mstatus.setText("Invalid");
@@ -173,8 +173,8 @@ mButton.setText("Cancel");
             mButton.setEnabled(false);
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+//            mWhatsappView.setVisibility(View.GONE);
+//            mReasonView.setVisibility(View.GONE);
         }
 
 

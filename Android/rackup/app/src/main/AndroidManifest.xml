@@ -63,6 +63,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Splash_Screen"
+            android:theme="@style/splash_screen"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

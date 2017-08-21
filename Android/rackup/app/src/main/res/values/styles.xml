@@ -21,6 +21,10 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
+    <style name="splash_screen" parent="AppTheme">
+        <item name="colorPrimaryDark">@color/green</item>
+    </style>
+
     <style name="CustomTheme" parent="AppTheme">
         <item name="colorPrimaryDark">@color/black</item>
     </style>
