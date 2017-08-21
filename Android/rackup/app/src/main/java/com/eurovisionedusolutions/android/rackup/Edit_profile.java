@@ -98,7 +98,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     private int year, month, day;
     private String token="temp";
     private ImageView imageView;
-    private CircularProgressButton circularButton1 ;
+    private Button circularButton1 ;
     private TextInputLayout studentName_layout,studentGrade_layout,studentDOB_layout, fatherName_layout,motherName_layout,
                             primaryContact_layout, secondaryContact_layout, address_layout, teacherName_layout,teacherContact_layout;
     private EditText studentName,studentGrade,studentDOB,fatherName, motherName,primaryContact,secondaryContact, address, teacherName,
@@ -142,7 +142,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
          primaryContact_layout=(TextInputLayout) view.findViewById(R.id.primaryNumber_layout);
         secondaryContact_layout=(TextInputLayout) view.findViewById(R.id.secondaryNumber_layout);
         address_layout=(TextInputLayout) view.findViewById(R.id.address_layout1);
-        circularButton1 = (CircularProgressButton) view.findViewById(R.id.done);
+        circularButton1 = (Button) view.findViewById(R.id.done);
         fatherName.setFocusable(false);
         fatherName.setClickable(false);
         motherName.setFocusable(false);
@@ -174,22 +174,22 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         student_name.setEnabled(false);
         dateView.setEnabled(false);*/
 
-        circularButton1.setIndeterminateProgressMode(true);
-        circularButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //fetchman();
-
-                if (circularButton1.getProgress() == 0) {
-                    circularButton1.setProgress(50);
-                } else if (circularButton1.getProgress() == 100) {
-                    circularButton1.setProgress(0);
-                } else {
-                    circularButton1.setProgress(100);
-                }
-                uploadImage();
-            }
-        });
+//        circularButton1.setIndeterminateProgressMode(true);
+//        circularButton1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //fetchman();
+//
+//                if (circularButton1.getProgress() == 0) {
+//                    circularButton1.setProgress(50);
+//                } else if (circularButton1.getProgress() == 100) {
+//                    circularButton1.setProgress(0);
+//                } else {
+//                    circularButton1.setProgress(100);
+//                }
+//                uploadImage();
+//            }
+//        });
 
 
 
@@ -649,7 +649,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
         String username = null;
         if (isSuccessful) {
-            circularButton1.setProgress(100);
+            //circularButton1.setProgress(100);
             //pd.dismiss();
             contact_flag=0;
             Toast.makeText(getContext().getApplicationContext(), "Profile Updated", Toast.LENGTH_LONG).show();

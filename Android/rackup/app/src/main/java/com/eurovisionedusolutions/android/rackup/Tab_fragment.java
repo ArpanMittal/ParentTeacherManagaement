@@ -16,12 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import com.eurovisionedusolutions.android.rackup.UserContract_Video_Category.UserDetailEntry;
 
 public class Tab_fragment extends Fragment {
     static ProgressDialog pd;
     private String category = "";
     private int category_num = 0;
+
     DBHelper mydb;
 
     public static Tab_fragment newInstance() {
@@ -30,7 +33,17 @@ public class Tab_fragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.activity_main_youtube, container, false);
+//        Toolbar toolbar = (Toolbar)rootview.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootview.findViewById(R.id.toolbar));
+        ImageView refreshIcon = (ImageView)rootview.findViewById(R.id.imageButton2);
+
+        refreshIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new VideoAPI_Call(getContext()).api_Call();
+
+            }
+        });
         TabLayout tabLayout = (TabLayout) rootview.findViewById(R.id.tab_layout);
         for (int i = 0; i < VideoAPI_Call.tab_count; i++) {
             fetchman(i);

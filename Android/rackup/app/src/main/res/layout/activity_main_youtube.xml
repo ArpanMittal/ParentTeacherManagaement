@@ -14,11 +14,7 @@
         android:minHeight="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-        <ImageButton
-            android:background="@color/colorPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_refresh_white_24dp" />
+
     </android.support.v7.widget.Toolbar>
     <android.support.design.widget.TabLayout
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -38,4 +34,15 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/login_progress"
+        android:layout_marginEnd="19dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimary"
+        android:src="@drawable/ic_refresh_white_24dp" />
 </RelativeLayout>

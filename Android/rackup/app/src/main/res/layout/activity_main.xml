@@ -22,9 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        app:itemIconTint="@color/colorAccent"
-        app:itemTextColor="@color/white"
-
+        android:background="@color/white"
+        app:elevation="8dp"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@color/draw_items"
+        app:itemTextColor="@color/draw_items"
         app:menu="@menu/bottom_navigation_items"/>
 </RelativeLayout>

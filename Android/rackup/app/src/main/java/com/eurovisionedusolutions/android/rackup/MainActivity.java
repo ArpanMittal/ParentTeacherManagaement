@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
         //ActionBar actionBar=getSupportActionBar();
        // actionBar.show();
         //bottomNavigationView.setScrollbarFadingEnabled(true);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+//        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         final View decorView = getWindow().getDecorView();
         final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -119,6 +119,6 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Used to select an item programmatically
-        bottomNavigationView.getMenu().getItem(1).setChecked(true);
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
     }
 }

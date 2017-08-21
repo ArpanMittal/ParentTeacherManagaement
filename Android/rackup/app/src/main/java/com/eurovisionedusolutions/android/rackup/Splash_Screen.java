@@ -141,6 +141,7 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
                 insert();
                 Intent intent6=new Intent(Splash_Screen.this,LoginActivity.class);
                 startActivity(intent6);
+                finish();
 
             }
             else
@@ -196,11 +197,13 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
                     if(flag==1){
                         Intent intent1=new Intent(Splash_Screen.this,MainActivity.class);
                         startActivity(intent1);
+                        finish();
 
                     }
                     else {
                         Intent intent2=new Intent(Splash_Screen.this,LoginActivity.class);
                         startActivity(intent2);
+                        finish();
 
                     }
                 }

@@ -207,7 +207,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
          inputLayoutEmail.setErrorEnabled(false);
         if (email.isEmpty()) {
            // inputLayoutEmail.setError(getString(R.string.err_msg_email));
-            mEmailView.setTextColor(Color.RED);
+            mEmailView.setTextColor(Color.DKGRAY);
             requestFocus(mEmailView);
             return false;
         }
@@ -218,7 +218,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
             return false;
         }
         else {
-            mEmailView.setTextColor(Color.GREEN);
+            mEmailView.setTextColor(Color.DKGRAY);
           //  inputLayoutEmail.setErrorEnabled(false);
         }
 
@@ -230,7 +230,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         inputLayoutPassword.setErrorEnabled(false);
         if (password.isEmpty()) {
          //   inputLayoutPassword.setError(getString(R.string.err_msg_password));
-            mPasswordView.setTextColor(Color.RED);
+            mPasswordView.setTextColor(Color.DKGRAY);
             requestFocus(mPasswordView);
             return false;
         } else if (password.length()<8){
@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
             return false;
         }else {
            // inputLayoutPassword.setErrorEnabled(false);
-            mPasswordView.setTextColor(Color.GREEN);
+            mPasswordView.setTextColor(Color.DKGRAY);
         }
 
         return true;

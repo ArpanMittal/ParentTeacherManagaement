@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_item1"
-        android:icon="@drawable/ic_account_box_black_24dp"
+        android:icon="@drawable/ic_video_library_black_24dp"
         android:title="@string/item_1"/>
     <item
         android:id="@+id/action_item2"
-        android:icon="@drawable/ic_perm_identity_black_24dp"
+        android:icon="@drawable/ic_phone_black_24dp"
         android:title="@string/item_2"/>
     <item
         android:id="@+id/action_item5"
@@ -14,11 +14,11 @@
         android:title="@string/item_5"/>
     <item
         android:id="@+id/action_item3"
-        android:icon="@drawable/ic_class_black_24dp"
+        android:icon="@drawable/ic_perm_identity_black_24dp"
         android:title="@string/item_3"/>
     <item
         android:id="@+id/action_item4"
-        android:icon="@drawable/ic_class_black_24dp"
+        android:icon="@drawable/ic_date_range_black_24dp"
         android:title="@string/item_4"/>
 
 
