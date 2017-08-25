@@ -123,7 +123,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         View view =inflater.inflate(R.layout.edit_profile, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Profile");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         done=(Button) view.findViewById(R.id.done);
         myapp=(Button) view.findViewById(R.id.cancelled_events);

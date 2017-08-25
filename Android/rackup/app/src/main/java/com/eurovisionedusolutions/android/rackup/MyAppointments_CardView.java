@@ -118,11 +118,12 @@ public class MyAppointments_CardView extends AppCompatActivity implements Remote
         initViews();
         initRecyclerView();
         toolbar.setTitle("Appointments");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+//        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
 //        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+
+//        getSupportActionBar().setHomeButtonEnabled(true);
         remotecall();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

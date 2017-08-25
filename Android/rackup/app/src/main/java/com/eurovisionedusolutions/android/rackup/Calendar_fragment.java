@@ -98,7 +98,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.calendar, container, false);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
         toolbar.setTitle("Calendar");
         myCalendar = (MyDynamicCalendar_Extended) view.findViewById(R.id.myCalendar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -116,56 +116,59 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
             }
         });
 
-        myCalendar.setCalendarBackgroundColor("#eeeeee");
-//        myCalendar.setCalendarBackgroundColor(R.color.gray);
-
-        myCalendar.setHeaderBackgroundColor("#454265");
-//        myCalendar.setHeaderBackgroundColor(R.color.black);
-
-        myCalendar.setHeaderTextColor("#ffffff");
-//        myCalendar.setHeaderTextColor(R.color.white);
-
-        myCalendar.setNextPreviousIndicatorColor("#245675");
-//        myCalendar.setNextPreviousIndicatorColor(R.color.black);
-
-        myCalendar.setWeekDayLayoutBackgroundColor("#965471");
-//        myCalendar.setWeekDayLayoutBackgroundColor(R.color.black);
-
-        myCalendar.setWeekDayLayoutTextColor("#246245");
-//        myCalendar.setWeekDayLayoutTextColor(R.color.black);
-
-//        myCalendar.isSaturdayOff(true, "#ffffff", "#ff0000");
-//        myCalendar.isSaturdayOff(true, R.color.white, R.color.red);
-
-//        myCalendar.isSundayOff(true, "#658745", "#254632");
-//        myCalendar.isSundayOff(true, R.color.white, R.color.red);
-
-        myCalendar.setExtraDatesOfMonthBackgroundColor("#324568");
-//        myCalendar.setExtraDatesOfMonthBackgroundColor(R.color.black);
-
-        myCalendar.setExtraDatesOfMonthTextColor("#756325");
-//        myCalendar.setExtraDatesOfMonthTextColor(R.color.black);
-
-//        myCalendar.setDatesOfMonthBackgroundColor(R.drawable.event_view);
-        myCalendar.setDatesOfMonthBackgroundColor("#145687");
-//        myCalendar.setDatesOfMonthBackgroundColor(R.color.black);
-
-        myCalendar.setDatesOfMonthTextColor("#745632");
-//        myCalendar.setDatesOfMonthTextColor(R.color.black);
-
-//        myCalendar.setCurrentDateBackgroundColor("#123412");
-//        myCalendar.setCurrentDateBackgroundColor(R.color.black);
-
-        myCalendar.setCurrentDateTextColor("#00e600");
-//        myCalendar.setCurrentDateTextColor(R.color.black);
-
-        myCalendar.setEventCellBackgroundColor("#852365");
-//        myCalendar.setEventCellBackgroundColor(R.color.black);
-
-        myCalendar.setEventCellTextColor("#425684");
+     //   myCalendar.setCalendarBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+////        myCalendar.setCalendarBackgroundColor(R.color.gray);
+//
+       // myCalendar.setHeaderBackgroundColor("#f9a81d");
+        myCalendar.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        // /        myCalendar.setHeaderBackgroundColor(R.color.colorPrimaryDark);
+//
+        myCalendar.setHeaderTextColor(getResources().getColor(R.color.black));
+////        myCalendar.setHeaderTextColor(R.color.white);
+//
+        myCalendar.setNextPreviousIndicatorColor(getResources().getColor(R.color.black));
+        myCalendar.setWeekDayLayoutTextColor(getResources().getColor(R.color.white));
+////        myCalendar.setNextPreviousIndicatorColor(R.color.black);
+//
+//        myCalendar.setWeekDayLayoutBackgroundColor(getResources().getColor(R.color.white));
+////        myCalendar.setWeekDayLayoutBackgroundColor(R.color.black);
+//
+//        myCalendar.setWeekDayLayoutTextColor("#246245");
+        myCalendar.setWeekDayLayoutTextColor(getResources().getColor(R.color.black));
+//
+////        myCalendar.isSaturdayOff(true, "#ffffff", "#ff0000");
+       // myCalendar.isSaturdayOff(true, getResources().getColor(R.color.white), getResources().getColor(R.color.red));
+//
+////        myCalendar.isSundayOff(true, "#658745", "#254632");
+        myCalendar.isSundayOff(true, getResources().getColor(R.color.white), getResources().getColor(R.color.red));
+//
+//        myCalendar.setExtraDatesOfMonthBackgroundColor("#324568");
+////        myCalendar.setExtraDatesOfMonthBackgroundColor(R.color.black);
+//
+//        myCalendar.setExtraDatesOfMonthTextColor("#756325");
+////        myCalendar.setExtraDatesOfMonthTextColor(R.color.black);
+//
+////        myCalendar.setDatesOfMonthBackgroundColor(R.drawable.event_view);
+//        myCalendar.setDatesOfMonthBackgroundColor("#145687");
+////        myCalendar.setDatesOfMonthBackgroundColor(R.color.black);
+//
+//        myCalendar.setDatesOfMonthTextColor("#745632");
+////        myCalendar.setDatesOfMonthTextColor(R.color.black);
+//
+////        myCalendar.setCurrentDateBackgroundColor("#123412");
+       myCalendar.setCurrentDateBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+//
+        myCalendar.setCurrentDateTextColor("#ffffff");
+        //myCalendar.setCurrentDateTextColor(getResources().getColor(R.color.green));
+//
+//        myCalendar.setEventCellBackgroundColor("#852365");
+////        myCalendar.setEventCellBackgroundColor(R.color.black);
+//
+//        myCalendar.setEventCellTextColor("#425684");
 //        myCalendar.setEventCellTextColor(R.color.black);
        //myCalendar.deleteAllEvent();
         myCalendar.deleteAllEvent();
+        //myCalendar.setBackgroundColor();
 
 
 
@@ -186,20 +189,21 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
 //        myCalendar.deleteEvent(2);
 
 //        myCalendar.deleteAllEvent();
-
-        myCalendar.setBelowMonthEventTextColor("#425684");
-//        myCalendar.setBelowMonthEventTextColor(R.color.black);
-
-        myCalendar.setBelowMonthEventDividerColor("#635478");
-//        myCalendar.setBelowMonthEventDividerColor(R.color.black);
-
-        myCalendar.setHolidayCellBackgroundColor("#654248");
-//        myCalendar.setHolidayCellBackgroundColor(R.color.black);
-
-        myCalendar.setHolidayCellTextColor("#d590bb");
+//
+//        myCalendar.setBelowMonthEventTextColor("#425684");
+////        myCalendar.setBelowMonthEventTextColor(R.color.black);
+//
+//        myCalendar.setBelowMonthEventDividerColor("#635478");
+////        myCalendar.setBelowMonthEventDividerColor(R.color.black);
+//
+//        myCalendar.setHolidayCellBackgroundColor("#654248");
+////        myCalendar.setHolidayCellBackgroundColor(R.color.black);
+//
+//        myCalendar.setHolidayCellTextColor("#d590bb");
 //        myCalendar.setHolidayCellTextColor(R.color.black);
 
         myCalendar.setHolidayCellClickable(false);
+       // myCalendar.isSaturdayOff();
         /*myCalendar.addHoliday("2-11-2016");
         myCalendar.addHoliday("8-11-2016");
         myCalendar.addHoliday("12-11-2016");

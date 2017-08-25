@@ -17,7 +17,7 @@ public class Video_Call extends Fragment {
         View view = inflater.inflate(R.layout.video_call, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Skype");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         return  view;
     }

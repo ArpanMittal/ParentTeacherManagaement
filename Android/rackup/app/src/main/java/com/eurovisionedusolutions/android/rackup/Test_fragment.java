@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.eurovisionedusolutions.android.rackup.UserContract_Video_Details.UserDetailEntry;
@@ -41,11 +43,11 @@ public class Test_fragment extends Fragment {
         String[] from = new String[]{"flag", "txt", "cur"};
         int[] to = new int[]{R.id.flag, R.id.txt, R.id.cur};
         final View v = inflater.inflate(R.layout.fragment_top_rated, container, false);
-        ListView list = (ListView) v.findViewById(R.id.listView1);
+        GridView list = (GridView) v.findViewById(R.id.listView1);
         list.setAdapter(new CustomAdapter(getActivity().getBaseContext(), aList, R.layout.listview_layout, from, to));
         list.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                LinearLayout layout = (LinearLayout) v.findViewById(R.id.layout);
+                GridLayout layout = (GridLayout) v.findViewById(R.id.layout);
                 Intent aa = new Intent(Test_fragment.this.getActivity(), FullscreenDemoActivity.class);
                 aa.putExtra("videoID", Test_fragment.this.mURL[position]);
                 Test_fragment.this.startActivity(aa);

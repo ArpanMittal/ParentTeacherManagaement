@@ -39,6 +39,7 @@ public class VideoAPI_Call implements RemoteCallHandler {
         String msg = "";
         if (isSuccessful) {
             try {
+                delete();
                 int status = response.getJSONArray(0).getJSONObject(0).getInt("gradeId");
                 tab_count = response.getJSONArray(0).length();
                 int count2 = response.getJSONArray(0).getJSONObject(0).getJSONArray("categoryData").length();

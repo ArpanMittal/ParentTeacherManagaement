@@ -589,11 +589,10 @@
                     android:id="@+id/done"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:textSize="14sp"
                     android:background="@drawable/login_background"
                     android:layout_margin="16dp"
-                    android:text="Done"
+                    android:text="Save"
                     android:padding="8dp"
                      />
 
@@ -604,7 +603,6 @@
                     android:text="Logout"
                     android:textSize="14sp"
                     android:id="@+id/done11"
-                    android:textColor="@color/white"
                     android:background="@drawable/login_background"
                     android:layout_margin="16dp"
                     android:padding="8dp"
@@ -617,7 +615,6 @@
                     android:text="Appointments"
                     android:background="@drawable/login_background"
                     android:layout_margin="16dp"
-                    android:textColor="@color/white"
                     android:textSize="14sp"
                     android:id="@+id/cancelled_events"
                     android:padding="8dp"

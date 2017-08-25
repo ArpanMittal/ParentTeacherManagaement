@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity{
                             case R.id.action_item1:
                                 selectedFragment = Tab_fragment.newInstance();
                                 break;
-                            case R.id.action_item2:
-                                selectedFragment = Video_Call.newInstance();
-                                break;
+//                            case R.id.action_item2:
+//                                selectedFragment = Video_Call.newInstance();
+//                                break;
                             case R.id.action_item3:
 
                                selectedFragment =Edit_profile.newInstance();
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity{
                 });
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, Tab_fragment.newInstance());
+        transaction.replace(R.id.frame_layout, Feed_Activity.newInstance());
         transaction.commit();
 
 

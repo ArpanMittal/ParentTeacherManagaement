@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -52,10 +54,16 @@ public class FullscreenDemoActivity extends YouTubeFailureRecoveryActivity imple
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.fullscreen_demo);
         Intent intent2=getIntent();
         Bundle b=intent2.getExtras();
+
+
+
         if(b.isEmpty()==false)
         {
             videoId=(String) b.get("videoID");
@@ -119,7 +127,7 @@ public class FullscreenDemoActivity extends YouTubeFailureRecoveryActivity imple
             controlFlags |= YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE;
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-            controlFlags &= ~YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE;
+            controlFlags |= YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE;
         }
         player.setFullscreenControlFlags(controlFlags);
     }
@@ -159,11 +167,11 @@ public class FullscreenDemoActivity extends YouTubeFailureRecoveryActivity imple
         }
     }
 
-    /*private void setControlsEnabled() {
+    private void setControlsEnabled() {
         checkbox.setEnabled(player != null
                 && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
-      *//*  fullscreenButton.setEnabled(player != null);*//*
-    }*/
+      fullscreenButton.setEnabled(player != null);
+    }
 
     @Override
     public void onFullscreen(boolean isFullscreen) {

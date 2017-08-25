@@ -44,7 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
     final String description=items.get(position).getDescription();
     Picasso.with(context1).load("http://web.rackupcambridge.com"+items.get(position).getImage_url()).into(holder.imageView);
     //Picasso.with(context1).load("http://web.rackupcambridge.com/storage/1/50_republic day 2.jpg").into(holder.imageView);
-    holder.tvItem.setText(items.get(position).getId());
+    holder.tvItem.setText(itemText);
     holder.dateView.setText(date);
     holder.description.setText(description);
 

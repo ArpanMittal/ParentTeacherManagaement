@@ -68,7 +68,7 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler {
         View view = inflater.inflate(R.layout.activity_feed_, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("ImageFeed");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         this.ModelList = createItems();
         initViews(view);

@@ -1,6 +1,7 @@
 package com.eurovisionedusolutions.android.rackup;
 
 import android.app.ProgressDialog;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -33,10 +34,13 @@ public class Tab_fragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.activity_main_youtube, container, false);
-//        Toolbar toolbar = (Toolbar)rootview.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootview.findViewById(R.id.toolbar));
-        ImageView refreshIcon = (ImageView)rootview.findViewById(R.id.imageButton2);
+        Toolbar toolbar = (Toolbar)rootview.findViewById(R.id.toolbar);
+        toolbar.setTitle("Video");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        ImageView refreshIcon = (ImageView)rootview.findViewById(R.id.imageButton2);
+        refreshIcon.setColorFilter(getResources().getColor(R.color.black));
         refreshIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +54,7 @@ public class Tab_fragment extends Fragment {
             tabLayout.addTab(tabLayout.newTab().setText(this.category));
         }
         tabLayout.setTabMode(0);
+//        tabLayout.setTabTextColors();
         tabLayout.setTabGravity(0);
         final ViewPager viewPager = (ViewPager) rootview.findViewById(R.id.pager);
         viewPager.setAdapter(new PagerAdapter(getActivity().getSupportFragmentManager(), tabLayout.getTabCount()));

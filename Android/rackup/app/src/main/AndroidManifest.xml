@@ -40,10 +40,10 @@
             android:name=".FullscreenDemoActivity"
             android:label="fullscreenactivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/CustomTheme" />
         <activity
             android:name=".MainActivity"
-            android:label="Video"
             android:launchMode="singleTask" />
         <activity
             android:name=".YouTubeAPIDemoActivity"
