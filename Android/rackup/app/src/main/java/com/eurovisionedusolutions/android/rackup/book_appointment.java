@@ -26,8 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class book_appointment extends AppCompatActivity implements RemoteCallHandler{
-    private EditText mstartTime,mendTime,mName,mstatus,mdate,mreason,mWhatsapp;
-    private TextView mReasonView,mReasonView_teacher,mWhatsappView;
+    private EditText mstartTime,mendTime,mName,mstatus,mdate,mreason,mWhatsapp,mTeacherWhatsapp;
+   // private TextView mReasonView,mReasonView_teacher,mWhatsappView;
     private Button mButton;
     private Toolbar toolbar;
     public static String token = "there1";
@@ -52,10 +52,11 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         mdate=(EditText) findViewById(R.id.editText8);
         mreason=(EditText)findViewById(R.id.editText9);
         mWhatsapp=(EditText)findViewById(R.id.editText10);
+        mTeacherWhatsapp=(EditText)findViewById(R.id.tt);
 
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-       toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        //toolbar.setTitleTextColor(getResources().getColor(R.color.white));
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -90,6 +91,7 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         mstartTime.setEnabled(false);
         mendTime.setEnabled(false);
         mdate.setEnabled(false);
+        mTeacherWhatsapp.setEnabled(false);
         mWhatsapp.setEnabled(true);
 
 if(Name1!=null){
@@ -126,14 +128,14 @@ if(Name1!=null){
         }
         if(title_int==2){
 
-           mButton.setText("Cancel");
+           mButton.setVisibility(View.GONE);
             mstatus.setText("Confirmed");
             if(isghostappointment==false){
                 mButton.setEnabled(true);}
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+//            mWhatsappView.setVisibility(View.GONE);
+           // mReasonView.setVisibility(View.GONE);
 
 
         }
