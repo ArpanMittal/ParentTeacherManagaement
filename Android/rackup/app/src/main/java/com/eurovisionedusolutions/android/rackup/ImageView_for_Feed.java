@@ -1,8 +1,10 @@
 package com.eurovisionedusolutions.android.rackup;
 
+import android.content.res.Configuration;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,6 +44,22 @@ public class ImageView_for_Feed extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //Do some stuff
+            mtitle.setVisibility(View.GONE);
+            mdate.setVisibility(View.GONE);
+            mdesc.setVisibility(View.GONE);
+        }else{
+            mtitle.setVisibility(View.VISIBLE);
+            mdate.setVisibility(View.VISIBLE);
+            mdesc.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void onBackPressed() {
         finish();
     }
