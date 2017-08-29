@@ -102,6 +102,18 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/editText9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Reason"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_margin="8dp"
+        android:layout_height="wrap_content">
+
+        <EditText
             android:id="@+id/editText10"
             android:layout_width="match_parent"
             android:inputType="numberDecimal"
@@ -111,42 +123,34 @@
 
 
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_margin="8dp"
-        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/editText9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Reason"/>
-    </android.support.design.widget.TextInputLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button5"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
             android:background="@drawable/login_background"
-            android:layout_centerInParent="true"
+
             android:padding="20dp"
-            android:textColor="@color/white"
+
             android:text="Confirm"
            />
-        <!--<Button-->
-            <!--android:id="@+id/button4"-->
-            <!--android:layout_weight="0.5"-->
-            <!--android:background="@drawable/login_background"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Cancel"-->
-            <!--/>-->
+        <Button
+            android:id="@+id/button4"
+            android:layout_weight="0.5"
+            android:background="@drawable/login_background"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:padding="20dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            />
 
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

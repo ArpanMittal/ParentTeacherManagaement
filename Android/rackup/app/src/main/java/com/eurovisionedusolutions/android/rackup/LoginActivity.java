@@ -364,9 +364,9 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         sendIntent.setPackage("com.whatsapp");
         startActivity(sendIntent);*/
 
-        //forget password action
-        Intent intent5=new Intent(this,MyAppointments_CardView.class);
-        startActivity(intent5);
+//        //forget password action
+//        Intent intent5=new Intent(this,MyAppointments_CardView.class);
+//        startActivity(intent5);
     }
 
 

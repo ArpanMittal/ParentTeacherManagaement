@@ -21,6 +21,7 @@ import com.desai.vatsal.mydynamiccalendar.AppConstants;
 import com.desai.vatsal.mydynamiccalendar.EventModel;
 import com.desai.vatsal.mydynamiccalendar.GetEventListListener;
 import com.desai.vatsal.mydynamiccalendar.OnDateClickListener;
+import com.desai.vatsal.mydynamiccalendar.OnEventClickListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,14 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Calendar_fragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Calendar_fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
     public static Calendar_fragment newInstance() {
         Calendar_fragment fragment = new Calendar_fragment();
@@ -64,14 +58,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Calendar_fragment.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static Calendar_fragment newInstance(String param1, String param2) {
         Calendar_fragment fragment = new Calendar_fragment();
@@ -116,59 +103,26 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
             }
         });
 
-     //   myCalendar.setCalendarBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-////        myCalendar.setCalendarBackgroundColor(R.color.gray);
-//
-       // myCalendar.setHeaderBackgroundColor("#f9a81d");
+
         myCalendar.setHeaderBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        // /        myCalendar.setHeaderBackgroundColor(R.color.colorPrimaryDark);
-//
+
+
         myCalendar.setHeaderTextColor(getResources().getColor(R.color.black));
-////        myCalendar.setHeaderTextColor(R.color.white);
-//
+
         myCalendar.setNextPreviousIndicatorColor(getResources().getColor(R.color.black));
         myCalendar.setWeekDayLayoutTextColor(getResources().getColor(R.color.white));
-////        myCalendar.setNextPreviousIndicatorColor(R.color.black);
-//
-//        myCalendar.setWeekDayLayoutBackgroundColor(getResources().getColor(R.color.white));
-////        myCalendar.setWeekDayLayoutBackgroundColor(R.color.black);
-//
-//        myCalendar.setWeekDayLayoutTextColor("#246245");
+
         myCalendar.setWeekDayLayoutTextColor(getResources().getColor(R.color.black));
-//
-////        myCalendar.isSaturdayOff(true, "#ffffff", "#ff0000");
-       // myCalendar.isSaturdayOff(true, getResources().getColor(R.color.white), getResources().getColor(R.color.red));
-//
-////        myCalendar.isSundayOff(true, "#658745", "#254632");
+
         myCalendar.isSundayOff(true, getResources().getColor(R.color.white), getResources().getColor(R.color.red));
 //
-//        myCalendar.setExtraDatesOfMonthBackgroundColor("#324568");
-////        myCalendar.setExtraDatesOfMonthBackgroundColor(R.color.black);
-//
-//        myCalendar.setExtraDatesOfMonthTextColor("#756325");
-////        myCalendar.setExtraDatesOfMonthTextColor(R.color.black);
-//
-////        myCalendar.setDatesOfMonthBackgroundColor(R.drawable.event_view);
-//        myCalendar.setDatesOfMonthBackgroundColor("#145687");
-////        myCalendar.setDatesOfMonthBackgroundColor(R.color.black);
-//
-//        myCalendar.setDatesOfMonthTextColor("#745632");
-////        myCalendar.setDatesOfMonthTextColor(R.color.black);
-//
-////        myCalendar.setCurrentDateBackgroundColor("#123412");
+
        myCalendar.setCurrentDateBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 //
         myCalendar.setCurrentDateTextColor("#ffffff");
-        //myCalendar.setCurrentDateTextColor(getResources().getColor(R.color.green));
-//
-//        myCalendar.setEventCellBackgroundColor("#852365");
-////        myCalendar.setEventCellBackgroundColor(R.color.black);
-//
-//        myCalendar.setEventCellTextColor("#425684");
-//        myCalendar.setEventCellTextColor(R.color.black);
-       //myCalendar.deleteAllEvent();
+
         myCalendar.deleteAllEvent();
-        //myCalendar.setBackgroundColor();
+
 
 
 
@@ -184,86 +138,16 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
 
         });
 
-//        myCalendar.updateEvent(0, "5-10-2016", "8:00", "8:15", "Today Event 111111");
-
-//        myCalendar.deleteEvent(2);
-
-//        myCalendar.deleteAllEvent();
-//
-//        myCalendar.setBelowMonthEventTextColor("#425684");
-////        myCalendar.setBelowMonthEventTextColor(R.color.black);
-//
-//        myCalendar.setBelowMonthEventDividerColor("#635478");
-////        myCalendar.setBelowMonthEventDividerColor(R.color.black);
-//
-//        myCalendar.setHolidayCellBackgroundColor("#654248");
-////        myCalendar.setHolidayCellBackgroundColor(R.color.black);
-//
-//        myCalendar.setHolidayCellTextColor("#d590bb");
-//        myCalendar.setHolidayCellTextColor(R.color.black);
 
         myCalendar.setHolidayCellClickable(false);
-       // myCalendar.isSaturdayOff();
-        /*myCalendar.addHoliday("2-11-2016");
-        myCalendar.addHoliday("8-11-2016");
-        myCalendar.addHoliday("12-11-2016");
-        myCalendar.addHoliday("13-11-2016");
-        myCalendar.addHoliday("8-10-2016");
-        myCalendar.addHoliday("10-12-2016");*/
 
 
-//        myCalendar.setCalendarDate(5, 10, 2016);
-
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
         return view;
     }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_month_with_below_events:
-                showMonthViewWithBelowEvents();
-                return true;
-
-            case R.id.action_agenda:
-                showAgendaView();
-                return true;
-
-            case R.id.action_today:
-                myCalendar.goToCurrentDate();
-                return true;
-            default:
-                myCalendar.showMonthViewWithBelowEvents();
-                return true;
-                //return super.onOptionsItemSelected(item);
-        }
-
-    }
-
-    private void showMonthView() {
-
-        myCalendar.showMonthView();
-
-        myCalendar.setOnDateClickListener(new OnDateClickListener() {
-            @Override
-            public void onClick(Date date) {
-                Log.e("date", String.valueOf(date));
 
 
-            }
 
-            @Override
-            public void onLongClick(Date date) {
-                Log.e("date", String.valueOf(date));
-            }
-        });
-
-    }
 
     private void showMonthViewWithBelowEvents() {
 
@@ -288,74 +172,8 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
 
     }
 
-    private void showWeekView() {
 
-       /* myCalendar.showWeekView();
 
-        myCalendar.setOnEventClickListener(new OnEventClickListener() {
-            @Override
-            public void onClick() {
-                Log.e("showWeekView","from setOnEventClickListener onClick");
-            }
-
-            @Override
-            public void onLongClick() {
-                Log.e("showWeekView","from setOnEventClickListener onLongClick");
-
-            }
-        });
-
-        myCalendar.setOnWeekDayViewClickListener(new OnWeekDayViewClickListener() {
-            @Override
-            public void onClick(String date, String time) {
-                Log.e("showWeekView", "from setOnWeekDayViewClickListener onClick");
-                Log.e("tag", "date:-" + date + " time:-" + time);
-
-            }
-
-            @Override
-            public void onLongClick(String date, String time) {
-                Log.e("showWeekView", "from setOnWeekDayViewClickListener onLongClick");
-                Log.e("tag", "date:-" + date + " time:-" + time);
-
-            }
-        });
-*/
-
-    }
-
-    private void showDayView() {
-
-    /*myCalendar.showDayView();
-
-        myCalendar.setOnEventClickListener(new OnEventClickListener() {
-           @Override
-            public void onClick() {
-                Log.e("showDayView", "from setOnEventClickListener onClick");
-
-            }
-
-            @Override
-            public void onLongClick() {
-                Log.e("showDayView", "from setOnEventClickListener onLongClick");
-
-            }
-        });
-
-        myCalendar.setOnWeekDayViewClickListener(new OnWeekDayViewClickListener() {
-            @Override
-            public void onClick(String date, String time) {
-                Log.e("showDayView", "from setOnWeekDayViewClickListener onClick");
-                Log.e("tag", "date:-" + date + " time:-" + time);
-            }
-
-            @Override
-            public void onLongClick(String date, String time) {
-                Log.e("showDayView", "from setOnWeekDayViewClickListener onLongClick");
-                Log.e("tag", "date:-" + date + " time:-" + time);
-            }
-        });*/
-    }
 
     private void showAgendaView() {
 
@@ -376,12 +194,6 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception){
@@ -420,16 +232,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
                         } else {
                             Toast.makeText(getActivity(), "End time can't be less than start time", Toast.LENGTH_SHORT).show();
                         }
-                       /* Calendar startTime = Calendar.getInstance();
-                        startTime.set(Calendar.HOUR_OF_DAY, api_startTime_HOUR);
-                        startTime.set(Calendar.DAY_OF_MONTH, api_startDate_Day);
-                        startTime.set(Calendar.MINUTE, api_startTime_MINUTE);
-                        startTime.set(Calendar.MONTH, api_startDate_Month - 1);
-                        startTime.set(Calendar.YEAR, api_startDate_Year);
-                        Calendar endTime = (Calendar) startTime.clone();
-                        endTime.add(Calendar.MINUTE, duration);
-                        endTime.set(Calendar.MONTH, api_startDate_Month - 1);
-                        WeekViewEvent event1 = new WeekViewEvent(api_id_long, getEventTitle(api_teacherName), startTime, endTime);*/
+
 
                         int square=api_teacherid_int*api_teacherid_int;
                         int sum=api_teacherid_int+api_teacherid_int;
@@ -442,15 +245,10 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
                         temp_sum=temp_sum.substring(0,3);
 
 
-                        /*event1.setColor(Color.rgb(Integer.valueOf(temp_square),Integer.valueOf(temp_sum),50));
-                        event1.setName(api_teacherName+"/"+api_teacherid+"@"+api_title);*/
-                       // look for  api_endTime_HOUR+":"+api_endTime_MINUTE,api_teacherName+"/"+api_teacherid+"@"+api_title+"#"+api_id
-                        // events.add(event1);
-                      //  myCalendar.addEvent();
 
                         myCalendar.addEvent(date_format(api_startDate),api_startTime_HOUR+":"+api_startTime_MINUTE,
                                 api_endTime_HOUR+":"+api_endTime_MINUTE,
-                                api_teacherName+"/"+api_teacherid+"@"+api_title+"#"+api_id ,R.mipmap.ic_launcher);
+                                api_teacherName+"/"+api_teacherid+"@"+api_title+"#"+api_id ,R.drawable.golden_circle);
 
 
 
@@ -480,18 +278,15 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
                     int api_endTime_MINUTE1 = Integer.valueOf(api_endTime1.substring(3, 5));
                     myCalendar.addEvent(date_format(api_startDate1),api_startTime_HOUR1+":"+api_startTime_MINUTE1,
                             api_endTime_HOUR1+":"+api_endTime_MINUTE1,
-                            name+"/"+imageURL+"@"+api_title1+"#"+api_eventId1 ,R.mipmap.ic_launcher);
+                            name+"/"+imageURL+"@"+api_title1+"#"+api_eventId1 ,R.drawable.golden_circle);
                 }
-                //Toast.makeText(getActivity(), "and here we go ", Toast.LENGTH_SHORT).show();}
 
-
-                //Toast.makeText(context, "remote call "+status1+" length: "+str.get(3), Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();
                 msg = "error";
                 Toast.makeText(getActivity(), "error", Toast.LENGTH_SHORT).show();
             }
-            // Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+
         } else {
             Toast.makeText(getActivity(), "can't connect to server", Toast.LENGTH_SHORT).show();
         }
@@ -504,33 +299,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         return;
     }
 
-   /* @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -538,7 +307,9 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
     @Override
     public void onResume(){
         super.onResume();
+        AppConstants.isShowMonthWithBellowEvents = false;
         //OnResume Fragment
+
         remotecall();
         //showMonthViewWithBelowEvents();
         //  Toast.makeText(getContext(), "resumed", Toast.LENGTH_SHORT).show();

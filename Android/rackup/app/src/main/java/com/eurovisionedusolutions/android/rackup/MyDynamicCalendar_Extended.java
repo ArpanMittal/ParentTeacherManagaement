@@ -92,7 +92,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     private GetEventListListener getEventListListener;
 
     private ArrayList<DateModel> dateModelList;
-    private DateListAdapter dateListAdapter;
+    private DateListAdapterExtend dateListAdapter;
     private ArrayList<EventModel> eventModelList;
     private EventListAdapter_extended eventListAdapter;
     private ArrayList<String> hourList;
@@ -223,16 +223,18 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     }
     private void setMonthViewWithBelowEvents(String sign) {
         dateModelList = new ArrayList<>();
-        dateListAdapter = new DateListAdapter(context, dateModelList);
+        dateListAdapter = new DateListAdapterExtend(context, dateModelList);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 7);
         recyclerView_dates.setLayoutManager(gridLayoutManager);
 
         recyclerView_dates.setAdapter(dateListAdapter);
 
+
         dateListAdapter.setOnDateClickListener(new OnDateClickListener() {
             @Override
             public void onClick(Date date) {
+                ll_month_view_below_events.setVisibility(View.VISIBLE);
                 if (onDateClickListener != null) {
                     onDateClickListener.onClick(date);
                 }
@@ -245,6 +247,10 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
                 }
             }
         });
+        if(AppConstants.isShowMonthWithBellowEvents)
+            ll_month_view_below_events.setVisibility(View.VISIBLE);
+        else
+            ll_month_view_below_events.setVisibility(View.GONE);
 
         AppConstants.isShowMonth = false;
         AppConstants.isShowMonthWithBellowEvents = true;
@@ -253,7 +259,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         AppConstants.isAgenda = false;
 
         ll_upper_part.setVisibility(View.VISIBLE);
-        ll_month_view_below_events.setVisibility(View.VISIBLE);
+//        ll_month_view_below_events.setVisibility(View.VISIBLE);
         ll_lower_part.setVisibility(View.GONE);
         ll_blank_space.setVisibility(View.GONE);
         ll_hours.setVisibility(View.GONE);
@@ -296,7 +302,6 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         dateListAdapter.setOnMonthBellowEventsClick(new OnMonthBellowEventsDateClickListener() {
             @Override
             public void onClick(Date date) {
-
                 eventModelList = new ArrayList<>();
                 eventListAdapter = new EventListAdapter_extended(context, eventModelList, "month");
 
@@ -321,7 +326,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     }
     private void setAgendaView(String sign) {
         dateModelList = new ArrayList<>();
-        dateListAdapter = new DateListAdapter(context, dateModelList);
+        dateListAdapter = new DateListAdapterExtend(context, dateModelList);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 7);
         recyclerView_dates.setLayoutManager(gridLayoutManager);
@@ -397,6 +402,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         dateListAdapter.setOnMonthBellowEventsClick(new OnMonthBellowEventsDateClickListener() {
             @Override
             public void onClick(Date date) {
+
 
                 recyclerView_show_events.setVisibility(VISIBLE);
 

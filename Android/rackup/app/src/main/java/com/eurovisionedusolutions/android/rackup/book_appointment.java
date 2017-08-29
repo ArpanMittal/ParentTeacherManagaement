@@ -28,7 +28,7 @@ import java.util.Date;
 public class book_appointment extends AppCompatActivity implements RemoteCallHandler{
     private EditText mstartTime,mendTime,mName,mstatus,mdate,mreason,mWhatsapp,mTeacherWhatsapp;
    // private TextView mReasonView,mReasonView_teacher,mWhatsappView;
-    private Button mButton;
+    private Button mButton, cancelButton;
     private Toolbar toolbar;
     public static String token = "there1";
     private boolean isghostappointment=false;
@@ -44,6 +44,7 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
       toolbar=(Toolbar)findViewById(R.id.toolbar);
 //        mReasonView=(TextView)findViewById(R.id.textView17);
 //        mWhatsappView=(TextView)findViewById(R.id.textView18);
+        cancelButton = (Button) findViewById(R.id.button4);
         mButton=(Button) findViewById(R.id.button5);
         mName =(EditText) findViewById(R.id.editText7);
         mstatus =(EditText) findViewById(R.id.editText4);
@@ -55,7 +56,8 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         mTeacherWhatsapp=(EditText)findViewById(R.id.tt);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitleTextColor(getResources().getColor(R.color.white));
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
           @Override
@@ -80,7 +82,7 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         try {
             Date mDate = sdf.parse(givenDateString);
             timeInMilliseconds = mDate.getTime();
-            System.out.println("Date in milli :: " + timeInMilliseconds);
+//            System.out.println("Date in milli :: " + timeInMilliseconds);
             //Toast.makeText(this, String.valueOf(timeInMilliseconds),Toast.LENGTH_SHORT);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -140,29 +142,38 @@ if(Name1!=null){
 
         }
         else if (title_int==1){
-mButton.setText("Cancel");
+            mButton.setText("Cancel");
             mstatus.setText("Awaited");
+            getSupportActionBar().setTitle("Appointment Details");
             if(isghostappointment==false){
             mButton.setEnabled(true);}
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
 //            mWhatsappView.setVisibility(View.GONE);
 //            mReasonView.setVisibility(View.GONE);
 
         }
         else if(title_int==5){
             mstatus.setText("Available");
-            mButton.setText("Confirm");
+            mButton.setText("Send Request");
             if(isghostappointment==false){
                 mButton.setEnabled(true);}
             mreason.setVisibility(View.VISIBLE);
             mWhatsapp.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.GONE);
+            mreason.requestFocus();
+
+            getSupportActionBar().setTitle("Request Appointment");
+
 //            mWhatsappView.setVisibility(View.VISIBLE);
 //            mReasonView.setVisibility(View.VISIBLE);
         }
         else if(title_int==3){
             mstatus.setText("Cancelled");
             mButton.setText("Cancelled");
+            cancelButton.setVisibility(View.GONE);
+            getSupportActionBar().setTitle("Cancelled Appointment");
             mButton.setEnabled(false);
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);

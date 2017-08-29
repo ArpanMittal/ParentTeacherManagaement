@@ -22,7 +22,7 @@ import org.w3c.dom.Text;
 
 public class Notification_activity extends AppCompatActivity implements RemoteCallHandler{
     private EditText mstartTime,mendTime,mName,mId,mdate,mWhatsapp,mWhatsapp1,mstatus,mreason_teacher;
-    private TextView mWhatsappView,mWhatsappView1,mStatusView,mreason_teacherView,delete;
+//    private TextView mWhatsappView,mWhatsappView1,mStatusView,mreason_teacherView,delete;
     private Button mButton_Cancel,mButton_Confirm;
    private Toolbar toolbar;
     public String reason="", contact="",token="";
@@ -33,7 +33,7 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification_activity);
+        setContentView(R.layout.activity_main_notificationactivity);
         mButton_Confirm=(Button) findViewById(R.id.button5);
       //  delete=(EditText)findViewById(R.id.editText3);
         //mStatusView=(TextView)findViewById(R.id.textView4);
@@ -43,12 +43,12 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
         mstatus =(EditText) findViewById(R.id.editText4);
         mstartTime =(EditText) findViewById(R.id.editText5);
         mendTime=(EditText) findViewById(R.id.editText6);
-        mWhatsapp=(EditText)findViewById(R.id.editText9);
-        mWhatsappView=(TextView)findViewById(R.id.textView17);
+        mWhatsapp=(EditText)findViewById(R.id.tt);
+//        mWhatsappView=(TextView)findViewById(R.id.textView17);
         mWhatsapp1=(EditText)findViewById(R.id.editText10);
-        mWhatsappView1=(TextView)findViewById(R.id.textView18);
-        mreason_teacher=(EditText)findViewById(R.id.editText12);
-        mreason_teacherView=(TextView)findViewById(R.id.textView4);
+//        mWhatsappView1=(TextView)findViewById(R.id.textView18);
+        mreason_teacher=(EditText)findViewById(R.id.editText9);
+//        mreason_teacherView=(TextView)findViewById(R.id.textView4);
                 //mWhatsappView=(TextView)findViewById(R.id.textView18);
         //mWhatsapp=(EditText) findViewById(R.id.editText10);
         mdate=(EditText) findViewById(R.id.editText8);
@@ -94,18 +94,19 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
                 }
             }
         });
+        mWhatsapp.setEnabled(false);
         mreason_teacher.setEnabled(false);
 
         mWhatsapp.setVisibility(View.GONE);
-        mWhatsappView.setVisibility(View.GONE);
+       // mWhatsappView.setVisibility(View.GONE);
        /* mreason.setVisibility(View.GONE);
         mReasonView.setVisibility(View.GONE);*/
         mButton_Confirm.setVisibility(View.GONE);
         mButton_Cancel.setVisibility(View.GONE);
         mreason_teacher.setVisibility(View.GONE);
-        mreason_teacherView.setVisibility(View.GONE);
+//        mreason_teacherView.setVisibility(View.GONE);
         mWhatsapp1.setVisibility(View.GONE);
-        mWhatsappView1.setVisibility(View.GONE);
+//        mWhatsappView1.setVisibility(View.GONE);
 
         mName.setText(Name1);
         mstartTime.setText(startTime);
@@ -120,19 +121,20 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
         if(title_int==1 ){
             mstatus.setText("Awaited");
             mWhatsapp.setVisibility(View.VISIBLE);
-            mWhatsappView.setVisibility(View.VISIBLE);
+//            mWhatsappView.setVisibility(View.VISIBLE);
             mButton_Confirm.setVisibility(View.VISIBLE);
             mButton_Cancel.setVisibility(View.VISIBLE);
             mreason_teacher.setVisibility(View.VISIBLE);
-            mreason_teacherView.setVisibility(View.VISIBLE);
+//            mreason_teacherView.setVisibility(View.VISIBLE);
             mWhatsapp1.setVisibility(View.VISIBLE);
-            mWhatsapp1.setBackgroundResource(R.color.edittext_background);
-            mWhatsappView1.setVisibility(View.VISIBLE);
+           // mWhatsapp1.setBackgroundResource(R.color.edittext_background);
+//            mWhatsappView1.setVisibility(View.VISIBLE);
             mWhatsapp.setText(teacher_contact);
-            mWhatsapp1.setHint("Enter Whatsapp Number");
+            mWhatsapp.setVisibility(View.VISIBLE);
+//            mWhatsapp1.setHint("Enter Whatsapp Number");
             mreason_teacher.setText(teacher_Reason);
             mreason_teacher.setEnabled(false);
-            mreason_teacherView.setText("Reason given");
+          //  mreason_teacherView.setText("Reason given");
 
         }
 
@@ -145,7 +147,7 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
             mButton_Cancel.setVisibility(View.VISIBLE);
             mWhatsapp.setVisibility(View.VISIBLE);
             mWhatsapp.setText(teacher_contact);
-            mWhatsappView.setVisibility(View.VISIBLE);
+//            mWhatsappView.setVisibility(View.VISIBLE);
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("",teacher_contact);
             clipboard.setPrimaryClip(clip);
@@ -157,10 +159,10 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
         else if (title_int==3 ){
             mstatus.setText("Cancelled");
             mreason_teacher.setVisibility(View.VISIBLE);
-            mreason_teacherView.setVisibility(View.VISIBLE);
+            //mreason_teacherView.setVisibility(View.VISIBLE);
             mreason_teacher.setText(teacher_Reason);
             mreason_teacher.setEnabled(false);
-            mreason_teacherView.setText("Reason for \r\n cancellation");
+            //mreason_teacherView.setText("Reason for \r\n cancellation");
 
         }
         else if (title_int==1 && request_type=="Parent Request"){
@@ -168,8 +170,8 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
             mButton_Confirm.setVisibility(View.VISIBLE);
             mButton_Cancel.setVisibility(View.VISIBLE);
             mWhatsapp.setVisibility(View.VISIBLE);
-            mWhatsappView.setVisibility(View.VISIBLE);
-            mWhatsappView.setVisibility(View.VISIBLE);
+//            mWhatsappView.setVisibility(View.VISIBLE);
+//            mWhatsappView.setVisibility(View.VISIBLE);
         }
         else if (title_int==4 ){
             mstatus.setText("Invalid/No such event found");
