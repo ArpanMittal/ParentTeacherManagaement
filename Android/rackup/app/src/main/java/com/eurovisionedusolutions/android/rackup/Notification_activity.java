@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,8 +54,8 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
         //mWhatsapp=(EditText) findViewById(R.id.editText10);
         mdate=(EditText) findViewById(R.id.editText8);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigate_before_black_24dp));
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +132,8 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
 //            mWhatsappView1.setVisibility(View.VISIBLE);
             mWhatsapp.setText(teacher_contact);
             mWhatsapp.setVisibility(View.VISIBLE);
+            mWhatsapp.setFocusable(true);
+            mWhatsapp.requestFocus();
 //            mWhatsapp1.setHint("Enter Whatsapp Number");
             mreason_teacher.setText(teacher_Reason);
             mreason_teacher.setEnabled(false);
@@ -207,24 +210,33 @@ public class Notification_activity extends AppCompatActivity implements RemoteCa
 
     }
     public void alertbox(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
+        View mView = layoutInflaterAndroid.inflate(R.layout.user_input_dialog_box, null);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this,R.style.MyAlertDialogStyle);
+
+
 
         alert.setTitle("Alert");
         alert.setMessage("You are about to cancel the appointment.\r\n Are you sure?");
 
-// Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
-        input.setHint("Reason for Cancellation");
+//// Set an EditText view to get user input
+//        final EditText input = new EditText(this);
+//        alert.setView(input);
+
+
+
+
+        alert.setView(mView);
+        final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-               reason= "reason: "+input.getText().toString().trim();
+                reason= "reason: "+userInputDialogEditText.getText().toString().trim();
 
 
                 new RemoteHelper(getApplicationContext()).Update_Event(Notification_activity.this, RemoteCalls.UPDATE_THE_APPOINTMENT_4,
-                        GCMPushReceiverService.token, Id,"3" ,reason);
-
+                        token, Id, "3",reason);
 
                 // Do something with value!
             }

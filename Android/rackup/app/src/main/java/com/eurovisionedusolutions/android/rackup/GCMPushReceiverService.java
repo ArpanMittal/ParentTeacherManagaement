@@ -9,6 +9,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -67,20 +69,25 @@ public static String  token="";
         intent.putExtra("Name", teacherName);
         intent.putExtra("Date", startDate);
         intent.putExtra("teacherId",teacherId);
-
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        
        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         int requestCode = 0;
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.logo);
 
         NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+
                 .setContentText(message)
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setLargeIcon(icon)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-                .setColor(getResources().getColor(R.color.colorAccent))
+                .setColor(getResources().getColor(R.color.colorPrimary))
                 .setSound(sound);
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

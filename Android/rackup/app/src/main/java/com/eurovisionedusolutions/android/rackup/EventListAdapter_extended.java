@@ -188,6 +188,7 @@ public class EventListAdapter_extended  extends RecyclerView.Adapter<RecyclerVie
                     i.putExtra("endTime",eventModelList.get(position).getStrEndTime() );
                     i.putExtra("Id","");
                     i.putExtra("Name", eventModelList.get(position).getStrName());
+//                    i.putExtra("Teacher_Reason",eventModelList.get(position).get)
                     // showEventsViewHolder.tv_event_name.setText(eventModelList.get(position).getStrName());
                     i.putExtra("Date", eventModelList.get(position).getStrDate());
 

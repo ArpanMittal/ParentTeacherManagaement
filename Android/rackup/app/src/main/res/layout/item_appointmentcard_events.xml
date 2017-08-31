@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView2"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:background="@color/colorPrimary"
+    android:focusableInTouchMode="true"
+    android:visibility="visible"
+    app:cardBackgroundColor="@color/cardview_light_background"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_indicator"
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@color/colorPrimary" />
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/date_human_readable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@+id/title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            tools:text="Time willl be here" />
+
+
+        <TextView
+            android:id="@+id/startTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/endTime"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:text="startTime will here" />
+
+        <TextView
+            android:id="@id/endTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/date"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startTime"
+            tools:text="End time will here" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@id/date"
+            app:layout_constraintBottom_toTopOf="@+id/reason"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startTime"
+            tools:text="date time will here" />
+
+        <TextView
+            android:id="@id/reason"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/requestedby"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            tools:text="reason will here" />
+
+        <TextView
+            android:id="@id/requestedby"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/teacherName"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reason"
+            tools:text="request by will here" />
+
+        <TextView
+            android:id="@id/teacherName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/teacherContact"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/requestedby"
+            tools:text="teacher name by will here" />
+
+        <TextView
+            android:id="@id/teacherContact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/image_indicator"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/teacherName"
+            tools:text="teacher contact by will here" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.v7.widget.CardView>
+

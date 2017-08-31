@@ -8,9 +8,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import static android.R.id.input;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 public class book_appointment extends AppCompatActivity implements RemoteCallHandler{
     private EditText mstartTime,mendTime,mName,mstatus,mdate,mreason,mWhatsapp,mTeacherWhatsapp;
@@ -130,12 +135,14 @@ if(Name1!=null){
         }
         if(title_int==2){
 
-           mButton.setVisibility(View.GONE);
+           mButton.setVisibility(View.VISIBLE);
+            mButton.setText("Cancel Appointment?" );
             mstatus.setText("Confirmed");
             if(isghostappointment==false){
                 mButton.setEnabled(true);}
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
 //            mWhatsappView.setVisibility(View.GONE);
            // mReasonView.setVisibility(View.GONE);
 
@@ -143,18 +150,25 @@ if(Name1!=null){
         }
         else if (title_int==1){
             mButton.setText("Cancel");
+            cancelButton.setText("Confirm");
             mstatus.setText("Awaited");
-            getSupportActionBar().setTitle("Appointment Details");
+            getSupportActionBar().setTitle("Awaiting Appointment Details");
             if(isghostappointment==false){
-            mButton.setEnabled(true);}
+                mButton.setEnabled(true);
+                cancelButton.setEnabled(true);
+            }else{
+                cancelButton.setEnabled(false);
+            }
+            mWhatsapp.requestFocus();
             mreason.setVisibility(View.GONE);
-            mWhatsapp.setVisibility(View.GONE);
-            cancelButton.setVisibility(View.GONE);
+//            mWhatsapp.setVisibility(View.VISIBLE);
+//            cancelButton.setVisibility(View.VISIBLE);
 //            mWhatsappView.setVisibility(View.GONE);
 //            mReasonView.setVisibility(View.GONE);
 
         }
         else if(title_int==5){
+
             mstatus.setText("Available");
             mButton.setText("Send Request");
             if(isghostappointment==false){
@@ -192,6 +206,22 @@ if(Name1!=null){
 
 
       token=fetchman();
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(title_int == 1){
+                    contact=mWhatsapp.getText().toString().trim();
+                    if(contact.length()==10) {
+                        //TODO:: confirm Appointment
+                        new RemoteHelper(getApplicationContext()).Update_Event(book_appointment.this, RemoteCalls.UPDATE_THE_APPOINTMENT_3, token, Id,"2",contact,0);
+
+                    }
+//                    else{
+////                        Toast.makeText(this,"there is problem with number", Toast.LENGTH_LONG).show();
+//                    }
+                }
+            }
+        });
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -230,19 +260,29 @@ if(Name1!=null){
 
 
     } public void alertbox(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
+        View mView = layoutInflaterAndroid.inflate(R.layout.user_input_dialog_box, null);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this,R.style.MyAlertDialogStyle);
+
+
 
         alert.setTitle("Alert");
         alert.setMessage("You are about to cancel the appointment.\r\n Are you sure?");
 
-// Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
-        input.setHint("Reason for Cancellation");
+//// Set an EditText view to get user input
+//        final EditText input = new EditText(this);
+//        alert.setView(input);
+
+
+
+
+        alert.setView(mView);
+        final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                reason= "reason: "+input.getText().toString().trim();
+                reason= "reason: "+userInputDialogEditText.getText().toString().trim();
 
 
                 new RemoteHelper(getApplicationContext()).Update_Event(book_appointment.this, RemoteCalls.UPDATE_THE_APPOINTMENT_4,
@@ -279,6 +319,10 @@ if(Name1!=null){
 
                         Toast.makeText(this,"Your Appointment is  Cancelled", Toast.LENGTH_LONG).show();
                         finish();
+            }
+            else if(callFor==RemoteCalls.UPDATE_THE_APPOINTMENT_3){
+                Toast.makeText(this,"Confirmed", Toast.LENGTH_LONG).show();
+                finish();
             }
 
 
