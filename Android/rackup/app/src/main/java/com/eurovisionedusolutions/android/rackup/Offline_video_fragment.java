@@ -4,7 +4,7 @@ import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -19,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,7 @@ public class Offline_video_fragment extends Fragment {
     private int videoColumnIndex;
     ListView videolist;
     int count;
+    private boolean permisssion = false;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL = 123;
     String[] videoProjection;
     View v;
@@ -74,36 +77,51 @@ public class Offline_video_fragment extends Fragment {
     public boolean checkPermission()
     {
         int currentAPIVersion = Build.VERSION.SDK_INT;
+
         if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
         {
             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))
+                {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
                     alertBuilder.setCancelable(true);
                     alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Write calendar permission is necessary to write event!!!");
+                    alertBuilder.setMessage("Read External Storage permission is necessary to View Content!!!");
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},  MY_PERMISSIONS_REQUEST_READ_EXTERNAL);
+                            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},  MY_PERMISSIONS_REQUEST_READ_EXTERNAL);
+                            //permisssion = true;
                         }
                     });
+//                    alertBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+//                    public void onClick(DialogInterface dialog, int which) {
+//                       permisssion = false;
+//                    }
+//                });
                     AlertDialog alert = alertBuilder.create();
                     alert.show();
                 }
-                else {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},  MY_PERMISSIONS_REQUEST_READ_EXTERNAL);
+                else
+                {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},  MY_PERMISSIONS_REQUEST_READ_EXTERNAL);
+
                 }
-                return false;
+
+                    return  false;
             }
             else {
                 return true;
             }
-        } else {
-           return false;
+        }
+        else {
+           return true;
         }
     }
+
+
     public void showView(){
         videoCursor = getActivity().managedQuery(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,videoProjection, null, null, null);
         count = videoCursor.getCount();
@@ -133,11 +151,15 @@ public class Offline_video_fragment extends Fragment {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        Log.d("permission granted","f1");
+        switch (requestCode)
+        {
             case  MY_PERMISSIONS_REQUEST_READ_EXTERNAL:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showView();
+                    Log.d("permission granted","true");
                 } else {
                     Toast.makeText(getActivity(),"Permission denied",Toast.LENGTH_LONG).show();
                     //code for denyima
