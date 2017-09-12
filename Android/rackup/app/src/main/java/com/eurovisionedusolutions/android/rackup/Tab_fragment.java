@@ -53,6 +53,7 @@ public class Tab_fragment extends Fragment {
             fetchman(i);
             tabLayout.addTab(tabLayout.newTab().setText(this.category));
         }
+        tabLayout.addTab(tabLayout.newTab().setText("Offline Video"));
         tabLayout.setTabMode(0);
 //        tabLayout.setTabTextColors();
         tabLayout.setTabGravity(0);

@@ -1,6 +1,8 @@
 package com.eurovisionedusolutions.android.rackup;
 
-public class EventModel_Feed {
+import java.io.Serializable;
+
+public class EventModel_Feed implements Serializable {
     private String description;
     private String id;
     private String type;

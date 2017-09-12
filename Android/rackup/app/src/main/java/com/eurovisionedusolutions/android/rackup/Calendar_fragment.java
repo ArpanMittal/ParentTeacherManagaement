@@ -142,7 +142,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         myCalendar.setHolidayCellClickable(false);
 
 
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         return view;
     }
 

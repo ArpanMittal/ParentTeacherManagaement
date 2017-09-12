@@ -68,10 +68,10 @@ public class MyAdapter_appointment extends RecyclerView.Adapter<MyAdapter_appoin
         else {requestby=items.get(position).getTeacherName();}
         if(event_type==1){status="Awaited";holder.imageView.setBackground(context.getDrawable(R.color.colorPrimary));}
         else if(event_type==2){status="Confirmed"; holder.imageView.setBackground(context.getDrawable(R.color.green));}
-        else if(event_type==3){status="Cancelled";holder.imageView.setBackground(context.getDrawable(R.color.gray));}
+        else if(event_type==3){status="Cancelled";holder.imageView.setBackground(context.getDrawable(R.color.red));}
         else if(event_type==4){status="Invalid";holder.imageView.setBackground(context.getDrawable(R.color.black));}
         else if(event_type==5){status="Free Slot";holder.imageView.setBackground(context.getDrawable(R.color.colorPrimaryDark));}
-        else if(event_type==6){status="School Event";holder.imageView.setBackground(context.getDrawable(R.color.red));}
+        else if(event_type==6){status="School Event";holder.imageView.setBackground(context.getDrawable(R.color.gray));}
         else {status="invalid";}
         String date1=items.get(position).getDate() + " "+items.get(position).getStartTime();
         long now = System.currentTimeMillis();

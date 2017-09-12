@@ -2,6 +2,7 @@ package com.eurovisionedusolutions.android.rackup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,13 +56,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent act = new Intent(MyAdapter.this.context, ImageView_for_Feed.class);
-        act.putExtra("imageURL", ((EventModel_Feed) MyAdapter.this.items.get(position)).getImage_url());
-        act.putExtra("date", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTime());
-        act.putExtra("description", ((EventModel_Feed) MyAdapter.this.items.get(position)).getDescription());
-        act.putExtra("title", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTitle());
-        MyAdapter.this.context.startActivity(act);
-        MyAdapter.this.context.startActivity(act);
+//        Intent act = new Intent(MyAdapter.this.context, ImageView_for_Feed.class);
+//        act.putExtra("imageURL", ((EventModel_Feed) MyAdapter.this.items.get(position)).getImage_url());
+//        act.putExtra("date", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTime());
+//        act.putExtra("description", ((EventModel_Feed) MyAdapter.this.items.get(position)).getDescription());
+//        act.putExtra("title", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTitle());
+//        MyAdapter.this.context.startActivity(act);
+//        MyAdapter.this.context.startActivity(act);
+
+        Intent intent = new Intent(MyAdapter.this.context,ImageFeedViewPager.class);
+        Bundle bundle = new Bundle();
+//        bundle.putSerializable("value", items);
+        intent.putExtra(ImageFeedViewPager.IMAGEVIEWLIST, items);
+        intent.putExtra(ImageFeedViewPager.CURRENTPOSITION, position);
+        MyAdapter.this.context.startActivity(intent);
 //        holder.tvItem.setText(itemText+","+ String.valueOf(position));
 //        Intent l= new Intent(context,ImageView_for_Feed.class);
 //        context.startActivity(l);

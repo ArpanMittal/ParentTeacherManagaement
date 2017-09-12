@@ -24,6 +24,8 @@ import org.json.JSONException;
 
 import java.text.ParseException;
 
+import static android.R.string.no;
+
 
 //Class is extending GcmListenerService
 public class GCMPushReceiverService extends GcmListenerService  implements RemoteCallHandler{
@@ -42,15 +44,40 @@ public static String  token="";
         if(data!=null) {
                 message = data.getString("message");
                 event = data.getString("eventId");
-                api_event_int = Integer.parseInt(event);
+                if(event!=null)
+                    api_event_int = Integer.parseInt(event);
+                else
+                    api_event_int = 0;
 
 
         }
-        //api_event_int=Integer.valueOf("event");
-        //message_int=Integer.valueOf(message);
-        //Displaying a notiffication with the message
-        token=fetchman();
-        new RemoteHelper(getApplicationContext()).Slot_Details(GCMPushReceiverService.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, token);
+        if(d == 2){
+            Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
+                    R.drawable.logo);
+            NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+
+                    .setContentText(message)
+                    .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                    .setLargeIcon(icon)
+                    .setAutoCancel(true)
+//                    .setContentIntent(pendingIntent)
+                    .setColor(getResources().getColor(R.color.colorPrimary))
+                    .setSound(sound);
+
+            noBuilder.setVibrate(new long[] { 0, 200, 200, 200, 200, 200 });
+
+            NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(0, noBuilder.build()); //0 = ID of notification
+
+        }
+        else {
+            //api_event_int=Integer.valueOf("event");
+            //message_int=Integer.valueOf(message);
+            //Displaying a notiffication with the message
+            token = fetchman();
+            new RemoteHelper(getApplicationContext()).Slot_Details(GCMPushReceiverService.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, token);
+        }
 
 
     }

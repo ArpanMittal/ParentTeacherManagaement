@@ -14,11 +14,17 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public Fragment getItem(int position) {
-        Bundle args = new Bundle();
-        Test_fragment tab1 = new Test_fragment();
-        args.putString("key", String.valueOf(position));
-        tab1.setArguments(args);
-        return tab1;
+        if(position<mNumOfTabs-1) {
+            Bundle args = new Bundle();
+            Test_fragment tab1 = new Test_fragment();
+            args.putString("key", String.valueOf(position));
+            tab1.setArguments(args);
+
+            return tab1;
+        }else{
+            Offline_video_fragment offline_video_fragment = new Offline_video_fragment();
+            return offline_video_fragment;
+        }
     }
 
     public int getCount() {

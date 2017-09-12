@@ -53,8 +53,8 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler {
             } else {
                 prefix = "";
             }
-            String title = "HHH";
-            itemsLocal1.add(new EventModel_Feed(title, title, title, title, "0"));
+            String title = "Please Refresh The layout";
+            itemsLocal1.add(new EventModel_Feed(title, "HHH", "Slight Internet problem", title, "0"));
         }
         return itemsLocal1;
     }
@@ -75,6 +75,7 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler {
         this.mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             public void onRefresh() {
                 Feed_Activity.this.ModelList.clear();
+                Feed_Activity.this.position_to_scroll = 0;
                 Feed_Activity.this.remotecall();
             }
         });

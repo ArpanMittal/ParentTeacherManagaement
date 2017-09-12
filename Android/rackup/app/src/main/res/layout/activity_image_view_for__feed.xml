@@ -11,7 +11,7 @@
     <!--<com.eurovisionedusolutions.android.rackup.ImageViewHelper-->
         <!--android:id="@+id/imageView"-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
         <!--android:layout_marginTop="0dp"-->
         <!--android:scaleType="matrix"-->
 
@@ -21,25 +21,29 @@
         <!--app:layout_constraintTop_toBottomOf="parent"-->
         <!--app:srcCompat="@drawable/all_cell" />-->
 
-    <com.jsibbold.zoomage.ZoomageView
+    <!--<com.jsibbold.zoomage.ZoomageView-->
+        <!--android:id="@+id/imageView"-->
+
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="parent"-->
+        <!--app:zoomage_restrictBounds="true"-->
+        <!--app:zoomage_animateOnReset="true"-->
+        <!--app:zoomage_autoResetMode="UNDER"-->
+        <!--app:zoomage_autoCenter="true"-->
+        <!--app:zoomage_zoomable="true"-->
+        <!--app:zoomage_translatable="true"-->
+        <!--app:zoomage_minScale="0.6"-->
+        <!--app:zoomage_maxScale="4"-->
+        <!--/>-->
+
+    <com.eurovisionedusolutions.android.rackup.TouchImageView
         android:id="@+id/imageView"
-
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:zoomage_restrictBounds="false"
-        app:zoomage_animateOnReset="true"
-        app:zoomage_autoResetMode="UNDER"
-
-        app:zoomage_autoCenter="true"
-        app:zoomage_zoomable="true"
-        app:zoomage_translatable="false"
-        app:zoomage_minScale="0.6"
-        app:zoomage_maxScale="3"
-        />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/textView5"

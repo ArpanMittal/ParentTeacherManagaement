@@ -127,7 +127,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailView.addTextChangedListener(new MyTextWatcher(mEmailView));
         mPasswordView.addTextChangedListener(new MyTextWatcher(mPasswordView));
-         Splash_Screen.fa.finish();
+        if(Splash_Screen.fa!=null)
+            Splash_Screen.fa.finish();
 
 
 
