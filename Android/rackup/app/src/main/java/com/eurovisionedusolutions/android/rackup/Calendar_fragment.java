@@ -126,6 +126,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
 
 
 
+
         myCalendar.getEventList(new GetEventListListener() {
             @Override
             public void eventList(ArrayList<EventModel> eventList) {
@@ -145,6 +146,35 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         setHasOptionsMenu(true);
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_month_with_below_events:
+                showMonthViewWithBelowEvents();
+                return true;
+
+            case R.id.action_agenda:
+                showAgendaView();
+                return true;
+
+            case R.id.action_today:
+                myCalendar.goToCurrentDate();
+                return true;
+            default:
+                myCalendar.showMonthViewWithBelowEvents();
+                return true;
+            //return super.onOptionsItemSelected(item);
+        }
+
+    }
+
 
 
 
