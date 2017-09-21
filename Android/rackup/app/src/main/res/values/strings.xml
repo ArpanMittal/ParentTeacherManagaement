@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">rackup</string>
+    <string name="app_name">Rackup</string>
     <!-- Strings related to msg -->
     <string name="loadingmsg">loading, please wait</string>
     <string name="item_1">Videos</string>

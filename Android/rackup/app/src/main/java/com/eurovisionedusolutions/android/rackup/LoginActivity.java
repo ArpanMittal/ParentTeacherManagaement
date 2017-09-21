@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -48,6 +49,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     VideoAPI_Call vid=new VideoAPI_Call(this);
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     // UI references.
+    private String database_email,database_pwd;
+    private int database_id;
     private EditText mEmailView;
     private String email = "", password1 = "",student_name, address;
     public static String token="",GCMId="";
@@ -78,15 +81,32 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)){
                     //Getting the registration token from the intent
                     GCMId = intent.getStringExtra("token");
+                    new SharedPrefrence().saveGCMRegistrationId(getApplicationContext(), GCMId);
                     GCM_flag=1;
+                    fetchman();
+                    if(database_id != 0){
+                        if(GCM_flag==1){
+                            pd = new ProgressDialog(LoginActivity.this);
+                            pd.setMessage("loading");
+                            new RemoteHelper(getApplicationContext()).verifyLogin(LoginActivity.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, database_email, database_pwd,GCMId);
+                            pd.show();
+                        }
+                    }
                     //Displaying the token as toast
                   //  Toast.makeText(getApplicationContext(), "Registration token:" + GCMId, Toast.LENGTH_LONG).show();
 
                     //if the intent is not with success then displaying error messages
-                } else if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)){
-                    GCM_flag=0;
+                }
+                else if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)){
+                    if((GCMId = new SharedPrefrence().getGcmregitrationId(getApplicationContext()))!= null) {
+
+                        GCM_flag = 1;
+                    }
+                    else
+                        GCM_flag=0;
                   //  Toast.makeText(getApplicationContext(), "GCM registration error!", Toast.LENGTH_LONG).show();
                 } else {
+
                     GCM_flag=0;
                   //  Toast.makeText(getApplicationContext(), "Error occurred (GCM)", Toast.LENGTH_LONG).show();
                 }
@@ -132,6 +152,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
 
 
 
+
         /*
         Log in button at the end of username and password
          */
@@ -150,6 +171,48 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
 //                forgotpassword();
 //            }
 //        });
+
+    }
+
+    public void fetchman() {
+
+        mydb = new DBHelper(this);
+        //To retrive information on opening the edit profile page
+        String[] mProjection =
+                {
+                        UserContract.UserDetailEntry.COLUMN_ID,    // Contract class constant for the _ID column name
+                        UserContract.UserDetailEntry.CoLUMN_EMAIL, // Contract class constant for the locale column name
+                        UserContract.UserDetailEntry.CoLUMN_PASSWORD
+                };
+        String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
+        String[] mSelectionArgs = {"1"};
+        Cursor mCursor;
+        String mSortOrder = null;
+        mCursor = getContentResolver().query(
+                UserContract.BASE_CONTENT_URI_Full,  // The content URI of the words table
+                mProjection,                       // The columns to return for each row
+                mSelectionClause,                   // Either null, or the word the user entered
+                mSelectionArgs,                    // Either empty, or the string the user entered
+                mSortOrder);
+        if (mCursor.getCount() > 0) {
+            //Search is successful
+            // Insert code here to do something with the results
+            int mCursorColumnIndex_main = mCursor.getColumnIndex(UserContract.UserDetailEntry.COLUMN_ID);
+            int mCursorColumnIndex_email = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_EMAIL);
+            int mCursorColumnIndex_password = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
+
+            while (mCursor.moveToNext()) {
+                // Insert code here to process the retrieved word.
+                database_email = mCursor.getString(mCursorColumnIndex_email);
+                database_pwd = mCursor.getString(mCursorColumnIndex_password);
+                database_id = mCursor.getInt(mCursorColumnIndex_main);
+
+                // end of while loop
+            }
+        }
+        mCursor.close();
+        mydb.close();
+
 
     }
     //Registering receiver on activity resume
@@ -190,14 +253,18 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         String email = mEmailView.getText().toString();
         password1 = mPasswordView.getText().toString();
 
-        if (isNetworkAvailable() == true) {
+        if (isNetworkAvailable() == true)
+        {
 
             if(GCM_flag==1){
-            pd = new ProgressDialog(this);
-            pd.setMessage("loading");
-            new RemoteHelper(getApplicationContext()).verifyLogin(this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password1,GCMId);
-            pd.show();}
-            else {Toast.makeText(getApplicationContext(), "GCM Error", Toast.LENGTH_LONG).show();}
+                pd = new ProgressDialog(this);
+                pd.setMessage("loading");
+                new RemoteHelper(getApplicationContext()).verifyLogin(this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password1,GCMId);
+                pd.show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "GCM Error", Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(getApplicationContext(), "Not Connected to the internet", Toast.LENGTH_LONG).show();
         }

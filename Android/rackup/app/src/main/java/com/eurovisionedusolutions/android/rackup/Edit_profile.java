@@ -46,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.iid.InstanceID;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -354,7 +355,21 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         String updatedrows = String.valueOf(mRowsUpdated) + " row(s) successfully updated";
        // Toast.makeText(getContext().getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
         mydb.close();
-        Intent intent1=new Intent(getContext(),LoginActivity.class);
+        final InstanceID instanceID  = InstanceID.getInstance(getActivity());
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    instanceID.deleteInstanceID();
+                } catch (Exception bug) {
+                    bug.printStackTrace();
+                }
+
+            }
+        });
+        thread.start();
+        Intent intent1=new Intent(getContext(),Splash_Screen.class);
         //MainActivity.fa1.finish();
         getActivity().finish();
         startActivity(intent1);

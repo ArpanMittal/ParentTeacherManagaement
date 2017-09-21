@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Permission to vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
 
     <permission
         android:name="com.eurovisionedusolutions.android.rackup.permission.C2D_MESSAGE"
@@ -17,16 +20,15 @@
 
     <application
         android:name=".VolleyController"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:icon="@mipmap/ic_launcher"
         android:screenOrientation="sensor"
         android:theme="@style/AppTheme">
         <provider
             android:name=".Provider"
             android:authorities="com.eurovisionedusolutions.android.rackup"
             android:exported="false" />
-
         <provider
             android:name=".GenericFileProvider"
             android:authorities="${applicationId}.provider"
@@ -34,7 +36,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <!--
@@ -79,7 +81,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Forgot_Password" />
+        <!-- <activity android:name=".Forgot_Password" /> -->
         <!-- <activity android:name=".video_Call" /> -->
         <!-- <activity android:name=".Events" /> -->
         <!--
@@ -104,25 +106,58 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".GCM_Example_mainActivity" />
         <!-- GCM Receiver -->
+        <!-- <receiver -->
+        <!-- android:name="com.google.android.gms.gcm.GcmReceiver" -->
+        <!-- android:exported="true" -->
+        <!-- android:permission="com.google.android.c2dm.permission.SEND"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
+
+
+        <!-- <category android:name="com.gnirt69.gcmexample" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
+
+        <!-- <receiver -->
+        <!-- android:name=".service.push.receiver.GcmBroadcastReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" -->
+        <!-- android:permission="com.google.android.c2dm.permission.SEND"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
+        <!-- <category android:name="${applicationId}" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
+        <!--<receiver-->
+            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
+            <!--android:exported="true"-->
+            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
+                <!--&lt;!&ndash; <category android:name="{applicationId}" /> &ndash;&gt;-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
         <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:name=".GcmMainBroadcastReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:enabled="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="com.gnirt69.gcmexample" />
             </intent-filter>
         </receiver>
 
-        <!-- GCM Receiver Service -->
-        <service
-            android:name=".GCMPushReceiverService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
+        <!--&lt;!&ndash; GCM Receiver Service &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name=".GcmBroadcastReceiver"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
         <!-- GCM Registration Intent Service -->
         <service
@@ -134,7 +169,7 @@
         </service>
 
         <activity android:name=".Notification_activity" />
-        <activity android:name=".Feed_Activity" />
+        <!-- <activity android:name=".Feed_Activity" /> -->
         <activity
             android:name=".ImageView_for_Feed"
             android:launchMode="singleTask"
@@ -146,13 +181,15 @@
             android:name=".WebviewActivity"
             android:label="@string/title_activity_webview"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Main1" />
-
-        <activity android:name=".ImageFeedViewPager"
+        <activity
+            android:name=".ImageFeedViewPager"
             android:label="Image Feeds"
-            android:theme="@style/CustomTheme">
+            android:theme="@style/CustomTheme"></activity>
 
-        </activity>
+        <service
+            android:name=".PushReceiverIntentService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -78,6 +78,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.media.CamcorderProfile.get;
+import static com.eurovisionedusolutions.android.rackup.R.id.myCalendar;
 
 /**
  * Created by sushant on 5/15/2017.
@@ -87,7 +88,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     private Context context;
     private AttributeSet attrs;
     private View rootView;
-    private static int currentYear = -1, currentMonth = -1;
+    private int currentYear = -1, currentMonth = -1;
     private RecyclerView recyclerView_dates, recyclerView_hours, recyclerView_show_events, recyclerView_month_view_below_events;
     private TextView tv_month_year, tv_mon, tv_tue, tv_wed, tv_thu, tv_fri, tv_sat, tv_sun;
     private ImageView iv_previous, iv_next;
@@ -172,6 +173,8 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         tv_fri = (TextView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.tv_fri);
         tv_sat = (TextView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.tv_sat);
         tv_sun = (TextView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.tv_sun);
+        AppConstants.main_calendar = Calendar.getInstance();
+
 
 
 //        ll_header_views.setBackgroundColor(Color.parseColor(strHeaderBackgroundColor));
@@ -541,7 +544,8 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        AppConstants.main_calendar=myCalendar1;
+        AppConstants.main_calendar = myCalendar1;
+
         if (AppConstants.isShowMonthWithBellowEvents) {
             setMonthViewWithBelowEvents("");
         } else if (AppConstants.isAgenda) {

@@ -21,6 +21,7 @@ public class SharedPrefrence
     public static final String PREFS_NAME = "AOP_PREFS";
     public static final String PREVIOUSLAYOUT = "PREVIOUS_LAYOUT";
     public static final String IS_PREVIOUS_CURRENT_DATE = "IS_PREVIOUS_CURRENT";
+    public static final String GCMREGITRATION_ID = "GCM_ID";
 
     public void savePreviousLayoutDetails(Context context, boolean is_Previous_Current, LinearLayout previousLayout) {
         SharedPreferences.Editor editor;
@@ -40,6 +41,20 @@ public class SharedPrefrence
         SharedPreferences  string =context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return string.getInt(PREVIOUSLAYOUT, 0);
     }
+
+    public void saveGCMRegistrationId(Context context, String token) {
+        SharedPreferences.Editor editor;
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        editor = settings.edit();
+        editor.putString(GCMREGITRATION_ID, token);
+        editor.apply();
+    }
+
+    public String getGcmregitrationId(Context context){
+        SharedPreferences  string =context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return string.getString(GCMREGITRATION_ID , null);
+    }
+
 
 
 

@@ -60,7 +60,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
 
 
     // TODO: Rename and change types and number of parameters
-    public static Calendar_fragment newInstance(String param1, String param2) {
+    public Calendar_fragment newInstance(String param1, String param2) {
         Calendar_fragment fragment = new Calendar_fragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);

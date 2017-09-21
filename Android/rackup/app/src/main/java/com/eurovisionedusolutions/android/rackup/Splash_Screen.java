@@ -148,9 +148,9 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
             {
                 if (isNetworkAvailable() == true) {// online, with proper email, password saved locally. Verify over network.
                     if (password!=null) {
-                      /* if(GCM_flag==1) {*/
+                       if(GCM_flag==1) {
                             new RemoteHelper(getApplicationContext()).verifyLogin(Splash_Screen.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password, GCMId);
-                        /*}else {flag=0;}*/
+                        }else {flag=0;}
                     } else {// online, with null password or email. Open Login activity
                       flag=0;
 
