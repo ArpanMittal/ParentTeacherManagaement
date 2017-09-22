@@ -25,7 +25,7 @@
       android:id="@+id/thumbnail"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:src="@drawable/no_thumbnail"
+      android:src="@drawable/all_cell"
       android:adjustViewBounds="true"
       android:scaleType="centerInside"/>
 

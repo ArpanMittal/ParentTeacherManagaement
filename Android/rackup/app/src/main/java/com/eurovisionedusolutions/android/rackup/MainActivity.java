@@ -20,15 +20,21 @@
 
 package com.eurovisionedusolutions.android.rackup;
 
+import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +42,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);
+        //ActionBar actionBar=getSupportActionBar();
+       // actionBar.show();
+        //bottomNavigationView.setScrollbarFadingEnabled(true);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        final View decorView = getWindow().getDecorView();
+        final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setVisibility(decorView.VISIBLE);
+        decorView.setOnSystemUiVisibilityChangeListener
+                (new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        // Note that system bars will only be "visible" if none of the
+                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            // TODO: The system bars are visible. Make any desired
+                            // adjustments to your UI, such as showing the action bar or
+                            // other navigational controls.
 
-        bottomNavigationView.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                           // Toast.makeText(getApplicationContext(), "yo", Toast.LENGTH_LONG).show();
+
+                        } else {
+                            // TODO: The system bars are NOT visible. Make any desired
+                            // adjustments to your UI, such as hiding the action bar or
+                            // other navigational controls.
+
+                            //Toast.makeText(getApplicationContext(), "ya", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         Fragment selectedFragment = null;
@@ -47,25 +84,41 @@ public class MainActivity extends AppCompatActivity {
                                 selectedFragment = Tab_fragment.newInstance();
                                 break;
                             case R.id.action_item2:
-                                selectedFragment = Tab_fragment.newInstance();
+                                selectedFragment = Video_Call.newInstance();
                                 break;
                             case R.id.action_item3:
-                                selectedFragment =Edit_profile.newInstance();
+
+                               selectedFragment =Edit_profile.newInstance();
                                 break;
+                            case R.id.action_item4:
+                                selectedFragment =Calendar_fragment.newInstance();
+                                break;
+                            case R.id.action_item5:
+                                selectedFragment=Feed_Activity.newInstance();
+                                break;
+
                         }
+                        if(item.getItemId() == R.id.action_item5)
+                            getSupportActionBar().setTitle("ImageFeed");
+//                        else if(item.getItemId() == R.id.action_item4)
+//                            getSupportActionBar().setTitle("Calendar");
+//                        else if(item.getItemId() == R.id.action_item1)
+//                            getSupportActionBar().setTitle("Video");
+
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.frame_layout, selectedFragment);
                         transaction.commit();
                         return true;
                     }
                 });
-
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, ItemTwoFragment.newInstance());
+        transaction.replace(R.id.frame_layout, Tab_fragment.newInstance());
         transaction.commit();
 
+
+
         //Used to select an item programmatically
-        //bottomNavigationView.getMenu().getItem(2).setChecked(true);
+        bottomNavigationView.getMenu().getItem(1).setChecked(true);
     }
 }

@@ -4,7 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -20,13 +22,21 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import java.util.Calendar;
 
 
 public class Splash_Screen extends Activity implements RemoteCallHandler {
 
 
+    VideoAPI_Call vid=new VideoAPI_Call(this);
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
     DBHelper mydb;
+    int status=0;
+    public static String token="",GCMId="";
+    public static int GCM_flag=0;
     private String email="temp", password="temp";
     private int id = 0;
     public static Activity fa;
@@ -38,6 +48,57 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         fa = this;
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+
+            //When the broadcast received
+            //We are sending the broadcast from GCMRegistrationIntentService
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //If the broadcast has received with success
+                //that means device is registered successfully
+                if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)){
+                    //Getting the registration token from the intent
+                    GCMId = intent.getStringExtra("token");
+                    GCM_flag=1;
+                    //Displaying the token as toast
+                    //  Toast.makeText(getApplicationContext(), "Registration token:" + GCMId, Toast.LENGTH_LONG).show();
+
+                    //if the intent is not with success then displaying error messages
+                } else if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)){
+                    GCM_flag=0;
+                    //  Toast.makeText(getApplicationContext(), "GCM registration error!", Toast.LENGTH_LONG).show();
+                } else {
+                    GCM_flag=0;
+                    //  Toast.makeText(getApplicationContext(), "Error occurred (GCM)", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        //Checking play service is available or not
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+
+        //if play service is not available
+        if(ConnectionResult.SUCCESS != resultCode) {
+            //If play service is supported but not installed
+            if(GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                //Displaying message that play service is not installed
+                Toast.makeText(getApplicationContext(), "Google Play Service is not install/enabled in this device!", Toast.LENGTH_LONG).show();
+                GooglePlayServicesUtil.showErrorNotification(resultCode, getApplicationContext());
+
+                //If play service is not supported
+                //Displaying an error message
+            } else {
+                Toast.makeText(getApplicationContext(), "This device does not support for Google Play Service!", Toast.LENGTH_LONG).show();
+            }
+
+            //If play service is available
+        } else {
+            //Starting intent to register device
+            Intent itent = new Intent(this, GCMRegistrationIntentService.class);
+            startService(itent);
+        }
+
 
         /**
          * Showing splashscreen while making network calls to download necessary
@@ -85,8 +146,10 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
             else
             {
                 if (isNetworkAvailable() == true) {// online, with proper email, password saved locally. Verify over network.
-                    if (password!=null || password!="") {
-                        new RemoteHelper(getApplicationContext()).verifyLogin(Splash_Screen.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password);
+                    if (password!=null) {
+                      /* if(GCM_flag==1) {*/
+                            new RemoteHelper(getApplicationContext()).verifyLogin(Splash_Screen.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password, GCMId);
+                        /*}else {flag=0;}*/
                     } else {// online, with null password or email. Open Login activity
                       flag=0;
 
@@ -129,10 +192,9 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
                 @Override
                 public void run() {
                     // Do something after "timer" milliseconds
-                    Toast.makeText(getApplicationContext(), timer+" milliseconds man..", Toast.LENGTH_LONG).show();
+                //    Toast.makeText(getApplicationContext(), timer+" milliseconds man..", Toast.LENGTH_LONG).show();
                     if(flag==1){
                         Intent intent1=new Intent(Splash_Screen.this,MainActivity.class);
-                        intent1.putExtra("email_send",email);
                         startActivity(intent1);
 
                     }
@@ -156,6 +218,7 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
 
             // close this activity
 
+
         }
 
     }
@@ -171,11 +234,12 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
         mNewValues.put(UserContract.UserDetailEntry.COLUMN_ID, 1);
         mNewValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, "temp");
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
-        mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_NAME);
+//        mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
+        mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_TOKEN);
 
-        mNewUri = getContentResolver().insert(
+         mNewUri = getContentResolver().insert(
                 UserContract.BASE_CONTENT_URI_Full,   // the user dictionary content URI
                 mNewValues                          // the values to insert
         );
@@ -225,7 +289,6 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
 
                 // end of while loop
             }
-
         }
         mCursor.close();
         mydb.close();
@@ -233,39 +296,66 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
 
     }
 
-    private void update(String email) {
+    private void update(String email, String password,String token,String name, String phone_num,String dob) {
         mydb = new DBHelper(this);
         ContentValues mUpdateValues = new ContentValues();
         String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_NAME);
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
+//        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_FATHER,name);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER,phone_num);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, email);
-        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH,dob);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PASSWORD, password);
+        mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_TOKEN,token);
         String[] mSelectionArgs = {"1"};
         int mRowsUpdated = getContentResolver().update(UserContract.BASE_CONTENT_URI_Full, mUpdateValues, mSelectionClause, mSelectionArgs);
-        String updatedrows = String.valueOf(mRowsUpdated) + " row(s) successfully updated";
-        Toast.makeText(getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
+        //  String updatedrows = String.valueOf(mRowsUpdated) + " row(s) successfully updated";
+        // Toast.makeText(getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
         mydb.close();
     }
 
 
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
+        String name, contact, dob;
         if (isSuccessful) {
             // write code here for checking the login verificaton
             // as of now every login is successful
-            Toast.makeText(getApplicationContext(), "login successful with locally saved credentials ", Toast.LENGTH_LONG).show();
-            flag=1;
-         /*   Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("email_send",email);
-            startActivity(intent);*/
-             return;
+            try {
+                status=response.getJSONObject(1).getInt("original");
+                email = response.getJSONObject(0).getString("username");
+                token =response.getJSONObject(0).getString("token");
+                name=response.getJSONObject(0).getString("fatherName");
+                contact=response.getJSONObject(0).getString("primartContact");
+                dob=response.getJSONObject(0).getString("dob");
+                // Tab_fragment.pd.show();
 
-        } else {
-            Toast.makeText(getApplicationContext(), "can't connect to server", Toast.LENGTH_LONG).show();
+                if(status==200){
+
+                    flag=1;
+                    update(email,password,token,name,contact,dob);
+                    vid.api_Call();
+                    int position= email.indexOf("@");
+                    email="welcome "+email.substring(0,position);
+                  /*  Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    finish();*/}
+                else {flag=0;
+                    Toast.makeText(getApplicationContext(), "Saved Username/password incorrect", Toast.LENGTH_LONG).show();
+                    /*Intent intent1=new Intent(this,LoginActivity.class);
+                    startActivity(intent1);
+                    finish();*/
+                }
+            }
+            catch (JSONException e) {
+                    e.printStackTrace();
+                    email = "error";
+                }
+                Toast.makeText(getApplicationContext(), email, Toast.LENGTH_LONG).show();
+            return;
+            }
+
+         else {
             flag=0;
-           /* Intent intent1 = new Intent(this, LoginActivity.class);
-           // intent1.putExtra("email_send",email);
-            startActivity(intent1);*/
+            Toast.makeText(getApplicationContext(), "can't connect to server1", Toast.LENGTH_LONG).show();
            return;
         }
 
