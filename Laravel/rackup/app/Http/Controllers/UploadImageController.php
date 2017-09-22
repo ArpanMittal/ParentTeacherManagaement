@@ -222,6 +222,7 @@ class UploadImageController extends Controller
             return Response::json([$images,HttpResponse::HTTP_OK]);
         }
     }
+    
     //Get the details of files for the timeline feed
     public function getFiles($student_files){
         $i = 0;
@@ -232,7 +233,7 @@ class UploadImageController extends Controller
             $type = $file->type;
             $typeDetails = ContentType::where('id',$type)->first();
             $typeName = $typeDetails->name;
-            if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "image" )
+//            if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "image" ) {
                 $filePath = $file->url;
                 $title = $file->name;
                 $description = $file->description;
@@ -243,9 +244,11 @@ class UploadImageController extends Controller
                     'title' => $title,
                     'description' => $description,
                     'type' => $type,
-                    'typeName'=>$typeName,
+                    'typeName' => $typeName,
                     'created_at' => $createdAt
                 );
+
+//            }
         }
         return $files;
     }
@@ -278,8 +281,8 @@ class UploadImageController extends Controller
             $path = 'public/'.substr($fileUrl,9);
             Storage::delete($path);
            $imageDetails->delete();
-//            $studentImages = ImageStudent::where('image_id',$id)->first();
-//            $studentImages->delete();
+            $studentImages = ImageStudent::where('image_id',$id)->first();
+            $studentImages->delete();
         }
         catch (Exception $e){
             \DB::rollback();

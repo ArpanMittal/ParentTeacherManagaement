@@ -646,6 +646,7 @@ class AppointmentController extends Controller
             $token = $request->get('token');;
             $user = JWTAuth::toUser($token);
             $userId = $user->id;
+          
         }catch (TokenExpiredException $e){
             return Response::json (['Token expired'],498);
         }catch (TokenInvalidException $e){
@@ -657,7 +658,9 @@ class AppointmentController extends Controller
         $freeSlots=array();
         $i=0;
         //Send free slots
-        while ($dateCount!=7){
+//        while ($dateCount!=7)
+//        {
+
             $studentDetails= Student::where('parent_id',$userId)->first();
             $gradeId = $studentDetails->grade_id;
             $calendarEvents = \DB::table('grade_user')
@@ -666,9 +669,9 @@ class AppointmentController extends Controller
                 ->where('teacherAppointmentsSlots.isBooked',0)
                 ->where('grade_user.grade_id',$gradeId)
                 ->where('calendar_events.eventType','Free Slot')
-                ->whereDate('calendar_events.start',$date)
+                ->whereDate('calendar_events.start','>',$date)
                 ->get();
-            
+        
             foreach ($calendarEvents as $calendarEvent)
             {
                 $calendarEventId = $calendarEvent->id;
@@ -695,9 +698,10 @@ class AppointmentController extends Controller
                     'endTime' => $endTime
                 );
             }
-            $dateCount++;
-            $date++;
-        }
+//            $dateCount++;
+//            $date = date('Y-m-d',strtotime( $date. ' + 1 days'));
+
+//        }
         $appointmentData=array();
         $j=0;
         $appointmentRequests = AppointmentRequest::all()
