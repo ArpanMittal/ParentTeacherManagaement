@@ -197,15 +197,13 @@ class UploadImageController extends Controller
             return Response::json (['Token invalid']);
         }
         $lastImageId = $request->get('lastImageId');
-        if (is_null($lastImageId)||$lastImageId==""){
-
+        if (is_null($lastImageId)){
             $studentDetails = Student::where('parent_id', $userId)->first();
             $studentId = $studentDetails->id;
             $student_files = ImageStudent::orderBy('created_at', 'desc')
                 ->take(10)
                 ->where('student_id',$studentId)
                 ->get();
-            return $student_files;
             $files = $this->getFiles($student_files);
             return Response::json([$files,HttpResponse::HTTP_OK]);
         }
@@ -229,7 +227,6 @@ class UploadImageController extends Controller
     public function getFiles($student_files){
         $i = 0;
         $files = array();
-
         foreach ($student_files as $student_file) {
             $fileId = $student_file->image_id;
             $file = Category::where('id', $fileId)->first();
