@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)){
                     //Getting the registration token from the intent
                     GCMId = intent.getStringExtra("token");
+                    Log.d("GCMTOKEN",GCMId);
                     new SharedPrefrence().saveGCMRegistrationId(getApplicationContext(), GCMId);
                     GCM_flag=1;
                     fetchman();
