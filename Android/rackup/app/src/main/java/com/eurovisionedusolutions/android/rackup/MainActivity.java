@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity{
                             case R.id.action_item5:
                                 selectedFragment=Feed_Activity.newInstance();
                                 break;
+                            case R.id.action_item6:
+                                selectedFragment = Maps_Fragment.newInstance();
+                                break;
 
                         }
                         if(item.getItemId() == R.id.action_item5)

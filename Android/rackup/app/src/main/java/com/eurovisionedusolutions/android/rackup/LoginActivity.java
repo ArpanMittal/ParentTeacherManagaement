@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     VideoAPI_Call vid=new VideoAPI_Call(this);
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     // UI references.
+    private String password;
     private String database_email,database_pwd;
     private int database_id;
     private EditText mEmailView;
@@ -88,8 +89,10 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                         if(GCM_flag==1){
                             pd = new ProgressDialog(LoginActivity.this);
                             pd.setMessage("loading");
-                            new RemoteHelper(getApplicationContext()).verifyLogin(LoginActivity.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, database_email, database_pwd,GCMId);
-                            pd.show();
+                            if(database_email != null && database_pwd!= null) {
+                                new RemoteHelper(getApplicationContext()).verifyLogin(LoginActivity.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, database_email, database_pwd, GCMId);
+                                pd.show();
+                            }
                         }
                     }
                     //Displaying the token as toast
@@ -263,7 +266,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 pd.show();
             }
             else {
-                Toast.makeText(getApplicationContext(), "GCM Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "GCM Error! Please Try Again", Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(getApplicationContext(), "Not Connected to the internet", Toast.LENGTH_LONG).show();
@@ -294,7 +297,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     }
 
     private boolean validatePassword() {
-        String password=mPasswordView.getText().toString().trim();
+        password=mPasswordView.getText().toString().trim();
         inputLayoutPassword.setErrorEnabled(false);
         if (password.isEmpty()) {
          //   inputLayoutPassword.setError(getString(R.string.err_msg_password));
@@ -364,7 +367,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         String name, primaryContact,secondaryContact,dob;
            String fatherName,motherName,grade,teacherName,teacherContact;
         pd.dismiss();
-        if (isSuccessful) {
+        if (isSuccessful)
+        {
 
             try {
                 status=response.getJSONObject(1).getInt("original");
@@ -375,7 +379,10 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 student_name=response.getJSONObject(0).getString("studentName");
                 address=response.getJSONObject(0).getString("address");
                  dob=response.getJSONObject(0).getString("dob");
-
+                if(password ==  null)
+                    password1 = database_pwd;
+                else
+                    password1 = password;
                 fatherName=response.getJSONObject(0).getString("fatherName");
                 motherName=response.getJSONObject(0).getString("motherName");
                 secondaryContact=response.getJSONObject(0).getString("secondaryContact");
@@ -404,9 +411,10 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 email = "error";
             }
             Toast.makeText(getApplicationContext(), email, Toast.LENGTH_LONG).show();
-        } else {
+        }
+        else {
 
-            Toast.makeText(getApplicationContext(), "can't connect to server", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Something Went Wrong! Please Try Again ", Toast.LENGTH_LONG).show();
         }
 
     }

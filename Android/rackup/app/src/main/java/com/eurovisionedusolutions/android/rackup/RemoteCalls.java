@@ -13,8 +13,8 @@ public enum RemoteCalls {
     UPDATE_THE_APPOINTMENT_4,
     BookAppointment_Confirm,
     CANCEL_THE_APPOINTMENT,
-    EDIT_PROFILE
-
+    EDIT_PROFILE,
+    GET_NOTIFICATION_LIST;
 
 
 }

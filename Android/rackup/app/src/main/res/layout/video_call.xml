@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/green"
     android:gravity="top|bottom|left|right|center_vertical|fill_vertical|center_horizontal|fill_horizontal|center|fill|start|end"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_width="match_parent">
 
 
@@ -10,8 +10,16 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        />
+        android:background="?attr/colorPrimary" />
+
+    <ProgressBar
+        android:id="@+id/dashboard_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp" />
 
 
     <ImageView
@@ -19,5 +27,14 @@
         android:layout_weight="1.0"
         android:layout_width="wrap_content"
         android:id="@+id/imageView5"
+        android:visibility="gone"
         android:src="@drawable/video_call" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
