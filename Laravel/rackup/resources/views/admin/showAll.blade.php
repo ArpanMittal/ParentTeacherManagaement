@@ -31,6 +31,7 @@
                     <th>DESCRIPTION</th>
                     <th>UPLOADED BY</th>
                     <th>TYPE</th>
+                    <th>DELETE</th>
                 </tr>
                 </thead>
 
@@ -43,6 +44,15 @@
                         <td>{{$uploadedFile['description']}}</td>
                         <td>{{$uploadedFile['uploadedBy']}}</td>
                         <td>{{$uploadedFile['type']}}</td>
+                        <td><a href="{{ url('/showAll/'.$uploadedFile['id']) }}">Delete</a></td>
+                        {{--<td><a href="{{ route('showAll') }}">Delete</a></td>--}}
+                        {{--<td><a href="{{ URL::to("showAll/".$uploadedFile['id'].")) }}"> Delete </a> </td>--}}
+                        {{--<td><form action="#/{{$uploadedFile['id']}}" method="DELETE" style="display: inline;"--}}
+                                  {{--onsubmit="if(confirm('Delete? Are you sure?'))--}}
+                   {{--{ return true }--}}
+                   {{--else {return false };">--}}
+                                {{--<button class="btn btn-danger" type="submit">Delete</button>--}}
+                            {{--</form></td>--}}
                     </tr>
                 @endforeach
 

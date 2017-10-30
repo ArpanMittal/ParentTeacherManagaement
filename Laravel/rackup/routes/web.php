@@ -25,6 +25,7 @@ Route::post('/editProfile{id}','AdminController@updateProfileDetails')->name('up
 Route::get('/assignTeacher','AdminController@getAssignTeacher')->name('getAssignTeacher');
 Route::post('/assignTeacher','AdminController@postAssignTeacher')->name('postAssignTeacher');
 Route::get('/showAll','AdminController@showAll')->name('showAll');
+
 //Route::get('/showAllFiles','AdminController@showAllFiles')->name('showPdf');
 //Route::get('/showAllVideos','AdminController@showAllVideos')->name('showVideos');
 Route::resource('admin','AdminController');
@@ -61,7 +62,7 @@ Route::resource('appointments','AppointmentController');
 
 Route::resource('school_events','SchoolEventController');
 
-Route::get('storage/{filename}', function ($filename)
+Route::get('/{filename}', function ($filename)
 {
     $path = storage_path('public/'.$filename);
 
@@ -74,3 +75,8 @@ Route::get('storage/{filename}', function ($filename)
     $response->header("Content-Type", $type);
     return $response;
 });
+
+//Route::get('/showAll/{id}',function ($id){
+//    return  "hello";})->name('showAll');
+
+Route::get('/showAll/{id}','AdminController@destroy')->name('destroy');

@@ -264,6 +264,7 @@ class AdminController extends Controller
         $i= 0;
         foreach ($uploadedFileDetails as $uploadedFileDetail){
             $title = $uploadedFileDetail->name;
+            $id = $uploadedFileDetail->id;
             $url = $uploadedFileDetail->url;
             $file_token = array("filePath"=>$url,"token"=>$token);
             $file_token=encrypt($file_token);
@@ -274,6 +275,7 @@ class AdminController extends Controller
             $typeName = $typeDetails->name;
             $uploadedFiles[$i++] = array(
                 'title'=>$title,
+                'id'=>$id,
                 'url'=>$file_token,
                 'description'=>$description,
                 'uploadedBy'=>$uploadedBy,
@@ -282,5 +284,25 @@ class AdminController extends Controller
         }
 
         return view('admin.showAll',compact('uploadedFiles'),$data);
+    }
+
+    public function destroy($id){
+        
+        try {
+            \DB::beginTransaction();
+            $imageDetails = Category::where('id',$id)->first();
+            $fileUrl = $imageDetails->url;
+            $path = 'public/'.substr($fileUrl,9);
+            Storage::delete($path);
+            $imageDetails->delete();
+//            $studentImages = ImageStudent::where('image_id',$id)->first();
+//            $studentImages->delete();
+        }
+        catch (Exception $e){
+            \DB::rollback();
+            return redirect(route('showAll'))->with('failure', 'Cannot delete image.');
+        }
+        \DB::commit();
+        return redirect(route('showAll'))->with('success', 'Image Deleted Successfully.');
     }
 }

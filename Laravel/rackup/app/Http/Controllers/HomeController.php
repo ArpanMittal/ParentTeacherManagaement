@@ -87,6 +87,18 @@ class HomeController extends Controller
         return redirect('login');
     }
 
+    public function getStudentDetails(Request $request){
+        $user = \DB::table('students')
+            ->select('students.name','students.id','users.username' )
+            ->join('users','students.parent_id','=','users.id')
+            ->where('users.active',1)->get();
+
+        $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
+        //return Response::json(HttpResponse::HTTP_OK);
+        return response()->json([$user, $STATUS_CODE]);
+
+    }
+
 
     //Return token and save the gcm registration id of the logged in user
     public function returnToken(Request $request)

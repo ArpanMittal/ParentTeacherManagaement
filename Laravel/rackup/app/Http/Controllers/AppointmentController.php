@@ -288,6 +288,7 @@ class AppointmentController extends Controller
         );
         // Google Cloud Messaging GCM API Key
         define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
+        //define("GOOGLE_API_KEY","AIzaSyCebqaWFJ57oqDk0TeR89pVRqPp2umKTV0");
 
         $headers = array(
             'Authorization: key=' . GOOGLE_API_KEY,

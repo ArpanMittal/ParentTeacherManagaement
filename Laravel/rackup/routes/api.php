@@ -25,4 +25,5 @@ Route::post('/slotDetails','AppointmentController@sendAppointmentSlotDetails')->
 Route::post('/bookAppointments','AppointmentController@bookAppointments')->name('bookAppointments');
 Route::post('/sendEvent','AppointmentController@sendEvent')->name('sendEvent');
 Route::post('/updateEvent','AppointmentController@updateEvent')->name('updateEvent');
+Route::post('/getStudentDetails','HomeController@getStudentDetails')->name('getStudentDetails');
 //Route::post('/uploadLink','UploadController@returnUploadLink');
