@@ -268,6 +268,7 @@ class AdminController extends Controller
             $url = $uploadedFileDetail->url;
             $file_token = array("filePath"=>$url,"token"=>$token);
             $file_token=encrypt($file_token);
+            $file_token_path = $url;
             $description = $uploadedFileDetail->description;
             $uploadedBy = $uploadedFileDetail->teacherName;
             $type = $uploadedFileDetail->type;
@@ -277,6 +278,7 @@ class AdminController extends Controller
                 'title'=>$title,
                 'id'=>$id,
                 'url'=>$file_token,
+                'url_main' => $file_token_path, 
                 'description'=>$description,
                 'uploadedBy'=>$uploadedBy,
                 'type'=>$typeName

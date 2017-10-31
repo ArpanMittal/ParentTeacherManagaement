@@ -39,8 +39,9 @@
 
                 @foreach($uploadedFiles as $uploadedFile)
                     <tr>
+
                         <td>{{$uploadedFile['title']}}</td>
-                        <td><a href="{{ route('getFile', $uploadedFile['url']) }}" target="_blank">Show {{$uploadedFile['title']}}</a></td>
+                        <td><a href="{{ url('http://web.rackupcambridge.com'. $uploadedFile['url_main']) }}" target="_blank">Show {{$uploadedFile['title']}}</a></td>
                         <td>{{$uploadedFile['description']}}</td>
                         <td>{{$uploadedFile['uploadedBy']}}</td>
                         <td>{{$uploadedFile['type']}}</td>
