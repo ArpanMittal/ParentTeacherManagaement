@@ -619,6 +619,7 @@ class AppointmentController extends Controller
 //            return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
 
     }
+    }
     //Show free slots of the logged in teacher
     public function showFreeSlots($id,Request $request){
 
