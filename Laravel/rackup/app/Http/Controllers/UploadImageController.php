@@ -51,6 +51,7 @@ class UploadImageController extends Controller
     }
     //To secure url
     public function getFile($fileToken,Request $request){
+        return "hello";
         $fileToken = decrypt($fileToken);
         try {
             $token = $fileToken['token'];
