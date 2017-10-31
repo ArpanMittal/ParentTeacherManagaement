@@ -31,11 +31,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * An example of how events can be fetched from network and be displayed on the week view.
- * Created by Raquib-ul-Alam Kanak on 1/3/2014.
- * Website: http://alamkanak.github.io
- */
+
 public class AsynchronousActivity extends BaseActivity  {
     public static AsynchronousActivity newInstance() {
         AsynchronousActivity fragment = new AsynchronousActivity();

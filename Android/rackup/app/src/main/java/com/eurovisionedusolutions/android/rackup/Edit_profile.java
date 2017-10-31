@@ -45,9 +45,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.dd.CircularProgressButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.iid.InstanceID;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -98,7 +97,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     private int year, month, day;
     private String token="temp";
     private ImageView imageView;
-    private CircularProgressButton circularButton1 ;
+    private Button circularButton1 ;
     private TextInputLayout studentName_layout,studentGrade_layout,studentDOB_layout, fatherName_layout,motherName_layout,
                             primaryContact_layout, secondaryContact_layout, address_layout, teacherName_layout,teacherContact_layout;
     private EditText studentName,studentGrade,studentDOB,fatherName, motherName,primaryContact,secondaryContact, address, teacherName,
@@ -122,6 +121,8 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.edit_profile, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitle("Profile");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         done=(Button) view.findViewById(R.id.done);
         myapp=(Button) view.findViewById(R.id.cancelled_events);
@@ -140,7 +141,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
          primaryContact_layout=(TextInputLayout) view.findViewById(R.id.primaryNumber_layout);
         secondaryContact_layout=(TextInputLayout) view.findViewById(R.id.secondaryNumber_layout);
         address_layout=(TextInputLayout) view.findViewById(R.id.address_layout1);
-        circularButton1 = (CircularProgressButton) view.findViewById(R.id.done);
+        circularButton1 = (Button) view.findViewById(R.id.done);
         fatherName.setFocusable(false);
         fatherName.setClickable(false);
         motherName.setFocusable(false);
@@ -157,6 +158,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         teacherName.setClickable(false);
 
         imageView = (ImageView) view.findViewById(R.id.imageView);
+        //loadImageFromStorage();
         fetch = (Button) view.findViewById(R.id.done11);
         /*inputL=(TextInputLayout)view.findViewById(R.id.input_layout_contact);
         primaryContac=(TextInputLayout) view.findViewById(R.id.input_layout_name);
@@ -172,22 +174,22 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         student_name.setEnabled(false);
         dateView.setEnabled(false);*/
 
-        circularButton1.setIndeterminateProgressMode(true);
-        circularButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //fetchman();
+//        circularButton1.setIndeterminateProgressMode(true);
+//        circularButton1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //fetchman();
+//
+//                if (circularButton1.getProgress() == 0) {
+//                    circularButton1.setProgress(50);
+//                } else if (circularButton1.getProgress() == 100) {
+//                    circularButton1.setProgress(0);
+//                } else {
+//                    circularButton1.setProgress(100);
+//                }
 
-                if (circularButton1.getProgress() == 0) {
-                    circularButton1.setProgress(50);
-                } else if (circularButton1.getProgress() == 100) {
-                    circularButton1.setProgress(0);
-                } else {
-                    circularButton1.setProgress(100);
-                }
-               // uploadImage();
-            }
-        });
+//            }
+//        });
 
 
 
@@ -343,6 +345,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_TEACHER);
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_GRADE);
+        mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHOTO_PATH);
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
         mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL,"temp");
         mUpdateValues.putNull(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
@@ -352,7 +355,21 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         String updatedrows = String.valueOf(mRowsUpdated) + " row(s) successfully updated";
        // Toast.makeText(getContext().getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
         mydb.close();
-        Intent intent1=new Intent(getContext(),LoginActivity.class);
+        final InstanceID instanceID  = InstanceID.getInstance(getActivity());
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    instanceID.deleteInstanceID();
+                } catch (Exception bug) {
+                    bug.printStackTrace();
+                }
+
+            }
+        });
+        thread.start();
+        Intent intent1=new Intent(getContext(),Splash_Screen.class);
         //MainActivity.fa1.finish();
         getActivity().finish();
         startActivity(intent1);
@@ -379,6 +396,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                         UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT,
                         UserContract.UserDetailEntry.CoLUMN_GRADE,
                         UserContract.UserDetailEntry.CoLUMN_TEACHER,
+                        UserContract.UserDetailEntry.CoLUMN_PHOTO_PATH,
                         UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT
 
                 };
@@ -425,6 +443,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
             int mCursorColumnIndex9=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_GRADE);
             int mCursorColumnIndex10=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHER);
             int mCursorColumnIndex11=mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_TEACHERCONTACT);
+            int photopath = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_PHOTO_PATH);
             while (mCursor.moveToNext()) {
 
                 // Insert code here to process the retrieved word.
@@ -432,7 +451,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                     token=mCursor.getString(mCursorColumnIndex4);
                    studentName.setText(mCursor.getString(mCursorColumnIndex1));
                     String l=mCursor.getString(mCursorColumnIndex);
-                    //email.setText(mCursor.getString(mCursorColumnIndex));
+//                    email.setText(mCursor.getString(mCursorColumnIndex));
                     fatherName.setText(mCursor.getString(mCursorColumnIndex1));
                     primaryContact.setText(mCursor.getString(mCursorColumnIndex3));
                     secondaryContact.setText(mCursor.getString(mCursorColumnIndex8));
@@ -443,7 +462,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                     studentDOB.setText(mCursor.getString(mCursorColumnIndex2));
                     studentName.setText(mCursor.getString(mCursorColumnIndex5));
                     address.setText(mCursor.getString(mCursorColumnIndex6));
-
+                    loadImageFromStorage(mCursor.getString(photopath));
                    // Toast.makeText(getContext().getApplicationContext(),mCursor.getString(mCursorColumnIndex4), Toast.LENGTH_LONG).show();
                 }
 
@@ -468,7 +487,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     }
 
     private void uploadImage() {
-        saveToInternalStorage(bitmap1);
+        path = saveToInternalStorage(bitmap1);
         String contact_check1="",contact_check2="",address_check1="";
          contact_check1 = primaryContact.getText().toString().trim();
          contact_check2 = secondaryContact.getText().toString().trim();
@@ -509,8 +528,10 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                 studentName.getText().toString().trim(),
                 primaryContact.getText().toString().trim(),
                 address.getText().toString().trim(),
+                secondaryContact.getText().toString().trim(),
                 studentDOB.getText().toString().trim(),
-                studentName.getText().toString().trim()
+                studentName.getText().toString().trim(),
+                path
                 );}
     }
     private int update(String phone_num,String scontact,String address) {
@@ -523,6 +544,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
             mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_SECONDARYCONTACT, scontact);
 
             mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_ADDRESS,address);
+            mUpdateValues.put(UserContract.UserDetailEntry.CoLUMN_PHOTO_PATH, path);
 
             String[] mSelectionArgs = {"1"};
             int mRowsUpdated = getContext().getContentResolver().update(UserContract.BASE_CONTENT_URI_Full, mUpdateValues, mSelectionClause, mSelectionArgs);
@@ -532,7 +554,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
                 return 0;
             }else {return 1;}*/
             // Toast.makeText(getContext().getApplicationContext(), updatedrows, Toast.LENGTH_LONG).show();
-           // Toast.makeText(getContext().getApplicationContext(), "profile updated", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext().getApplicationContext(), "profile updated", Toast.LENGTH_LONG).show();
         }
         mydb.close();
         return 0;
@@ -609,16 +631,16 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
 
     private void loadImageFromStorage(String path)
     {
+        if(path != null) {
 
-        try {
-            File f=new File(path, "profile.jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            imageView.setImageBitmap(b);
+            try {
+                File f = new File(path, "profile.jpg");
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+                imageView.setImageBitmap(b);
 
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -647,7 +669,7 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
         String username = null;
         if (isSuccessful) {
-            circularButton1.setProgress(100);
+            //circularButton1.setProgress(100);
             //pd.dismiss();
             contact_flag=0;
             Toast.makeText(getContext().getApplicationContext(), "Profile Updated", Toast.LENGTH_LONG).show();

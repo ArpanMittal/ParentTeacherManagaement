@@ -1,7 +1,10 @@
 package com.eurovisionedusolutions.android.rackup;
 
+import android.content.res.Configuration;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,7 +13,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 public class ImageView_for_Feed extends AppCompatActivity {
-private ImageView imageview;
+    private ImageView imageview;
     private TextView mtitle, mdesc,mdate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +23,7 @@ private ImageView imageview;
         mtitle=(TextView)findViewById(R.id.textView5);
         mdate=(TextView)findViewById(R.id.textView6);
         mdesc=(TextView)findViewById(R.id.textView7);
-       // imageview.setImageResource(R.drawable.large_image);
+        // imageview.setImageResource(R.drawable.large_image);
         String url="",description="",title="",date="";
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -41,8 +44,24 @@ private ImageView imageview;
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //Do some stuff
+            mtitle.setVisibility(View.GONE);
+            mdate.setVisibility(View.GONE);
+            mdesc.setVisibility(View.GONE);
+        }else{
+            mtitle.setVisibility(View.VISIBLE);
+            mdate.setVisibility(View.VISIBLE);
+            mdesc.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void onBackPressed() {
-            finish();
+        finish();
     }
 
 }

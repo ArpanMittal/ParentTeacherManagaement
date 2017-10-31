@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -48,6 +49,9 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     VideoAPI_Call vid=new VideoAPI_Call(this);
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     // UI references.
+    private String password;
+    private String database_email,database_pwd;
+    private int database_id;
     private EditText mEmailView;
     private String email = "", password1 = "",student_name, address;
     public static String token="",GCMId="";
@@ -78,15 +82,35 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)){
                     //Getting the registration token from the intent
                     GCMId = intent.getStringExtra("token");
+                    Log.d("GCMTOKEN",GCMId);
+                    new SharedPrefrence().saveGCMRegistrationId(getApplicationContext(), GCMId);
                     GCM_flag=1;
+                    fetchman();
+                    if(database_id != 0){
+                        if(GCM_flag==1){
+                            pd = new ProgressDialog(LoginActivity.this);
+                            pd.setMessage("loading");
+                            if(database_email != null && database_pwd!= null) {
+                                new RemoteHelper(getApplicationContext()).verifyLogin(LoginActivity.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, database_email, database_pwd, GCMId);
+                                pd.show();
+                            }
+                        }
+                    }
                     //Displaying the token as toast
                   //  Toast.makeText(getApplicationContext(), "Registration token:" + GCMId, Toast.LENGTH_LONG).show();
 
                     //if the intent is not with success then displaying error messages
-                } else if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)){
-                    GCM_flag=0;
+                }
+                else if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)){
+                    if((GCMId = new SharedPrefrence().getGcmregitrationId(getApplicationContext()))!= null) {
+
+                        GCM_flag = 1;
+                    }
+                    else
+                        GCM_flag=0;
                   //  Toast.makeText(getApplicationContext(), "GCM registration error!", Toast.LENGTH_LONG).show();
                 } else {
+
                     GCM_flag=0;
                   //  Toast.makeText(getApplicationContext(), "Error occurred (GCM)", Toast.LENGTH_LONG).show();
                 }
@@ -119,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        button = (Button) findViewById(R.id.button2);
+//        button = (Button) findViewById(R.id.button2);
         mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_Email);
@@ -127,7 +151,9 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailView.addTextChangedListener(new MyTextWatcher(mEmailView));
         mPasswordView.addTextChangedListener(new MyTextWatcher(mPasswordView));
-         Splash_Screen.fa.finish();
+        if(Splash_Screen.fa!=null)
+            Splash_Screen.fa.finish();
+
 
 
 
@@ -143,12 +169,54 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         /*
         forgot password button on click
          */
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                forgotpassword();
+//        button.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                forgotpassword();
+//            }
+//        });
+
+    }
+
+    public void fetchman() {
+
+        mydb = new DBHelper(this);
+        //To retrive information on opening the edit profile page
+        String[] mProjection =
+                {
+                        UserContract.UserDetailEntry.COLUMN_ID,    // Contract class constant for the _ID column name
+                        UserContract.UserDetailEntry.CoLUMN_EMAIL, // Contract class constant for the locale column name
+                        UserContract.UserDetailEntry.CoLUMN_PASSWORD
+                };
+        String mSelectionClause = UserContract.UserDetailEntry.COLUMN_ID + "=?";
+        String[] mSelectionArgs = {"1"};
+        Cursor mCursor;
+        String mSortOrder = null;
+        mCursor = getContentResolver().query(
+                UserContract.BASE_CONTENT_URI_Full,  // The content URI of the words table
+                mProjection,                       // The columns to return for each row
+                mSelectionClause,                   // Either null, or the word the user entered
+                mSelectionArgs,                    // Either empty, or the string the user entered
+                mSortOrder);
+        if (mCursor.getCount() > 0) {
+            //Search is successful
+            // Insert code here to do something with the results
+            int mCursorColumnIndex_main = mCursor.getColumnIndex(UserContract.UserDetailEntry.COLUMN_ID);
+            int mCursorColumnIndex_email = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_EMAIL);
+            int mCursorColumnIndex_password = mCursor.getColumnIndex(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
+
+            while (mCursor.moveToNext()) {
+                // Insert code here to process the retrieved word.
+                database_email = mCursor.getString(mCursorColumnIndex_email);
+                database_pwd = mCursor.getString(mCursorColumnIndex_password);
+                database_id = mCursor.getInt(mCursorColumnIndex_main);
+
+                // end of while loop
             }
-        });
+        }
+        mCursor.close();
+        mydb.close();
+
 
     }
     //Registering receiver on activity resume
@@ -189,14 +257,18 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         String email = mEmailView.getText().toString();
         password1 = mPasswordView.getText().toString();
 
-        if (isNetworkAvailable() == true) {
+        if (isNetworkAvailable() == true)
+        {
 
             if(GCM_flag==1){
-            pd = new ProgressDialog(this);
-            pd.setMessage("loading");
-            new RemoteHelper(getApplicationContext()).verifyLogin(this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password1,GCMId);
-            pd.show();}
-            else {Toast.makeText(getApplicationContext(), "GCM Error", Toast.LENGTH_LONG).show();}
+                pd = new ProgressDialog(this);
+                pd.setMessage("loading");
+                new RemoteHelper(getApplicationContext()).verifyLogin(this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password1,GCMId);
+                pd.show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "GCM Error! Please Try Again", Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(getApplicationContext(), "Not Connected to the internet", Toast.LENGTH_LONG).show();
         }
@@ -207,7 +279,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
          inputLayoutEmail.setErrorEnabled(false);
         if (email.isEmpty()) {
            // inputLayoutEmail.setError(getString(R.string.err_msg_email));
-            mEmailView.setTextColor(Color.RED);
+            mEmailView.setTextColor(Color.DKGRAY);
             requestFocus(mEmailView);
             return false;
         }
@@ -218,7 +290,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
             return false;
         }
         else {
-            mEmailView.setTextColor(Color.GREEN);
+            mEmailView.setTextColor(Color.DKGRAY);
           //  inputLayoutEmail.setErrorEnabled(false);
         }
 
@@ -226,11 +298,11 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
     }
 
     private boolean validatePassword() {
-        String password=mPasswordView.getText().toString().trim();
+        password=mPasswordView.getText().toString().trim();
         inputLayoutPassword.setErrorEnabled(false);
         if (password.isEmpty()) {
          //   inputLayoutPassword.setError(getString(R.string.err_msg_password));
-            mPasswordView.setTextColor(Color.RED);
+            mPasswordView.setTextColor(Color.DKGRAY);
             requestFocus(mPasswordView);
             return false;
         } else if (password.length()<8){
@@ -240,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
             return false;
         }else {
            // inputLayoutPassword.setErrorEnabled(false);
-            mPasswordView.setTextColor(Color.GREEN);
+            mPasswordView.setTextColor(Color.DKGRAY);
         }
 
         return true;
@@ -292,10 +364,12 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
      */
     @Override
     public void HandleRemoteCall(boolean isSuccessful, RemoteCalls callFor, JSONArray response, Exception exception) {
-           int status=0;String name, primaryContact,secondaryContact,dob;
+           int status=0;
+        String name, primaryContact,secondaryContact,dob;
            String fatherName,motherName,grade,teacherName,teacherContact;
         pd.dismiss();
-        if (isSuccessful) {
+        if (isSuccessful)
+        {
 
             try {
                 status=response.getJSONObject(1).getInt("original");
@@ -306,6 +380,10 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 student_name=response.getJSONObject(0).getString("studentName");
                 address=response.getJSONObject(0).getString("address");
                  dob=response.getJSONObject(0).getString("dob");
+                if(password ==  null)
+                    password1 = database_pwd;
+                else
+                    password1 = password;
                 fatherName=response.getJSONObject(0).getString("fatherName");
                 motherName=response.getJSONObject(0).getString("motherName");
                 secondaryContact=response.getJSONObject(0).getString("secondaryContact");
@@ -334,9 +412,10 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 email = "error";
             }
             Toast.makeText(getApplicationContext(), email, Toast.LENGTH_LONG).show();
-        } else {
+        }
+        else {
 
-            Toast.makeText(getApplicationContext(), "can't connect to server", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Something Went Wrong! Please Try Again ", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -362,9 +441,9 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
         sendIntent.setPackage("com.whatsapp");
         startActivity(sendIntent);*/
 
-        //forget password action
-        Intent intent5=new Intent(this,MyAppointments_CardView.class);
-        startActivity(intent5);
+//        //forget password action
+//        Intent intent5=new Intent(this,MyAppointments_CardView.class);
+//        startActivity(intent5);
     }
 
 

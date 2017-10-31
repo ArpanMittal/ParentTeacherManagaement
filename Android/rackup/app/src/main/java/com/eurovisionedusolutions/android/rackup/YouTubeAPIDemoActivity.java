@@ -21,8 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-import com.eurovisionedusolutions.android.rackup.adapter.DemoListViewItem;
-import com.eurovisionedusolutions.android.rackup.adapter.DemoArrayAdapter;
+import com.eurovisionedusolutions.android.rackup.DemoListViewItem;
+import com.eurovisionedusolutions.android.rackup.DemoArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class YouTubeAPIDemoActivity extends AppCompatActivity implements OnItemC
                     getPackageName(), PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA);
 
         } catch (NameNotFoundException e) {
-            Log.e(getString(R.string.loggingTag), "Could not find package with name " + getPackageName());
+//            Log.e(getString(R.string.loggingTag), "Could not find package with name " + getPackageName());
             finish();
         }
 

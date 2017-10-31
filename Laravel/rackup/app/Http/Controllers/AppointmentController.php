@@ -261,6 +261,24 @@ class AppointmentController extends Controller
         return redirect(route('appointments.index'));
 
     }
+
+    private function addMessageToNoticeBoard($userId, $message){
+//        $message = serialize($message);
+        $message = json_encode($message);
+        try {
+            DB::beginTransaction();
+            $request = DB::table('notifications')
+                ->insert(
+                    ['parent_id' => $userId , 'message' => $message]
+                );
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Response::json("Insertion failed", HttpResponse::HTTP_PARTIAL_CONTENT);
+        }
+        DB::commit();
+        return $request;
+    }
+
     //Change contact no of teacher in case of different whatsapp number
     public function changeContactNumber($id){
         $contactNo = Input::get('contact');
@@ -287,8 +305,7 @@ class AppointmentController extends Controller
             'data' => $message,
         );
         // Google Cloud Messaging GCM API Key
-        define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
-        //define("GOOGLE_API_KEY","AIzaSyCebqaWFJ57oqDk0TeR89pVRqPp2umKTV0");
+        define("GOOGLE_API_KEY","AIzaSyA7L7TUfGzpFtIBGLvxA8YAB4gcSCeiJII");
 
         $headers = array(
             'Authorization: key=' . GOOGLE_API_KEY,
@@ -382,10 +399,15 @@ class AppointmentController extends Controller
         DB::commit();
         $eventDetails = CalendarEvent::where('id',$calendarEventId)->first();
         $url = $eventDetails->imageUrl;
-        $message = array("message"=>"Your appointment with $teacherName on $startDate from $startTime to $endTime has been cancelled due to $cancellationReason",
-            "eventId"=>$calendarEventId,"imageUrl"=>$url,"type"=>4);
-        $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
-        return redirect(route('appointments.index'));
+        $message = array("message" => "Your appointment with $teacherName on $startDate from $startTime to $endTime has been cancelled due to $cancellationReason",
+            "eventId" => $calendarEventId, "imageUrl" => $url, "type" => 4);
+//        $this->sendPushNotificationToGCM($gcmRegistrationId, $message);
+//        return redirect(route('appointments.index'));
+
+        if($this->addMessageToNoticeBoard($parentId, $message)) {
+            $this->sendPushNotificationToGCM($gcmRegistrationId, $message);
+            return redirect(route('appointments.index'));
+        }
 
     }
     /**
@@ -579,18 +601,22 @@ class AppointmentController extends Controller
                 $appointmentLog->triggeredBy = $teacherName;
                 $appointmentLog->save();
 
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 \DB::rollback();
                 redirect(route('appointments.index'))->with('failure', 'Could not send appointment request. Please try again');
             }
             \DB::commit();
-            $eventDetails = CalendarEvent::where('id',$calendarEvent->id)->first();
+            $eventDetails = CalendarEvent::where('id', $calendarEvent->id)->first();
             $url = $eventDetails->imageUrl;
-            $message =array("message"=> "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.Whatsapp Video Call Number : $contactNo",
-                "eventId"=> $calendarEvent->id,"imageUrl"=>$url,"type"=>4);
-            $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
-            return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
-        }
+            $message = array("message" => "Request of Appointment by $teacherName on $startDate from $startTime to $endTime.Whatsapp Video Call Number : $contactNo",
+                "eventId" => $calendarEvent->id, "imageUrl" => $url, "type" => 4);
+//            $this->sendPushNotificationToGCM($gcmRegistrationId, $message);
+            if($this->addMessageToNoticeBoard($parentId, $message)) {
+                $this->sendPushNotificationToGCM($gcmRegistrationId, $message);
+//                return redirect(route('appointments.index'));
+                return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
+            }
+//            return redirect(route('appointments.index'))->with('success', 'Appointment Request Sent Successfully');
 
     }
     //Show free slots of the logged in teacher
@@ -654,50 +680,48 @@ class AppointmentController extends Controller
         }
         $today = Carbon::today()->addDay();
         $date = $today->toDateString();
-        $dateCount=0;
-        $freeSlots=array();
-        $i=0;
+        $dateCount = 0;
+        $freeSlots = array();
+        $i = 0;
         //Send free slots
-        while ($dateCount!=7){
-            $studentDetails= Student::where('parent_id',$userId)->first();
-            $gradeId = $studentDetails->grade_id;
-            $calendarEvents = \DB::table('grade_user')
-                ->join('teacherAppointmentsSlots','grade_user.user_id','=','teacherAppointmentsSlots.teacher_id')
-                ->join('calendar_events','teacherAppointmentsSlots.calendarEventsId','calendar_events.id')
-                ->where('teacherAppointmentsSlots.isBooked',0)
-                ->where('grade_user.grade_id',$gradeId)
-                ->where('calendar_events.eventType','Free Slot')
-                ->whereDate('calendar_events.start',$date)
-                ->get();
-            
-            foreach ($calendarEvents as $calendarEvent)
-            {
-                $calendarEventId = $calendarEvent->id;
-                $title = $calendarEvent->title;
-                $start = $calendarEvent->start;
-                $startDateTime = Carbon::parse($start);
-                $startDate = $startDateTime->toDateString();
-                $startTime = $startDateTime->toTimeString();
-                $end = $calendarEvent->end;
-                $endDateTime = Carbon::parse($end);
-                $endDate = $startDateTime->toDateString();
-                $endTime = $endDateTime->toTimeString();
-                $teacherId = $calendarEvent->teacher_id;
-                $teacherDetails = UserDetails::where('user_id', $teacherId)->first();
-                $teacherName = $teacherDetails->name;
-                $freeSlots[$i++] = array(
-                    'id' => $calendarEventId,
-                    'teacherId' => $teacherId,
-                    'teacherName' => $teacherName,
-                    'title' => $title,
-                    'startDate'=>$startDate,
-                    'endDate'=>$endDate,
-                    'startTime' => $startTime,
-                    'endTime' => $endTime
-                );
-            }
-            $dateCount++;
-            $date++;
+//        while ($dateCount!=7)
+//        {
+
+        $studentDetails = Student::where('parent_id', $userId)->first();
+        $gradeId = $studentDetails->grade_id;
+        $calendarEvents = \DB::table('grade_user')
+            ->join('teacherAppointmentsSlots', 'grade_user.user_id', '=', 'teacherAppointmentsSlots.teacher_id')
+            ->join('calendar_events', 'teacherAppointmentsSlots.calendarEventsId', 'calendar_events.id')
+            ->where('teacherAppointmentsSlots.isBooked', 0)
+            ->where('grade_user.grade_id', $gradeId)
+            ->where('calendar_events.eventType', 'Free Slot')
+            ->whereDate('calendar_events.start', '>', $date)
+            ->get();
+
+        foreach ($calendarEvents as $calendarEvent) {
+            $calendarEventId = $calendarEvent->id;
+            $title = $calendarEvent->title;
+            $start = $calendarEvent->start;
+            $startDateTime = Carbon::parse($start);
+            $startDate = $startDateTime->toDateString();
+            $startTime = $startDateTime->toTimeString();
+            $end = $calendarEvent->end;
+            $endDateTime = Carbon::parse($end);
+            $endDate = $startDateTime->toDateString();
+            $endTime = $endDateTime->toTimeString();
+            $teacherId = $calendarEvent->teacher_id;
+            $teacherDetails = UserDetails::where('user_id', $teacherId)->first();
+            $teacherName = $teacherDetails->name;
+            $freeSlots[$i++] = array(
+                'id' => $calendarEventId,
+                'teacherId' => $teacherId,
+                'teacherName' => $teacherName,
+                'title' => $title,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'startTime' => $startTime,
+                'endTime' => $endTime
+            );
         }
         $appointmentData=array();
         $j=0;

@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.eurovisionedusolutions.android.rackup.R.id.address;
+
 /**
  * Created by sushant on 2/2/2017.
  */
@@ -32,6 +34,7 @@ public class RemoteHelper {
     String GET_PROFILE_DETAIL;
     String SAVE_PROFILE_DETAIL;
     String GET_DASHBOARD_IMAGE_LIST;
+    String GET_NOTIFICATION_LIST;
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     String LOGIN_PAGE;
     String FETCH_CONTENT_PAGE;
@@ -77,6 +80,7 @@ public class RemoteHelper {
         GET_USER_BAG_DETAILS = "api/v1/userPackage";
         GET_PAYMENT_INFORMATION = "api/v1/userOrder";
         CHANGE_STREAM_START_POINT = this.context.getResources().getString(R.string.change_stream_start_point_page);
+        GET_NOTIFICATION_LIST = "GET_NOTIFICATION_LIST";
         //////////////////////////////////////////////////////////////////////////////////////
         GET_SINGLEADAPTIVE_TEST = this.context.getResources().getString(R.string.get_single_adaptive_test);
         LOGIN_PAGE = this.context.getResources().getString(R.string.login_page);
@@ -208,8 +212,8 @@ public class RemoteHelper {
         new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);
 
     }
-    public void Edit_profile(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String parentName,String contact,
-                             String address, String dob, String studentName) {
+    public void Edit_profile(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String parentName,String contact,String secondryContact,
+                             String address, String dob, String studentName, String path) {
         //  verifyLoginurl=R.string.loginurl;
         Map<String, String> params = new HashMap<String, String>();
       /*  params.put("client_id", GlobalConstants.CLIENT_ID);
@@ -219,8 +223,10 @@ public class RemoteHelper {
         params.put("parentName",parentName);
         params.put("contact",contact);
         params.put("address",address);
+        params.put("secondryContact",secondryContact);
         params.put("dob",dob);
         params.put("studentName",studentName);
+        params.put("profile_pic",path);
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/x-www-form-urlencoded");
         new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);
@@ -238,6 +244,14 @@ public class RemoteHelper {
         header.put("Content-Type", "application/x-www-form-urlencoded");
         new JSONParserAsync(this.context.getResources().getString(R.string.FeedActivity), params, header, caller, functionCalled);
 
+    }
+
+    public void getNotificationList(RemoteCallHandler caller, RemoteCalls functionCalled, String token){
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("token", token);
+        Map<String, String> header = new HashMap<String, String>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+        new JSONParserAsync(this.context.getResources().getString(R.string.NotficationActivity), params, header, caller, functionCalled);
     }
 }
 

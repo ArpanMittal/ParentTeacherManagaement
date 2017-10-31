@@ -2,6 +2,7 @@ package com.eurovisionedusolutions.android.rackup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,8 @@ import java.util.ArrayList;
 
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
-    private Context context;
+  private Context context;
   private Context context1;
-
   public MyAdapter(Context context, ArrayList<EventModel_Feed> items){
     this.context=context;
     this.items = items;
@@ -39,19 +39,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
 
   @Override
   public void onBindViewHolder(final ViewHolder holder, final int position) {
-   // final Context context = parent.getContext();
+    // final Context context = parent.getContext();
     final String itemText = items.get(position).getTitle();
     final String date=items.get(position).getTime();
     final String description=items.get(position).getDescription();
-    final String type=items.get(position).getType();
-    final int l =Integer.parseInt(type);
-
     Picasso.with(context1).load("http://web.rackupcambridge.com"+items.get(position).getImage_url()).into(holder.imageView);
     //Picasso.with(context1).load("http://web.rackupcambridge.com/storage/1/50_republic day 2.jpg").into(holder.imageView);
     holder.tvItem.setText(itemText);
     holder.dateView.setText(date);
     holder.description.setText(description);
-
 
     /*if(position%2==1){
     holder.imageView.setImageResource(R.drawable.large_image);}
@@ -60,19 +56,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-       // holder.tvItem.setText(itemText+","+ String.valueOf(position));
-        if(l==5){
-        Intent act= new Intent(context,ImageView_for_Feed.class);
-        act.putExtra("imageURL",items.get(position).getImage_url());
-        act.putExtra("date",items.get(position).getTime());
-        act.putExtra("description",items.get(position).getDescription());
-        act.putExtra("title",items.get(position).getTitle());
-        context.startActivity(act);}
-        else {
-          Intent web=new Intent(context, WebviewActivity.class);
-          context.startActivity(web);
-        }
+//        Intent act = new Intent(MyAdapter.this.context, ImageView_for_Feed.class);
+//        act.putExtra("imageURL", ((EventModel_Feed) MyAdapter.this.items.get(position)).getImage_url());
+//        act.putExtra("date", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTime());
+//        act.putExtra("description", ((EventModel_Feed) MyAdapter.this.items.get(position)).getDescription());
+//        act.putExtra("title", ((EventModel_Feed) MyAdapter.this.items.get(position)).getTitle());
+//        MyAdapter.this.context.startActivity(act);
+//        MyAdapter.this.context.startActivity(act);
 
+        Intent intent = new Intent(MyAdapter.this.context,ImageFeedViewPager.class);
+        Bundle bundle = new Bundle();
+//        bundle.putSerializable("value", items);
+        intent.putExtra(ImageFeedViewPager.IMAGEVIEWLIST, items);
+        intent.putExtra(ImageFeedViewPager.CURRENTPOSITION, position);
+        MyAdapter.this.context.startActivity(intent);
+//        holder.tvItem.setText(itemText+","+ String.valueOf(position));
+//        Intent l= new Intent(context,ImageView_for_Feed.class);
+//        context.startActivity(l);
 
       }
     });
@@ -92,7 +92,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
   public class ViewHolder extends RecyclerView.ViewHolder {
     protected TextView tvItem;
     private TextView dateView;
-     private ImageView imageView;
+    private ImageView imageView;
     private TextView description;
     public ViewHolder(final View itemView) {
       super(itemView);

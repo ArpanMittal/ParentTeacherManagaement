@@ -9,6 +9,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +22,10 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.text.ParseException;
+
+
+
+import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_HIGH;
 
 
 //Class is extending GcmListenerService
@@ -40,22 +45,50 @@ public static String  token="";
         if(data!=null) {
                 message = data.getString("message");
                 event = data.getString("eventId");
-                api_event_int = Integer.parseInt(event);
+                if(event!=null)
+                    api_event_int = Integer.parseInt(event);
+                else
+                    api_event_int = 0;
 
 
         }
-        //api_event_int=Integer.valueOf("event");
-        //message_int=Integer.valueOf(message);
-        //Displaying a notiffication with the message
-        token=fetchman();
-        new RemoteHelper(getApplicationContext()).Slot_Details(GCMPushReceiverService.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, token);
+        if(d == 2)
+        {
+            Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher);
+            NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+
+                    .setContentText(message)
+                    .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+//                    .setSmallIcon(R.mipmap.ic_launcher)
+//                    .setLargeIcon(icon)
+                    .setAutoCancel(true)
+                    .setContentTitle("Photo List Updated")
+//                    .setContentIntent(pendingIntent)
+                    .setColor(getResources().getColor(R.color.colorPrimary))
+                    .setSound(sound);
+
+            noBuilder.setVibrate(new long[] { 0, 200, 200, 200, 200, 200 });
+
+            NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(0, noBuilder.build()); //0 = ID of notification
+
+        }
+        else {
+            //api_event_int=Integer.valueOf("event");
+            //message_int=Integer.valueOf(message);
+            //Displaying a notiffication with the message
+            token = fetchman();
+            new RemoteHelper(getApplicationContext()).Slot_Details(GCMPushReceiverService.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, token);
+        }
 
 
     }
 
 
     //This method is generating a notification and displaying the notification
-    private void sendNotification(String message) {
+    private void sendNotification(String message)
+    {
         Intent intent = new Intent(GCMPushReceiverService.this, Notification_activity.class);
         intent.putExtra("title",title);
         intent.putExtra("startTime", startDateTime);
@@ -67,20 +100,26 @@ public static String  token="";
         intent.putExtra("Name", teacherName);
         intent.putExtra("Date", startDate);
         intent.putExtra("teacherId",teacherId);
-
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+        
        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         int requestCode = 0;
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher);
 
         NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+
                 .setContentText(message)
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setPriority(IMPORTANCE_HIGH)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
+                .setContentTitle("Appointment Status")
                 .setContentIntent(pendingIntent)
-                .setColor(getResources().getColor(R.color.colorAccent))
+                .setColor(getResources().getColor(R.color.colorPrimary))
                 .setSound(sound);
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

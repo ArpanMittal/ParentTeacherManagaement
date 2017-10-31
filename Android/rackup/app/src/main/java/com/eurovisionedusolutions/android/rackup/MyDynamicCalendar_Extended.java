@@ -3,6 +3,7 @@ package com.eurovisionedusolutions.android.rackup;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,8 @@ import com.desai.vatsal.mydynamiccalendar.ShowDayViewEventsListAdapter;
 import com.desai.vatsal.mydynamiccalendar.ShowEventsModel;
 import com.desai.vatsal.mydynamiccalendar.ShowWeekViewEventsListAdapter;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,12 +68,17 @@ import com.desai.vatsal.mydynamiccalendar.OnWeekDayViewClickListener;
 import com.desai.vatsal.mydynamiccalendar.ShowDayViewEventsListAdapter;
 import com.desai.vatsal.mydynamiccalendar.ShowEventsModel;
 import com.desai.vatsal.mydynamiccalendar.ShowWeekViewEventsListAdapter;
+import com.eurovisionedusolutions.android.rackup.apiclient.CustomYearMonthPickerDialog;
+import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import static android.media.CamcorderProfile.get;
+import static com.eurovisionedusolutions.android.rackup.R.id.myCalendar;
 
 /**
  * Created by sushant on 5/15/2017.
@@ -80,7 +88,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     private Context context;
     private AttributeSet attrs;
     private View rootView;
-
+    private int currentYear = -1, currentMonth = -1;
     private RecyclerView recyclerView_dates, recyclerView_hours, recyclerView_show_events, recyclerView_month_view_below_events;
     private TextView tv_month_year, tv_mon, tv_tue, tv_wed, tv_thu, tv_fri, tv_sat, tv_sun;
     private ImageView iv_previous, iv_next;
@@ -92,7 +100,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     private GetEventListListener getEventListListener;
 
     private ArrayList<DateModel> dateModelList;
-    private DateListAdapter dateListAdapter;
+    private DateListAdapterExtend dateListAdapter;
     private ArrayList<EventModel> eventModelList;
     private EventListAdapter_extended eventListAdapter;
     private ArrayList<String> hourList;
@@ -147,6 +155,8 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         recyclerView_month_view_below_events = (RecyclerView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.recyclerView_month_view_below_events);
         iv_previous = (ImageView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.iv_previous);
         iv_next = (ImageView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.iv_next);
+        iv_next.setVisibility(INVISIBLE);
+        iv_previous.setVisibility(INVISIBLE);
         parentLayout = (LinearLayout) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.parentLayout);
         ll_upper_part = (LinearLayout) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.ll_upper_part);
         ll_lower_part = (LinearLayout) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.ll_lower_part);
@@ -163,6 +173,8 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         tv_fri = (TextView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.tv_fri);
         tv_sat = (TextView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.tv_sat);
         tv_sun = (TextView) rootView.findViewById(com.desai.vatsal.mydynamiccalendar.R.id.tv_sun);
+        AppConstants.main_calendar = Calendar.getInstance();
+
 
 
 //        ll_header_views.setBackgroundColor(Color.parseColor(strHeaderBackgroundColor));
@@ -187,7 +199,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
                 } else if (AppConstants.isShowDay) {
                     // setDayView("add");
                 } else if (AppConstants.isAgenda) {
-                    // setAgendaView("add");
+                     setAgendaView("add");
                 }
 
             }
@@ -206,7 +218,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
                 } else if (AppConstants.isShowDay) {
                     // setDayView("sub");
                 } else if (AppConstants.isAgenda) {
-                    // setAgendaView("sub");
+                     setAgendaView("sub");
                 }
 
             }
@@ -223,16 +235,18 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     }
     private void setMonthViewWithBelowEvents(String sign) {
         dateModelList = new ArrayList<>();
-        dateListAdapter = new DateListAdapter(context, dateModelList);
+        dateListAdapter = new DateListAdapterExtend(context, dateModelList);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 7);
         recyclerView_dates.setLayoutManager(gridLayoutManager);
 
         recyclerView_dates.setAdapter(dateListAdapter);
 
+
         dateListAdapter.setOnDateClickListener(new OnDateClickListener() {
             @Override
             public void onClick(Date date) {
+                ll_month_view_below_events.setVisibility(View.VISIBLE);
                 if (onDateClickListener != null) {
                     onDateClickListener.onClick(date);
                 }
@@ -245,6 +259,10 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
                 }
             }
         });
+        if(AppConstants.isShowMonthWithBellowEvents)
+            ll_month_view_below_events.setVisibility(View.VISIBLE);
+        else
+            ll_month_view_below_events.setVisibility(View.GONE);
 
         AppConstants.isShowMonth = false;
         AppConstants.isShowMonthWithBellowEvents = true;
@@ -253,7 +271,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         AppConstants.isAgenda = false;
 
         ll_upper_part.setVisibility(View.VISIBLE);
-        ll_month_view_below_events.setVisibility(View.VISIBLE);
+//        ll_month_view_below_events.setVisibility(View.VISIBLE);
         ll_lower_part.setVisibility(View.GONE);
         ll_blank_space.setVisibility(View.GONE);
         ll_hours.setVisibility(View.GONE);
@@ -296,7 +314,6 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         dateListAdapter.setOnMonthBellowEventsClick(new OnMonthBellowEventsDateClickListener() {
             @Override
             public void onClick(Date date) {
-
                 eventModelList = new ArrayList<>();
                 eventListAdapter = new EventListAdapter_extended(context, eventModelList, "month");
 
@@ -321,7 +338,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
     }
     private void setAgendaView(String sign) {
         dateModelList = new ArrayList<>();
-        dateListAdapter = new DateListAdapter(context, dateModelList);
+        dateListAdapter = new DateListAdapterExtend(context, dateModelList);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 7);
         recyclerView_dates.setLayoutManager(gridLayoutManager);
@@ -372,6 +389,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
 
         String weekStartDay = sdfWeekDay.format(calendar.getTime());
 
+
         dateModelList.clear();
 
         while (dateModelList.size() < 7) {
@@ -397,6 +415,7 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         dateListAdapter.setOnMonthBellowEventsClick(new OnMonthBellowEventsDateClickListener() {
             @Override
             public void onClick(Date date) {
+
 
                 recyclerView_show_events.setVisibility(VISIBLE);
 
@@ -427,32 +446,97 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
 
     @Override
     public void goToCurrentDate() {
-
         myCalendar1=Calendar.getInstance();
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        if(currentYear == -1 || currentMonth == -1){
+            currentYear =  myCalendar1.get(Calendar.YEAR);
+            currentMonth = myCalendar1.get(Calendar.MONTH);
+        }
+
+         CustomYearMonthPickerDialog yearMonthPickerDialog = new CustomYearMonthPickerDialog(getContext(), new CustomYearMonthPickerDialog.OnDateSetListener(){
+
 
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                // TODO Auto-generated method stub
+            public void onYearMonthSet(int year, int month) {
+
                 myCalendar1.set(Calendar.YEAR, year);
-                myCalendar1.set(Calendar.MONTH, monthOfYear);
-                myCalendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                myCalendar1.set(Calendar.MONTH, month);
+                myCalendar1.set(Calendar.DAY_OF_MONTH, 1 );
+                currentMonth = month;
+                currentYear =  year;
                 updateLabel();
             }
+        }, R.style.MyDialogTheme, R.color.black, currentMonth, currentYear );
 
+//        Method m = null;
+//        try {
+//            m =YearMonthPickerDialog.class.getDeclaredMethod("setCurrentDate");
+//            m.setAccessible(true);// Abracadabra
+//            m.invoke(yearMonthPickerDialog);// now its OK
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
+        //m.invoke(d);// throws java.lang.IllegalAccessException
+
+
+
+        yearMonthPickerDialog.show();
+
+//        createDialogWithoutDateField().show();
+
+
+//        myCalendar1=Calendar.getInstance();
+//        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+//
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int monthOfYear,
+//                                  int dayOfMonth) {
+//                // TODO Auto-generated method stub
+//                myCalendar1.set(Calendar.YEAR, year);
+//                myCalendar1.set(Calendar.MONTH, monthOfYear);
+//                myCalendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//                updateLabel();
+//                //dateListAdapter.updateLayout(dateModelList);
+//
+//            }
+//
+//        };
+//
+//
+//
+//        DatePickerDialog dialog=new DatePickerDialog(getContext(),date,myCalendar1
+//                .get(Calendar.YEAR), myCalendar1.get(Calendar.MONTH),myCalendar1.get(Calendar.DAY_OF_MONTH));
+//        Calendar l= Calendar.getInstance();
+//        Calendar l2=(Calendar) l.clone();
+//        l.add(Calendar.MONTH,6);
+//        l2.add(Calendar.MONTH,-1);
+//        dialog.getDatePicker().setMaxDate(l.getTimeInMillis());
+//        dialog.getDatePicker().setMinDate(l2.getTimeInMillis());
+//        dialog.show();
+
+    }
+
+    private DatePickerDialog createDialogWithoutDateField() {
+        DatePickerDialog dpd = new DatePickerDialog(getContext() , null, 2014, 1, 24)
+        {
+            @Override
+            protected void onCreate(Bundle savedInstanceState)
+            {
+                super.onCreate(savedInstanceState);
+                int year = getContext().getResources()
+                        .getIdentifier("android:id/year", null, null);
+                if(year != 0){
+                    View yearPicker = findViewById(year);
+                    if(yearPicker != null){
+                        yearPicker.setVisibility(View.GONE);
+                    }
+                }
+            }
         };
-
-        DatePickerDialog dialog=new DatePickerDialog(getContext(),date,myCalendar1
-                .get(Calendar.YEAR), myCalendar1.get(Calendar.MONTH),myCalendar1.get(Calendar.DAY_OF_MONTH));
-        Calendar l= Calendar.getInstance();
-        Calendar l2=(Calendar) l.clone();
-        l.add(Calendar.MONTH,6);
-        l2.add(Calendar.MONTH,-1);
-        dialog.getDatePicker().setMaxDate(l.getTimeInMillis());
-        dialog.getDatePicker().setMinDate(l2.getTimeInMillis());
-        dialog.show();
-
+        return dpd;
     }
 
     private void updateLabel() {
@@ -460,7 +544,8 @@ public class MyDynamicCalendar_Extended extends MyDynamicCalendar {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        AppConstants.main_calendar=myCalendar1;
+        AppConstants.main_calendar = myCalendar1;
+
         if (AppConstants.isShowMonthWithBellowEvents) {
             setMonthViewWithBelowEvents("");
         } else if (AppConstants.isAgenda) {

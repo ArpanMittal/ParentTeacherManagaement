@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
         //ActionBar actionBar=getSupportActionBar();
        // actionBar.show();
         //bottomNavigationView.setScrollbarFadingEnabled(true);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+//        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         final View decorView = getWindow().getDecorView();
         final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -75,8 +75,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        bottomNavigationView.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         Fragment selectedFragment = null;
@@ -84,9 +83,9 @@ public class MainActivity extends AppCompatActivity{
                             case R.id.action_item1:
                                 selectedFragment = Tab_fragment.newInstance();
                                 break;
-                            case R.id.action_item2:
-                                selectedFragment = video_Call.newInstance();
-                                break;
+//                            case R.id.action_item2:
+//                                selectedFragment = Video_Call.newInstance();
+//                                break;
                             case R.id.action_item3:
 
                                selectedFragment =Edit_profile.newInstance();
@@ -97,21 +96,32 @@ public class MainActivity extends AppCompatActivity{
                             case R.id.action_item5:
                                 selectedFragment=Feed_Activity.newInstance();
                                 break;
+                            case R.id.action_item6:
+                                selectedFragment = Maps_Fragment.newInstance();
+                                break;
 
                         }
+                        if(item.getItemId() == R.id.action_item5)
+                            getSupportActionBar().setTitle("ImageFeed");
+//                        else if(item.getItemId() == R.id.action_item4)
+//                            getSupportActionBar().setTitle("Calendar");
+//                        else if(item.getItemId() == R.id.action_item1)
+//                            getSupportActionBar().setTitle("Video");
+
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.frame_layout, selectedFragment);
                         transaction.commit();
                         return true;
                     }
                 });
-
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, Tab_fragment.newInstance());
+        transaction.replace(R.id.frame_layout, Feed_Activity.newInstance());
         transaction.commit();
 
+
+
         //Used to select an item programmatically
-        bottomNavigationView.getMenu().getItem(1).setChecked(true);
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
     }
 }

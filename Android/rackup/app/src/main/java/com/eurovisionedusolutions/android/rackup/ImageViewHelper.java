@@ -123,39 +123,41 @@ public class ImageViewHelper extends android.support.v7.widget.AppCompatImageVie
                 Log.d("rackup", "mode=NONE");
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (mode == DRAG) {
-                    // ...
-                    matrix.set(savedMatrix);
-                    matrix.getValues(matrixValues);
-                    matrixX = matrixValues[2];
-                    matrixY = matrixValues[5];
-                    if(getDrawable()!=null) {
-                        width = matrixValues[0] * (((ImageView) this).getDrawable()
-                                .getIntrinsicWidth());
-                        height = matrixValues[4] * (((ImageView) this).getDrawable()
-                                .getIntrinsicHeight());
-                    }
-
-                    dx = event.getX() - start.x;
-                    dy = event.getY() - start.y;
-
-                    //if image will go outside left bound
-                    if (matrixX + dx + width < 100){
-                        dx = 100 -matrixX-width;
-                    }
-                    //if image will go outside right bound
-                    if(matrixX + dx +100 > this.getWidth()){
-                        dx = this.getWidth() - matrixX - 100;
-                    }
-                    //if image will go oustside top bound
-                    if (matrixY + dy + height< 100){
-                        dy = 100 -matrixY - height;
-                    }
-                    //if image will go outside bottom bound
-                    if(matrixY + dy +100 > this.getHeight()){
-                        dy = this.getHeight() - matrixY - 100;
-                    }
-                    matrix.postTranslate(dx, dy);
+                if (mode == DRAG)
+                {
+//
+//                    // ...
+//                    matrix.set(savedMatrix);
+//                    matrix.getValues(matrixValues);
+//                    matrixX = matrixValues[2];
+//                    matrixY = matrixValues[5];
+//                    if(getDrawable()!=null) {
+//                        width = matrixValues[0] * (((ImageView) this).getDrawable()
+//                                .getIntrinsicWidth());
+//                        height = matrixValues[4] * (((ImageView) this).getDrawable()
+//                                .getIntrinsicHeight());
+//                    }
+//
+//                    dx = event.getX() - start.x;
+//                    dy = event.getY() - start.y;
+//
+//                    //if image will go outside left bound
+//                    if (matrixX + dx + width < 100){
+//                        dx = 100 -matrixX-width;
+//                    }
+//                    //if image will go outside right bound
+//                    if(matrixX + dx +100 > this.getWidth()){
+//                        dx = this.getWidth() - matrixX - 100;
+//                    }
+//                    //if image will go oustside top bound
+//                    if (matrixY + dy + height< 100){
+//                        dy = 100 -matrixY - height;
+//                    }
+//                    //if image will go outside bottom bound
+//                    if(matrixY + dy +100 > this.getHeight()){
+//                        dy = this.getHeight() - matrixY - 100;
+//                    }
+//                    matrix.postTranslate(dx, dy);
                 } else if (mode == ZOOM) {
                     float newDist = spacing(event);
                     if (newDist > 10f) {

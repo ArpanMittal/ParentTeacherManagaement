@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3f51b5</color>
+
     <color name="edittext_background">	#eee8aa</color>>
-    <color name="colorPrimaryDark">#303f9f</color>
-    <color name="colorAccent">#FF4081</color>
+
     <color name="gray">	#808080</color>
 <color name="black">	#000000</color>
     <color name="white">	#ffffff</color>
@@ -11,4 +10,11 @@
     <color name="black_overlay">#66000000</color>
     <color name="black_transp">#80000000</color>
     <color name="green">#016701</color>
+    <!--<color name="colorPrimary">#0084ff</color>-->
+    <!--<color name="colorPrimaryDark">#1565C0</color>-->
+    <!--&lt;!&ndash;<color name="colorAccent">#03A9F4</color>&ndash;&gt;-->
+    <!--<color name="colorAccent">#0084ff</color>-->
+    <color name="colorPrimaryDark">#c68400</color>
+    <color name="colorPrimary">#ffb300</color>
+    <!--<color name="colorAccent">#ff5722</color>-->
 </resources>

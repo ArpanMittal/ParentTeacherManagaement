@@ -232,7 +232,7 @@ class UploadImageController extends Controller
             $type = $file->type;
             $typeDetails = ContentType::where('id',$type)->first();
             $typeName = $typeDetails->name;
-//            if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "image" ) {
+            if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "image" )
                 $filePath = $file->url;
                 $title = $file->name;
                 $description = $file->description;
@@ -243,11 +243,9 @@ class UploadImageController extends Controller
                     'title' => $title,
                     'description' => $description,
                     'type' => $type,
-                    'typeName' => $typeName,
+                    'typeName'=>$typeName,
                     'created_at' => $createdAt
                 );
-
-//            }
         }
         return $files;
     }

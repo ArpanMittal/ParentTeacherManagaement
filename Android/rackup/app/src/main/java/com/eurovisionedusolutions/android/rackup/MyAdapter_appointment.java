@@ -55,7 +55,7 @@ public class MyAdapter_appointment extends RecyclerView.Adapter<MyAdapter_appoin
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         final Context context = parent.getContext();
         context1=context;
-        final View view = LayoutInflater.from(context).inflate(R.layout.item_cancelled_events, parent, false);
+        final View view = LayoutInflater.from(context).inflate(R.layout.item_appointmentcard_events, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -66,12 +66,12 @@ public class MyAdapter_appointment extends RecyclerView.Adapter<MyAdapter_appoin
         int event_type=Integer.parseInt(items.get(position).getStatus());
         if(items.get(position).getRequestby()=="Parent Request"){requestby="YOU";}
         else {requestby=items.get(position).getTeacherName();}
-        if(event_type==1){status="Awaited";}
-        else if(event_type==2){status="Confirmed";}
-        else if(event_type==3){status="Cancelled";}
-        else if(event_type==4){status="Invalid";}
-        else if(event_type==5){status="Free Slot";}
-        else if(event_type==6){status="School Event";}
+        if(event_type==1){status="Awaited";holder.imageView.setBackground(context.getDrawable(R.color.colorPrimary));}
+        else if(event_type==2){status="Confirmed"; holder.imageView.setBackground(context.getDrawable(R.color.green));}
+        else if(event_type==3){status="Cancelled";holder.imageView.setBackground(context.getDrawable(R.color.red));}
+        else if(event_type==4){status="Invalid";holder.imageView.setBackground(context.getDrawable(R.color.black));}
+        else if(event_type==5){status="Free Slot";holder.imageView.setBackground(context.getDrawable(R.color.colorPrimaryDark));}
+        else if(event_type==6){status="School Event";holder.imageView.setBackground(context.getDrawable(R.color.gray));}
         else {status="invalid";}
         String date1=items.get(position).getDate() + " "+items.get(position).getStartTime();
         long now = System.currentTimeMillis();
@@ -92,7 +92,7 @@ public class MyAdapter_appointment extends RecyclerView.Adapter<MyAdapter_appoin
         holder.startTime.setText("Start Time : "+ items.get(position).getStartTime());
         holder.endTime.setText("End Time : " + items.get(position).getEndTime());
         holder.date.setText("Date : " + items.get(position).getDate());
-        holder.status.setText("Status : " + status);
+//        holder.status.setText("Status : " + status);
         holder.teacherName.setText("Teacher Name: "+ items.get(position).getTeacherName());
         holder.teacherContact.setText("Teacher Contact : "+ items.get(position).getTeacherContact());
         holder.requestby.setText(requestby);
@@ -144,6 +144,7 @@ public class MyAdapter_appointment extends RecyclerView.Adapter<MyAdapter_appoin
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         protected TextView title,date_human_readable,startTime, endTime, date, status, requestby,reason,teacherName, teacherContact;
+        protected  ImageView imageView;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -152,7 +153,8 @@ public class MyAdapter_appointment extends RecyclerView.Adapter<MyAdapter_appoin
             startTime = (TextView) itemView.findViewById(R.id.startTime);
             endTime = (TextView) itemView.findViewById(R.id.endTime);
             date = (TextView) itemView.findViewById(R.id.date);
-            status = (TextView) itemView.findViewById(R.id.status);
+            imageView = (ImageView) itemView.findViewById(R.id.image_indicator);
+//            status = (TextView) itemView.findViewById(R.id.status);
             requestby = (TextView) itemView.findViewById(R.id.requestedby);
             reason = (TextView) itemView.findViewById(R.id.reason);
             teacherName = (TextView) itemView.findViewById(R.id.teacherName);

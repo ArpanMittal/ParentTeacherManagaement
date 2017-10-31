@@ -141,15 +141,16 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
                 insert();
                 Intent intent6=new Intent(Splash_Screen.this,LoginActivity.class);
                 startActivity(intent6);
+                finish();
 
             }
             else
             {
                 if (isNetworkAvailable() == true) {// online, with proper email, password saved locally. Verify over network.
                     if (password!=null) {
-                      /* if(GCM_flag==1) {*/
+                       if(GCM_flag==1) {
                             new RemoteHelper(getApplicationContext()).verifyLogin(Splash_Screen.this, RemoteCalls.CHECK_LOGIN_CREDENTIALS, email, password, GCMId);
-                        /*}else {flag=0;}*/
+                        }else {flag=0;}
                     } else {// online, with null password or email. Open Login activity
                       flag=0;
 
@@ -196,11 +197,13 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
                     if(flag==1){
                         Intent intent1=new Intent(Splash_Screen.this,MainActivity.class);
                         startActivity(intent1);
+                        finish();
 
                     }
                     else {
                         Intent intent2=new Intent(Splash_Screen.this,LoginActivity.class);
                         startActivity(intent2);
+                        finish();
 
                     }
                 }
@@ -234,7 +237,7 @@ public class Splash_Screen extends Activity implements RemoteCallHandler {
         mNewValues.put(UserContract.UserDetailEntry.COLUMN_ID, 1);
         mNewValues.put(UserContract.UserDetailEntry.CoLUMN_EMAIL, "temp");
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_PASSWORD);
-        mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
+//        mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_FATHER);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_DATE_OF_BIRTH);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_PHONE_NUMBER);
         mNewValues.putNull(UserContract.UserDetailEntry.CoLUMN_TOKEN);

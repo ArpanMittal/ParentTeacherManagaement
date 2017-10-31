@@ -8,9 +8,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +27,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static android.R.id.input;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+
 public class book_appointment extends AppCompatActivity implements RemoteCallHandler{
-    private EditText mstartTime,mendTime,mName,mstatus,mdate,mreason,mWhatsapp;
-    private TextView mReasonView,mReasonView_teacher,mWhatsappView;
-    private Button mButton;
+    private EditText mstartTime,mendTime,mName,mstatus,mdate,mreason,mWhatsapp,mTeacherWhatsapp;
+   // private TextView mReasonView,mReasonView_teacher,mWhatsappView;
+    private Button mButton, cancelButton;
     private Toolbar toolbar;
     public static String token = "there1";
     private boolean isghostappointment=false;
@@ -40,10 +45,11 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_appointment);
+        setContentView(R.layout.activity_main_notificationactivity);
       toolbar=(Toolbar)findViewById(R.id.toolbar);
-        mReasonView=(TextView)findViewById(R.id.textView17);
-        mWhatsappView=(TextView)findViewById(R.id.textView18);
+//        mReasonView=(TextView)findViewById(R.id.textView17);
+//        mWhatsappView=(TextView)findViewById(R.id.textView18);
+        cancelButton = (Button) findViewById(R.id.button4);
         mButton=(Button) findViewById(R.id.button5);
         mName =(EditText) findViewById(R.id.editText7);
         mstatus =(EditText) findViewById(R.id.editText4);
@@ -52,9 +58,12 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         mdate=(EditText) findViewById(R.id.editText8);
         mreason=(EditText)findViewById(R.id.editText9);
         mWhatsapp=(EditText)findViewById(R.id.editText10);
+        mTeacherWhatsapp=(EditText)findViewById(R.id.tt);
 
         setSupportActionBar(toolbar);
-       toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigate_before_black_24dp));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //toolbar.setTitleTextColor(getResources().getColor(R.color.white));
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -78,7 +87,7 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         try {
             Date mDate = sdf.parse(givenDateString);
             timeInMilliseconds = mDate.getTime();
-            System.out.println("Date in milli :: " + timeInMilliseconds);
+//            System.out.println("Date in milli :: " + timeInMilliseconds);
             //Toast.makeText(this, String.valueOf(timeInMilliseconds),Toast.LENGTH_SHORT);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -89,6 +98,7 @@ String Name1,Id,startTime,endTime,date,TeacherId,title,fromActivity;
         mstartTime.setEnabled(false);
         mendTime.setEnabled(false);
         mdate.setEnabled(false);
+        mTeacherWhatsapp.setEnabled(false);
         mWhatsapp.setEnabled(true);
 
 if(Name1!=null){
@@ -108,8 +118,8 @@ if(Name1!=null){
         if(title!=null || title!="" ) {
             title_int=Integer.valueOf(title);}
        // mreason.setHint("Reason for the appointment");
-           mreason.setBackgroundResource(R.color.edittext_background);
-        mWhatsapp.setBackgroundResource(R.color.edittext_background);
+//           mreason.setBackgroundResource(R.color.edittext_background);
+//        mWhatsapp.setBackgroundResource(R.color.edittext_background);
         //mId.setText(Id);
         mstartTime.setText(startTime);
         mendTime.setText(endTime);
@@ -118,53 +128,71 @@ if(Name1!=null){
         mdate.setText(date);
         mreason.setVisibility(View.VISIBLE);
         mWhatsapp.setVisibility(View.VISIBLE);
-        mWhatsappView.setVisibility(View.VISIBLE);
-        mReasonView.setVisibility(View.VISIBLE);
+//        mWhatsappView.setVisibility(View.VISIBLE);
+//        mReasonView.setVisibility(View.VISIBLE);
         if (currentTime>timeInMilliseconds){
             isghostappointment=true;
         }
         if(title_int==2){
 
-           mButton.setText("Cancel");
+           mButton.setVisibility(View.VISIBLE);
+            mButton.setText("Cancel Appointment?" );
             mstatus.setText("Confirmed");
             if(isghostappointment==false){
                 mButton.setEnabled(true);}
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+//            mWhatsappView.setVisibility(View.GONE);
+           // mReasonView.setVisibility(View.GONE);
 
 
         }
         else if (title_int==1){
-mButton.setText("Cancel");
+            mButton.setText("Cancel");
+            cancelButton.setText("Confirm");
             mstatus.setText("Awaited");
+            getSupportActionBar().setTitle("Awaiting Appointment Details");
             if(isghostappointment==false){
-            mButton.setEnabled(true);}
+                mButton.setEnabled(true);
+                cancelButton.setEnabled(true);
+            }else{
+                cancelButton.setEnabled(false);
+            }
+            mWhatsapp.requestFocus();
             mreason.setVisibility(View.GONE);
-            mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+//            mWhatsapp.setVisibility(View.VISIBLE);
+//            cancelButton.setVisibility(View.VISIBLE);
+//            mWhatsappView.setVisibility(View.GONE);
+//            mReasonView.setVisibility(View.GONE);
 
         }
         else if(title_int==5){
+
             mstatus.setText("Available");
-            mButton.setText("Confirm");
+            mButton.setText("Send Request");
             if(isghostappointment==false){
                 mButton.setEnabled(true);}
             mreason.setVisibility(View.VISIBLE);
             mWhatsapp.setVisibility(View.VISIBLE);
-            mWhatsappView.setVisibility(View.VISIBLE);
-            mReasonView.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.GONE);
+            mreason.requestFocus();
+
+            getSupportActionBar().setTitle("Request Appointment");
+
+//            mWhatsappView.setVisibility(View.VISIBLE);
+//            mReasonView.setVisibility(View.VISIBLE);
         }
         else if(title_int==3){
             mstatus.setText("Cancelled");
             mButton.setText("Cancelled");
+            cancelButton.setVisibility(View.GONE);
+            getSupportActionBar().setTitle("Cancelled Appointment");
             mButton.setEnabled(false);
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+//            mWhatsappView.setVisibility(View.GONE);
+//            mReasonView.setVisibility(View.GONE);
         }
         else if(title_int==4){
             mstatus.setText("Invalid");
@@ -172,12 +200,28 @@ mButton.setText("Cancel");
             mButton.setEnabled(false);
             mreason.setVisibility(View.GONE);
             mWhatsapp.setVisibility(View.GONE);
-            mWhatsappView.setVisibility(View.GONE);
-            mReasonView.setVisibility(View.GONE);
+//            mWhatsappView.setVisibility(View.GONE);
+//            mReasonView.setVisibility(View.GONE);
         }
 
 
       token=fetchman();
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(title_int == 1){
+                    contact=mWhatsapp.getText().toString().trim();
+                    if(contact.length()==10) {
+                        //TODO:: confirm Appointment
+                        new RemoteHelper(getApplicationContext()).Update_Event(book_appointment.this, RemoteCalls.UPDATE_THE_APPOINTMENT_3, token, Id,"2",contact,0);
+
+                    }
+//                    else{
+////                        Toast.makeText(this,"there is problem with number", Toast.LENGTH_LONG).show();
+//                    }
+                }
+            }
+        });
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,19 +260,29 @@ mButton.setText("Cancel");
 
 
     } public void alertbox(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
+        View mView = layoutInflaterAndroid.inflate(R.layout.user_input_dialog_box, null);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this,R.style.MyAlertDialogStyle);
+
+
 
         alert.setTitle("Alert");
         alert.setMessage("You are about to cancel the appointment.\r\n Are you sure?");
 
-// Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
-        input.setHint("Reason for Cancellation");
+//// Set an EditText view to get user input
+//        final EditText input = new EditText(this);
+//        alert.setView(input);
+
+
+
+
+        alert.setView(mView);
+        final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                reason= "reason: "+input.getText().toString().trim();
+                reason= "reason: "+userInputDialogEditText.getText().toString().trim();
 
 
                 new RemoteHelper(getApplicationContext()).Update_Event(book_appointment.this, RemoteCalls.UPDATE_THE_APPOINTMENT_4,
@@ -265,6 +319,10 @@ mButton.setText("Cancel");
 
                         Toast.makeText(this,"Your Appointment is  Cancelled", Toast.LENGTH_LONG).show();
                         finish();
+            }
+            else if(callFor==RemoteCalls.UPDATE_THE_APPOINTMENT_3){
+                Toast.makeText(this,"Confirmed", Toast.LENGTH_LONG).show();
+                finish();
             }
 
 

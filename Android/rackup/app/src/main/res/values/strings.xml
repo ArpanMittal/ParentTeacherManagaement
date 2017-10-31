@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">rackup</string>
+    <string name="app_name">Rackup</string>
     <!-- Strings related to msg -->
     <string name="loadingmsg">loading, please wait</string>
     <string name="item_1">Videos</string>
@@ -547,8 +547,11 @@
     <string name="Update_Event">http://web.rackupcambridge.com/api/updateEvent</string>
     <string name="item_5">Feed</string>
     <string name="FeedActivity">http://web.rackupcambridge.com/api/activityImages</string>
+    <string name="NotficationActivity">http://web.rackupcambridge.com/api/getNotifications</string>
     <string name="title_activity_web_view">WebView</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_webview">WebviewActivity</string>
     <string name="address_is_empty">Enter a valid address</string>
+    <string name="isLaunchableActivity">isLaunchableActivity</string>
+    <string name="minVersion">minVersion</string>
 </resources>

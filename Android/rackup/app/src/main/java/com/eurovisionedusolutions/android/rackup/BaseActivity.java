@@ -212,6 +212,7 @@ public abstract class BaseActivity extends Fragment implements RemoteCallHandler
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
+        event.setColor(getResources().getColor(R.color.green));
 
         String startTime, endTime, Id, Name, Date;
 
