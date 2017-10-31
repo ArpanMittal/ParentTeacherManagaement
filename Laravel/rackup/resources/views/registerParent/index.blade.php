@@ -37,6 +37,7 @@
                     <th>Secondary Contact</th>
                     <th>Address</th>
                     <th>Username</th>
+                    <th>Password</th>
                     <th class="text-right">OPTIONS</th>
                 </tr>
                 </thead>
@@ -55,7 +56,7 @@
                         <td>{{$parent_detail['secondaryContact']}}</td>
                         <td>{{$parent_detail['address']}}</td>
                         <td>{{$parent_detail['username']}}</td>
-
+                        <td>{{$parent_detail['password']}}</td>
                         <td>
                             <a class="btn btn-primary" href="{{ route('registerParent.show', $parent_detail['parentId']) }}">View</a>
                         </td>

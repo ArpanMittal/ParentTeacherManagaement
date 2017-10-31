@@ -21,6 +21,7 @@ class RegisterParentController extends Controller
     public function getParentDetails ($parentId){
         $parent = User::where('id',$parentId)->first();
         $username = $parent->username;
+        $password = $parent->password;
         $parentDetails = UserDetails::where('user_id',$parentId)->first();
         $fatherName = $parentDetails->name;
         $motherName = $parentDetails->motherName;
@@ -47,7 +48,8 @@ class RegisterParentController extends Controller
             'contact'=>$contact,
             'secondaryContact'=>$secondaryContact,
             'address'=>$address,
-            'username'=>$username
+            'username'=>$username,
+            'password' => $password
         );
         return $parent_details;
     }
@@ -68,7 +70,7 @@ class RegisterParentController extends Controller
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
         //Role Id of parent is 2
-        $parents = User::all()->where('role_id',2);
+        $parents = User::all()->where('role_id',2)->where('active',1);
         $parent_details = array();
         $i=0;
         foreach ($parents as $parent)
@@ -223,6 +225,7 @@ class RegisterParentController extends Controller
         $secondaryContact = $request->input('secondaryContact');
         $studentName = $request->input("studentName");
         $dob =  $request->input("dob");
+        $password = $request->input("password");
         try{
             \DB::beginTransaction();
             DB::table('userDetails')
@@ -240,6 +243,9 @@ class RegisterParentController extends Controller
                     'name'=>$studentName,
                     'dob'=>$dob
                 ]);
+            DB::table('users')
+                ->where('id', $id)
+                ->update(['password'=>$password]);
         }catch (Exception $e){
             \DB::rollback();
             return redirect(route('registerParent.edit'))->with('failure', 'Cannot update User Details');
@@ -262,9 +268,12 @@ class RegisterParentController extends Controller
             $parentDetails = UserDetails::where('user_id',$id)->first();
             $studentDetails = Student::where('parent_id',$id)->first();
             $user = User::where('id',$id);
-            $parentDetails->delete();
-            $studentDetails->delete();
-            $user->delete();
+            DB::table('users')
+                ->where('id', $user)
+                ->update(['active'=>0]);
+//            $parentDetails->delete();
+//            $studentDetails->delete();
+//            $user->delete();
         }catch (Exception $e){
             \DB::rollback();
             return redirect(route('registerParent.index'))->with('failure', 'Cannot delete User');

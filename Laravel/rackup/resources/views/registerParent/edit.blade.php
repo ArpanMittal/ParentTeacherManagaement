@@ -28,6 +28,7 @@
                             </span>
                     @endif
                 </div>
+
                 <div class="form-group {{$errors->has('dob')?'has-error':''}}">
                     <label for="dob">DOB</label>
                     <input type="date" name="dob" class="form-control" value="{{$parent_details['dob']}}"/>
@@ -89,6 +90,16 @@
                 <div class="form-group">
                     <label for="username">Username</label>
                     <p class="form-control-static">{{$parent_details['username']}}</p>
+                </div>
+
+                <div class="form-group {{$errors->has('password')?'has-error':''}}">
+                    <label for="secondaryContact">Password</label>
+                    <input type="text" name="password" class="form-control" value="{{$parent_details['password']}}"/>
+                    @if ($errors->has('password'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </span>
+                    @endif
                 </div>
 
                 <a class="btn btn-default" href="{{ route('registerParent.index') }}">Back</a>

@@ -62,19 +62,32 @@ Route::resource('appointments','AppointmentController');
 
 Route::resource('school_events','SchoolEventController');
 
-Route::get('/{filename}', function ($filename)
-{
-    $path = storage_path('public/'.$filename);
+//Route::get('/{filename}', function ($filename)
+//{
+//    $path = storage_path('public/'.$filename);
+//
+//    if (!File::exists($path)) {
+//        abort(404);
+//    }
+//    $file = File::get($path);
+//    $type = File::mimeType($path);
+//    $response = Response::make($file, 200);
+//    $response->header("Content-Type", $type);
+//    return $response;
+//});
 
-    if (!File::exists($path)) {
-        abort(404);
-    }
-    $file = File::get($path);
-    $type = File::mimeType($path);
-    $response = Response::make($file, 200);
-    $response->header("Content-Type", $type);
-    return $response;
-});
+//Route::get('/storage/{folder}/{filename}', function($folder, $filename){
+//    $path = storage_path('public/'.$filename);
+//
+//    if (!File::exists($path)) {
+//        abort(404);
+//    }
+//    $file = File::get($path);
+//    $type = File::mimeType($path);
+//    $response = Response::make($file, 200);
+//    $response->header("Content-Type", $type);
+//    return $response;
+//});
 
 //Route::get('/showAll/{id}',function ($id){
 //    return  "hello";})->name('showAll');
