@@ -56,6 +56,26 @@
                     @endif
                 </div>
 
+                <div class="form-group $errors->has('address')?'has-error':''}}">
+                    <label for="address">Pancard</label>
+                    <input type="text" name="pancard" class="form-control" value="{{$teacher_details['pancard']}}"/>
+                    @if ($errors->has('pancard'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('pancard') }}</strong>
+                            </span>
+                    @endif
+                </div>
+
+                <div class="form-group $errors->has('address')?'has-error':''}}">
+                    <label for="address">Adharcard</label>
+                    <input type="text" name="adharcard" class="form-control" value="{{$teacher_details['adharcard']}}"/>
+                    @if ($errors->has('adharcard'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('adharcard') }}</strong>
+                            </span>
+                    @endif
+                </div>
+
                 <a class="btn btn-default" href="{{ route('registerTeacher.index') }}">Back</a>
                 <button class="btn btn-primary" type="submit" >Save</button>
             </form>

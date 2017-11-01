@@ -33,6 +33,8 @@
                     <th>Contact</th>
                     <th>Address</th>
                     <th>Username</th>
+                    <th>Pancard</th>
+                    <th>Adharcard</th>
                     <th class="text-right">OPTIONS</th>
                 </tr>
                 </thead>
@@ -47,7 +49,8 @@
                         <td>{{$teacher_detail['contact']}}</td>
                         <td>{{$teacher_detail['address']}}</td>
                         <td>{{$teacher_detail['username']}}</td>
-
+                        <td>{{$teacher_detail['pancard']}}</td>
+                        <td>{{$teacher_detail['adharcard']}}</td>
                         <td>
                             <a class="btn btn-primary" href="{{ route('registerTeacher.show', $teacher_detail['teacherId']) }}">View</a>
                         </td>
@@ -66,7 +69,7 @@
                                   };">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <button class="btn btn-danger" type="submit">Delete</button>
+                                <button class="btn btn-danger" type="submit">Disable</button>
                             </form>
                         </td>
                     </tr>

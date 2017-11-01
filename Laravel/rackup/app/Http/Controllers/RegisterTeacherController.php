@@ -25,6 +25,8 @@ class RegisterTeacherController extends Controller
         $contact = $teacherDetails->contact;
         $address = $teacherDetails->address;
         $profilePhoto = $teacherDetails->profilePhotoPath;
+        $pancard = $teacherDetails->pancard;
+        $adharcard = $teacherDetails->adharcard;
         $teacher_details=array(
             'teacherId'=>$teacherId,
             'teacherName'=>$teacherName,
@@ -32,7 +34,9 @@ class RegisterTeacherController extends Controller
             'contact'=>$contact,
             'address'=>$address,
             'username'=>$username,
-            'profilePhoto'=>$profilePhoto
+            'profilePhoto'=>$profilePhoto,
+            'pancard' =>$pancard,
+            'adharcard' => $adharcard
         );
         return $teacher_details;
     }
@@ -58,7 +62,8 @@ class RegisterTeacherController extends Controller
         foreach ($teachers as $teacher)
         {
             $teacherId = $teacher->id;
-            $teacher_details[$i++]=$this->getTeacherDetails($teacherId);
+            if($teacher->active == 1)
+                $teacher_details[$i++]=$this->getTeacherDetails($teacherId);
             
         }
         return view('registerTeacher.index',compact('teacher_details'),$data);
@@ -179,12 +184,16 @@ class RegisterTeacherController extends Controller
 //        $teacherGender = $request->input("teacherGender");
         $teacherAddress = $request->input("address");
         $contact = $request->input("contact");
+        $pancard = $request->input("pancard");
+        $adharcard = $request->input("adharcard");
         try{
             \DB::beginTransaction();
             DB::table('userDetails')
                 ->where('user_id', $id)
                 ->update([
                     'name'=>$teacherName,
+                    'pancard' => $pancard,
+                    'adharcard' => $adharcard,
 //                    'gender' => $teacherGender,
                     'address' => $teacherAddress,
                     'contact' => $contact
@@ -209,10 +218,13 @@ class RegisterTeacherController extends Controller
     {
         try{
             \DB::beginTransaction();
-            $teacherDetails = UserDetails::where('user_id',$id)->first();
-            $user = User::where('id',$id);
-            $teacherDetails->delete();
-            $user->delete();
+//            $teacherDetails = UserDetails::where('user_id',$id)->first();
+//            $user = User::where('id',$id);
+            DB::table('users')
+                ->where('id', $id)
+                ->update(['active'=>0]);
+//            $teacherDetails->delete();
+//            $user->delete();
         }catch (Exception $e){
             \DB::rollback();
             return redirect(route('registerTeacher.index'))->with('failure', 'Cannot delete User');
