@@ -14,20 +14,20 @@ class CreateUsersNotificationTable extends Migration
     public function up()
     {
         //
-        Schema::create('notifications', function(Blueprint $table) {
-            $table->increments('id');
-            $table->string('message');
-            $table->integer('parent_id')->unsigned();
-            $table->foreign('parent_id')->references('id')->on('users')
-                ->onDelete('restrict')
-                ->onUpdate('restrict');
-
-        });
-
-        Schema::table('notifications', function(Blueprint $table) {
-            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-        });
+//        Schema::create('notifications', function(Blueprint $table) {
+//            $table->increments('id');
+//            $table->string('message');
+//            $table->integer('parent_id')->unsigned();
+//            $table->foreign('parent_id')->references('id')->on('users')
+//                ->onDelete('restrict')
+//                ->onUpdate('restrict');
+//
+//        });
+//
+//        Schema::table('notifications', function(Blueprint $table) {
+//            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+//            $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+//        });
 
     }
 
