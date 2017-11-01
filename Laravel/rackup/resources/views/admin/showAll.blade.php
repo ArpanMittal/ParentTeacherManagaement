@@ -61,6 +61,45 @@
                 </tbody>
             </table>
 
+            <label>Deleted Items</label>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>TITLE</th>
+                    <th>URL</th>
+                    <th>DESCRIPTION</th>
+                    <th>DELETED BY</th>
+
+                    <th> TIME</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                @foreach($deleteContents as $deletedimage)
+                    <tr>
+
+                        <td>{{$deletedimage['name']}}</td>
+                        <td><a href="{{ url('http://web.rackupcambridge.com'. $deletedimage['url']) }}" target="_blank">Show {{$deletedimage['name']}}</a></td>
+                        <td>{{$deletedimage['description']}}</td>
+                        <td>{{$deletedimage['deletedBy']}}</td>
+                        <td>{{$deletedimage['time']}}</td>
+                        {{--<td><a href="{{ route('showAll') }}">Delete</a></td>--}}
+                        {{--<td><a href="{{ URL::to("showAll/".$uploadedFile['id'].")) }}"> Delete </a> </td>--}}
+                        {{--<td><form action="#/{{$uploadedFile['id']}}" method="DELETE" style="display: inline;"--}}
+                        {{--onsubmit="if(confirm('Delete? Are you sure?'))--}}
+                        {{--{ return true }--}}
+                        {{--else {return false };">--}}
+                        {{--<button class="btn btn-danger" type="submit">Delete</button>--}}
+                        {{--</form></td>--}}
+                    </tr>
+
+                @endforeach
+
+                </tbody>
+            </table>
+
         </div>
     </div>
 

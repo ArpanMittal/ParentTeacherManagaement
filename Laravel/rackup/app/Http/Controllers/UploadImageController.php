@@ -277,7 +277,10 @@ class UploadImageController extends Controller
             $imageDetails = Category::where('id',$id)->first();
             $fileUrl = $imageDetails->url;
             $path = 'public/'.substr($fileUrl,9);
-            Storage::delete($path);
+            DB::table('categories_delete')->insert(
+                ['id' => $imageDetails->id, 'url' => $fileUrl, 'name'=> $imageDetails->name, 'contentGradeId' => $imageDetails->contentGradeId, 'teacherName' => $imageDetails->teacherName, 'type'=>$imageDetails->type, 'description'=>$imageDetails->description]
+            );
+//            Storage::delete($path);
            $imageDetails->delete();
 //            $studentImages = ImageStudent::where('image_id',$id)->first();
 //            $studentImages->delete();

@@ -284,8 +284,20 @@ class AdminController extends Controller
                 'type'=>$typeName
             );
         }
+        
+        $deleteContents = array();
+        $i =0;
+        $deleted_image = DB::table('categories_delete')->get();
+        foreach ($deleted_image as $deletedimage){
+            $name = $deletedimage->name; 
+            $url = $deletedimage->url;
+            $description = $deletedimage->description;
+            $deletedBy = $deletedimage->teacherName;
+            $time = $deletedimage->created_at;
+            $deleteContents[$i++]= array('name'=>$name, 'url' => $url, 'description' => $description, 'deletedBy' => $deletedBy, 'time' => $time);
+        }
 
-        return view('admin.showAll',compact('uploadedFiles'),$data);
+        return view('admin.showAll',compact('uploadedFiles','deleteContents' ),$data);
     }
 
     public function destroy($id){
