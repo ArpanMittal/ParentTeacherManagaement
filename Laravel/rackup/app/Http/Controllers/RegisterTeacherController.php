@@ -56,7 +56,7 @@ class RegisterTeacherController extends Controller
         $data['name'] = $userDetails->name;
         
         //Role Id of teacher is 4
-        $teachers = User::all()->where('role_id',4);
+        $teachers = User::all()->where('role_id',4)->where('school_id',$user->school_id);
         $teacher_details = array();
         $i=0;
         foreach ($teachers as $teacher)
@@ -103,7 +103,9 @@ class RegisterTeacherController extends Controller
             'address' => 'required',
             'contact'=>'required|digits:10',
             'username'=>'required|email|unique:users',
-            'password'=>'required|min:6|regex:/^[a-zA-Z0-9]*$/'
+            'password'=>'required|min:3|regex:/^[a-zA-Z0-9]*$/',
+            'pancard' => 'required',
+            'adharcard' =>'required'
         );
 
         $this->validate($request,$rules);
@@ -114,11 +116,13 @@ class RegisterTeacherController extends Controller
         $contact = Input::get('contact');
         $username = Input::get('username');
         $password = Input::get('password');
+        $adharcard = Input::get('adharcard');
+        $pancard = Input::get('pancard');
 
         try {
             \DB::beginTransaction();
-            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => 4]);
-            \DB::table('userDetails')->insert(['name' => $teacherName, 'gender' => $teacherGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId]);
+            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => 4, 'school_id' => $user->school_id]);
+            \DB::table('userDetails')->insert(['name' => $teacherName, 'gender' => $teacherGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId, 'adharcard'=> $adharcard, 'pancard' => $pancard]);
         }catch (Exception $e){
             \DB::rollBack();
             return redirect(route('registerTeacher.index'))->with('failure', 'Cannot create User');

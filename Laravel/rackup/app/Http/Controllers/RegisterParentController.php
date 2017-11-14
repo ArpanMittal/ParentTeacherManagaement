@@ -66,11 +66,12 @@ class RegisterParentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        $schoolId = $user->school_id;
         $userDetails = UserDetails::where('id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
         //Role Id of parent is 2
-        $parents = User::all()->where('role_id',2)->where('active',1);
+        $parents = User::all()->where('role_id',2)->where('active',1)->where('school_id',$schoolId);
         $parent_details = array();
         $i=0;
         foreach ($parents as $parent)
@@ -92,6 +93,7 @@ class RegisterParentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
+        
         $userDetails = UserDetails::where('id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
@@ -102,10 +104,14 @@ class RegisterParentController extends Controller
         foreach ($gradeDetails as $gradeDetail){
             $gradeId = $gradeDetail->id;
             $gradeName = $gradeDetail->grade_name;
-            $grades[$i++] = array(
-                'gradeId'=>$gradeId,
-                'gradeName'=>$gradeName
-            );
+            // school check
+            $school_check = \DB::table('grade_school')->where('grad_id',$gradeId)->where('school_id',$user->school_id)->first();
+            if($school_check) {
+                $grades[$i++] = array(
+                    'gradeId' => $gradeId,
+                    'gradeName' => $gradeName
+                );
+            }
         }
         return view('registerParent.create',compact('grades'),$data);
     }
@@ -130,7 +136,7 @@ class RegisterParentController extends Controller
             'contact'=>'required|digits:10',
             'secondaryContact'=>'required|digits:10',
             'username'=>'required|email|unique:users',
-            'password'=>'required|min:6|regex:/^[a-zA-Z0-9]*$/'
+            'password'=>'required|min:3|regex:/^[a-zA-Z0-9]*$/'
         );
         $this->validate($request,$rules);
 
@@ -148,7 +154,7 @@ class RegisterParentController extends Controller
 
         try {
             \DB::beginTransaction();
-            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2]);
+            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2, 'school_id'=>$user->school_id]);
             \DB::table('userDetails')->insert(['name' => $fatherName, 'motherName'=>$motherName, 'address' => $address,'contact'=>$contact,'secondaryContact'=>$secondaryContact,'user_id'=> $userId]);
 
             \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);

@@ -94,6 +94,29 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="form-group {{$errors->has('pancard')?'has-error':''}}">
+                    <label for="pancard">Pancard</label>
+                    <div>
+                        <input type="pancard" name="pancard" id="pancard" required autofocus>
+                        @if ($errors->has('pancard'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('pancard') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group {{$errors->has('adharcard')?'has-error':''}}">
+                    <label for="adharcard">Adharcard</label>
+                    <div>
+                        <input type="adharcard" name="adharcard" id="adharcard" required autofocus>
+                        @if ($errors->has('adharcard'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('adharcard') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
                 <a class="btn btn-default" href="{{ route('registerTeacher.index') }}">Back</a>
                 <button class="btn btn-primary" type="submit" >Register</button>
             </form>

@@ -59,11 +59,10 @@ class SchoolEventController extends Controller
         $userDetails = UserDetails::where('id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
-
+        $event_type = ["Both", "Teacher Function", "Parent Function"];
         $school_events = \DB::table('calendar_events')
-            ->where('eventType',"Parent Function")
-            ->orWhere('eventType',"Teacher Function")
-            ->orWhere('eventType',"Both")
+            ->whereIn('eventType',$event_type)
+            ->where('school_id',$user->school_id)
             ->orderBy('eventType')
             ->orderBy('id','desc')
             ->get();
@@ -101,6 +100,10 @@ class SchoolEventController extends Controller
      */
     public function store(Request $request)
     {
+
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
+
         $rules = array(
             'eventType'=>'required',
             'title' => 'required',
@@ -114,13 +117,20 @@ class SchoolEventController extends Controller
         $startDate = Input::get('startDate');
         $startTime =Input::get('startTime');
         $endTime =Input::get("endTime");
-        
-        if($request->hasFile('fileEntries')) {
+
+        if($request->hasFile('fileEntries'))
+        {
+
             $file = $request->file('fileEntries');
             $fileExtension = $file->getClientOriginalExtension();
-            if ($fileExtension != 'jpg') {
-                return redirect(route('school_events.create'))->with('failure', 'Upload images of jpg only');
-            } else {
+
+            if ($fileExtension != 'jpg' && $fileExtension != 'png' && $fileExtension != 'jpeg' && $fileExtension != 'JPEG') {
+
+                return redirect(route('school_events.create'))->with('failure', 'Upload images of jpg,png,jpeg, JPEG only');
+            }
+            else {
+
+
                 try {
                     
                     \DB::beginTransaction();
@@ -138,7 +148,7 @@ class SchoolEventController extends Controller
                     $seconds = (double)$endTime->format('s');
                     $endDateTime = date_time_set($endDate, $hours, $minutes, $seconds);
                     $eventId = \DB::table('calendar_events')
-                        ->insertgetId(['title' => $title, 'start' => $startDateTime,'end' => $endDateTime,'is_all_day'=>0,'eventType'=>$eventType]);
+                        ->insertgetId(['title' => $title, 'start' => $startDateTime,'end' => $endDateTime,'is_all_day'=>0,'eventType'=>$eventType, 'school_id'=>$user->school_id]);
                     
                     $fileName = $eventId . '_' . $title . '.' . $fileExtension;
                     $filePath = Storage::putFileAs('public/events', $file, $fileName);

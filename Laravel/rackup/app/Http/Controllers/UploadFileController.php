@@ -123,6 +123,7 @@ class UploadFileController extends Controller
     public function store(Request $request)
     {
         $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
         $userDetails = UserDetails::where('user_id',$id)->first();
         $teacherName = $userDetails->name;
         $rules = array(
@@ -159,7 +160,7 @@ class UploadFileController extends Controller
                 $type = ContentType::where('name','school_html')->first();
                 $typeId = $type->id;
                 $fileId = \DB::table('categories')
-                    ->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId]);
+                    ->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId, 'school_id'=>$user->school_id]);
                 $students = Student::all();
                 foreach ($students as $student){
                     $student_id = $student->id;
@@ -201,7 +202,7 @@ class UploadFileController extends Controller
                 $type = ContentType::where('name','grade_html')->first();
                 $typeId = $type->id;
                 $fileId = \DB::table('categories')
-                    ->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId]);
+                    ->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId, 'school_id'=>$user->school_id]);
                 $students = Student::all()->where('grade_id',$gradeId);
                 foreach ($students as $student){
                     $student_id = $student->id;
@@ -241,7 +242,7 @@ class UploadFileController extends Controller
                 $type = ContentType::where('name','html')->first();
                 $typeId = $type->id;
                 $fileId = \DB::table('categories')
-                    ->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId]);
+                    ->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId, 'school_id'=>$user->school_id]);
                 \DB::table('image_students')->insert(['image_id'=>$fileId,'student_id'=>$studentId]);
                 $fileName = $fileId.'_'.$title.'.html';
                 Storage::put('public/'.$studentId.'/'.$fileName,$fileContents);

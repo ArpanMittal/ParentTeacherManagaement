@@ -55,7 +55,6 @@ class AdminController extends Controller
         $user = \DB::table('users')->whereId($id)->first();
 
         $rules = array('gradeId' => 'required',
-            'room_number' => 'required|unique:grades'
         );
         $this->validate($request,$rules);
 
@@ -70,7 +69,8 @@ class AdminController extends Controller
         else{
             try {
                 \DB::beginTransaction();
-                \DB::table('grades')->insert(['grade_name'=>$gradeId,'room_number'=>$roomNo]);
+                $gradeId = \DB::table('grades')->insertGetId(['grade_name'=>$gradeId,'room_number'=>$roomNo]);
+                \DB::table('grade_school')->insert(['grad_id'=> $gradeId, 'school_id'=>$user->school_id]);
 
             }catch (Exception $e){
                 \DB::rollBack();
@@ -90,7 +90,7 @@ class AdminController extends Controller
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
 
-        $teacherUsers = User::all()->where('role_id', 4);
+        $teacherUsers = User::all()->where('role_id', 4)->where('school_id', $user->school_id);
         $i = 0;
         $teacherData=array();
         foreach ($teacherUsers as $teacherUser) {
@@ -108,10 +108,13 @@ class AdminController extends Controller
         foreach ($gradeDetails as $gradeDetail){
             $gradeId = $gradeDetail->id;
             $gradeName = $gradeDetail->grade_name;
-            $grades[$i++] = array(
-                'gradeId'=>$gradeId,
-                'gradeName'=>$gradeName
-            );
+            $check_school = \DB::table('grade_school')->where('grad_id',$gradeId)->where('school_id', $user->school_id)->first();
+            if($check_school) {
+                $grades[$i++] = array(
+                    'gradeId' => $gradeId,
+                    'gradeName' => $gradeName
+                );
+            }
         }
         return view('admin.assignTeacher',compact('teacherData','grades'),$data);
     }
@@ -274,15 +277,17 @@ class AdminController extends Controller
             $type = $uploadedFileDetail->type;
             $typeDetails = ContentType::where('id',$type)->first();
             $typeName = $typeDetails->name;
-            $uploadedFiles[$i++] = array(
-                'title'=>$title,
-                'id'=>$id,
-                'url'=>$file_token,
-                'url_main' => $file_token_path, 
-                'description'=>$description,
-                'uploadedBy'=>$uploadedBy,
-                'type'=>$typeName
-            );
+            if($uploadedFileDetail->school_id == $user->school_id) {
+                $uploadedFiles[$i++] = array(
+                    'title' => $title,
+                    'id' => $id,
+                    'url' => $file_token,
+                    'url_main' => $file_token_path,
+                    'description' => $description,
+                    'uploadedBy' => $uploadedBy,
+                    'type' => $typeName
+                );
+            }
         }
         
         $deleteContents = array();

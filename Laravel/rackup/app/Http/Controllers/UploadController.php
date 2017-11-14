@@ -72,7 +72,12 @@ class UploadController extends Controller
         foreach ($contentDetails as $contentDetail){
             $uploadedContentDetails[$i++]= $this->getUploadedContentDetails($contentDetail->id);
         }
-        return view('upload.index',compact('uploadedContentDetails'),$data);
+        if($user->role_id != 7){
+            return "permission denied";
+        }
+        else {
+            return view('upload.index', compact('uploadedContentDetails'), $data);
+        }
     }
 
     /**
@@ -107,6 +112,10 @@ class UploadController extends Controller
         $data['name'] = $userDetails->name;
 
         $uploadedContentDetails=$this->getUploadedContentDetails($id);
+
+        if($user->role_id != 7){
+            return "permission denied";
+        }
 
         return view('upload.edit',compact('uploadedContentDetails'),$data);
     }
@@ -152,6 +161,8 @@ class UploadController extends Controller
      * @return Response
      */
     public function destroy($id){
+
+
         try {
             \DB::beginTransaction();
             $contentDetails = Category::where('id',$id)->first();
@@ -248,7 +259,9 @@ class UploadController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         //role_id of teacher is 4
-        if ($user->role_id == 4) {
+        // role_id of superadmin is 7
+        if ($user->role_id == 7)
+        {
 
             $teacherId = $user->id;
             $teacherDetails = UserDetails::where('user_id',$teacherId)->first();

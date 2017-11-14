@@ -35,6 +35,15 @@
                     <label for="address">Address</label>
                     <p class="form-control-static">{{$teacher_details['address']}}</p>
                 </div>
+
+                <div class="form-group">
+                    <label for="address">Pancard</label>
+                    <p class="form-control-static">{{$teacher_details['pancard']}}</p>
+                </div>
+                <div class="form-group">
+                    <label for="address">Adharcard</label>
+                    <p class="form-control-static">{{$teacher_details['adharcard']}}</p>
+                </div>
             </form>
 
             <a class="btn btn-default" href="{{ route('registerTeacher.index') }}">Back</a>

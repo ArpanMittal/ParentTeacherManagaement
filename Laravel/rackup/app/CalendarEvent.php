@@ -70,4 +70,8 @@ class CalendarEvent extends Model implements Event
             'color' => $this->background_color,
         ];
     }
+    
+    public function getSchoolId(){
+        return $this->school_id;
+    }
 }

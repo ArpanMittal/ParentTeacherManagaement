@@ -20,7 +20,7 @@
                     <label for="parent">Parent</label>
                     <select  id="parentId" name="parentId" class="form-control"  required autofocus >
                         @foreach($parentData as $parent)
-                            <option value = "{{$parent['id']}}" >{{$parent['name']}}_{{$parent['id']}}</option>
+                            <option value = "{{$parent['id']}}" >{{$parent['name']}}</option>
                         @endforeach
                     </select>
                     @if ($errors->has('parentId'))

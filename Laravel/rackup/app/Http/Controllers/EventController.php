@@ -43,13 +43,13 @@ class EventController extends Controller
             $data['month'] = $month;
             $data['year1'] = $year;
         }
-            $calendar = $this->genCal();
+            $calendar = $this->genCal($user->school_id);
         
         return view('calendar_events.calendar', compact('calendar'),$data);
     }
 
-    private function genCal(){
-        $databaseEvents = $this->calendarEvent->all();
+    private function genCal($school_id){
+        $databaseEvents = $this->calendarEvent->all()->where('school_id', $school_id);
         $slots = array();
         $schoolEvents = array();
         $appointments = array();

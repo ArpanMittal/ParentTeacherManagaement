@@ -162,16 +162,19 @@ class CalendarEventController extends Controller
                 $teacherSlot = TeacherAppointmentSlots::where('calendarEventsId', $calendarEventId)->first();
                 $teacherId = $teacherSlot->teacher_id;
                 $teacherDetails = UserDetails::where('user_id', $teacherId)->first();
+                $teacher = \DB::table('users')->whereId($teacherId)->first();
                 $teacherName = $teacherDetails->name;
-                $calendar_events[$i++] = array(
-                    'id' => $calendarEventId,
-                    'teacherId' => $teacherId,
-                    'teacherName' => $teacherName,
-                    'title' => $title,
-                    'day' => $day,
-                    'startTime' => $startTime,
-                    'endTime' => $endTime
-                );
+                if($teacher->school_id == $user->school_id) {
+                    $calendar_events[$i++] = array(
+                        'id' => $calendarEventId,
+                        'teacherId' => $teacherId,
+                        'teacherName' => $teacherName,
+                        'title' => $title,
+                        'day' => $day,
+                        'startTime' => $startTime,
+                        'endTime' => $endTime
+                    );
+                }
             }
             $weekday++;
             $dayCount++;
@@ -192,7 +195,7 @@ class CalendarEventController extends Controller
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
 
-        $teacherUsers = User::all()->where('role_id', 4);
+        $teacherUsers = User::all()->where('role_id', 4)->where('school_id',$user->school_id);
         $i = 0;
         foreach ($teacherUsers as $teacherUser) {
             $teacherId = $teacherUser->id;
@@ -215,7 +218,8 @@ class CalendarEventController extends Controller
      */
     public function store(Request $request)
     {
-
+        $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
         $rules = array(
             'teacherId' => 'required',
             'day' => 'required',
@@ -277,6 +281,7 @@ class CalendarEventController extends Controller
                     $calendar_event->end = $endDateTime;
                     $calendar_event->is_all_day = 0;
                     $calendar_event->eventType = "Free Slot";
+                    $calendar_event->school_id = $user->school_id;
                     $calendar_event->save();
                     $teacherSlots = new TeacherAppointmentSlots();
                     $teacherSlots->teacher_id = $teacherId;

@@ -427,16 +427,43 @@ class AppointmentController extends Controller
         $userDetails = UserDetails::where('user_id',$id)->first();
         $contactNo = $userDetails->contact;
 
-        $parentUsers = User::all()->where('role_id', 2);
+        $parentUsers = User::all()->where('role_id', 2)->where('school_id',$user->school_id);
         $i = 0;
-        foreach ($parentUsers as $parentUser) {
-            $parentId = $parentUser->id;
-            $parentDetails = UserDetails::where('user_id', $parentId)->first();
-            $parentName = $parentDetails->name;
-            $parentData[$i++] = array(
-                'id' => $parentId,
-                'name' => $parentName
-            );
+       $parentData = array();
+
+        foreach ($parentUsers as $parentUser)
+        {
+            if($user->role_id !=1)
+            {
+                $teacher_grades = \DB::table('grade_user')->where('user_id', $id)->groupBy('grade_id')->get();
+                $flag = false;
+                foreach ($teacher_grades as $teacher_grade){
+                    $exist = \DB::table('students')->where('grade_id', $teacher_grade->grade_id)->where('parent_id', $parentUser->id)->first();
+                    if($exist){
+                        $flag = true;
+                        break;
+                    }
+                }
+                if($flag) {
+                    $parentId = $parentUser->id;
+                    $parentDetails = UserDetails::where('user_id', $parentId)->first();
+                    $parentName = $parentDetails->name;
+                    $parentData[$i++] = array(
+                        'id' => $parentId,
+                        'name' => $parentName
+                    );
+                }
+            }
+
+            else{
+                $parentId = $parentUser->id;
+                $parentDetails = UserDetails::where('user_id', $parentId)->first();
+                $parentName = $parentDetails->name;
+                $parentData[$i++] = array(
+                    'id' => $parentId,
+                    'name' => $parentName
+                );
+            }
         }
         return view('appointments.create',compact('parentData','contactNo'),$data);
     }
@@ -491,6 +518,7 @@ class AppointmentController extends Controller
         $endDateTime = date_time_set($endDate,$hours,$minutes,$seconds);
         $teacherSlots = TeacherAppointmentSlots::all()->where('teacher_id',$id);
         $flag = 0;
+
         foreach ($teacherSlots as $teacherSlot){
             $slotId = $teacherSlot->id;
             $calendarEventId = $teacherSlot->calendarEventsId;
@@ -500,7 +528,8 @@ class AppointmentController extends Controller
             //If requested time is clashing with the existing slots
             if(($startDateTime==$slotStart)|| ($endDateTime==$slotEnd)||
                ($startDateTime>$slotStart && $startDateTime<$slotEnd)||
-               ($endDateTime<$slotEnd && $endDateTime>$slotStart)){
+               ($endDateTime<$slotEnd && $endDateTime>$slotStart))
+            {
                 //If the existing slot is not booked
                 if($teacherSlot->isBooked == 0){
                     $flag=1;
@@ -516,6 +545,7 @@ class AppointmentController extends Controller
                         $calendarEvent->eventType = "Parent Appointment";
                         $imageUrl = Storage::url('public/default/request.jpg');
                         $calendarEvent->imageUrl = $imageUrl;
+                        $calendarEvent->school_id = $user->school_id;
                         $calendarEvent->save();
                         $slot = new TeacherAppointmentSlots();
                         $slot->teacher_id = $id;
@@ -577,6 +607,7 @@ class AppointmentController extends Controller
                 $calendarEvent->eventType = "Parent Appointment";
                 $imageUrl = Storage::url('public/default/request.jpg');
                 $calendarEvent->imageUrl = $imageUrl;
+                $calendarEvent->school_id = $user->school_id;
                 $calendarEvent->save();
                 $slot = new TeacherAppointmentSlots();
                 $slot->teacher_id = $id;

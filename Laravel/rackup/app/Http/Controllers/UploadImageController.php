@@ -51,7 +51,6 @@ class UploadImageController extends Controller
     }
     //To secure url
     public function getFile($fileToken,Request $request){
-        return "hello";
         $fileToken = decrypt($fileToken);
         try {
             $token = $fileToken['token'];
@@ -100,15 +99,25 @@ class UploadImageController extends Controller
         $data['name'] = $userDetails->name;
 
         $studentDetails = Student::all();
+        $grades = \DB::table('grade_user')->where('user_id',$id)->get();
         $i=0;
         $sudents = array();
         foreach ($studentDetails as $studentDetail){
             $studentName = $studentDetail->name;
             $studentId = $studentDetail->id;
-            $students[$i++]=array(
-                'id'=>$studentId,
-                'name'=>$studentName
-            );
+            $flag = false;
+            foreach ($grades as $grade){
+                if($grade->grade_id == $studentDetail->grade_id) {
+                    $flag = true;
+                    break;
+                }
+            }
+            if($flag) {
+                $students[$i++] = array(
+                    'id' => $studentId,
+                    'name' => $studentName
+                );
+            }
         }
         return view('uploadImage.upload',compact('students'),$data);
     }
@@ -116,18 +125,37 @@ class UploadImageController extends Controller
     public function store(Request $request)
     {
         $id = $request->session()->get('id');
+        $user = \DB::table('users')->whereId($id)->first();
         $userDetails = UserDetails::where('user_id',$id)->first();
         $teacherName = $userDetails->name;
         $rules = array(
             'title' => 'required',
             'message' =>'required',
-            'studentId'=>'required'
+            'studentId'=>'required',
+            'circle_time'=>'required',
+            'activities' => 'required',
+            'first_meal' => 'required',
+            'curriculum' => 'required',
+            'second_meal' => 'required',
+            'third_meal' => 'required',
+            'evening_activity' => 'required',
+            'other' => 'required',
         );
         $this->validate($request,$rules);
 
         $title = Input::get('title');
         $description = Input::get('message');
         $studentId = Input::get('studentId');
+        $circle_time = Input::get('circle_time');
+        $activities = Input::get('activities');
+        $first_meal = Input::get('first_meal');
+        $curriculum = Input::get('curriculum');
+        $second_meal = Input::get('second_meal');
+        $third_meal = Input::get('third_meal');
+        $evening_activity = Input::get('evening_activity');
+        $other = Input::get('other');
+
+        
 
         if($request->hasFile('fileEntries')){
             $file=$request->file('fileEntries');
@@ -147,8 +175,9 @@ class UploadImageController extends Controller
                     \DB::beginTransaction();
                     $type = ContentType::where('name','Image')->first();
                     $typeId = $type->id;
-                    $imageId = \DB::table('categories')->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId]);
-                    \DB::table('image_students')->insert(['image_id'=>$imageId,'student_id'=>$studentId]);
+                    $imageId = \DB::table('categories')->insertgetId(['name' => $title,'teacherName'=>$teacherName,'description'=>$description,'type'=>$typeId , 'school_id'=> $user->school_id]);
+                    $image_student_id = \DB::table('image_students')->insertGetId(['image_id'=>$imageId,'student_id'=>$studentId , 'is_broadcast'=>false]);
+                    \DB::table('image_details')->insert(['circle_time'=>$circle_time, '1st meal'=>$first_meal, '2nd meal' => $second_meal, '3rd meal' => $third_meal, 'activities'=> $activities, 'evening activities' => $evening_activity, 'others'=> $other, 'image_student_id' => $image_student_id]);
                     $fileName = $imageId.'_'.$title.'.'.$fileExtension;
                     $filePath = Storage::putFileAs('public/'.$studentId,$file,$fileName);
                     $file_url = asset('storage/'.$studentId.'/'.$imageId.'_'.$title.'.'.$fileExtension);
