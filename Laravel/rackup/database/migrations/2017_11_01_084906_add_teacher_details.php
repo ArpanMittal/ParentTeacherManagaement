@@ -14,7 +14,7 @@ class AddTeacherDetails extends Migration
     public function up()
     {
         //
-        Schema::table('userdetails', function (Blueprint $table) {
+        Schema::table('userDetails', function (Blueprint $table) {
             $table->string('pancard');
             $table->string('adharcard');
         });
@@ -28,7 +28,7 @@ class AddTeacherDetails extends Migration
     public function down()
     {
         //
-        Schema::table('userdetails', function (Blueprint $table) {
+        Schema::table('userDetails', function (Blueprint $table) {
             $table->dropColumn(['pancard', 'adharcard']);
         }); 
     }
