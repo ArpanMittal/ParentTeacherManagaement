@@ -74,6 +74,19 @@
                             <li><a href="{{ route('appointments.index')}}">My Appointments</a></li>
                         </ul>
                     </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Uploads<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('upload.index')}}">Video Links</a></li>
+                            <li><a href="{{ route('uploadImage.index')}}">Images</a></li>
+                            {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
+                        </ul>
+                    </div>
+
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Slots and School Events <span class="caret"></span>

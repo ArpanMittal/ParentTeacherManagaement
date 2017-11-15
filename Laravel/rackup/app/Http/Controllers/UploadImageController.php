@@ -101,24 +101,43 @@ class UploadImageController extends Controller
         $studentDetails = Student::all();
         $grades = \DB::table('grade_user')->where('user_id',$id)->get();
         $i=0;
-        $sudents = array();
-        foreach ($studentDetails as $studentDetail){
-            $studentName = $studentDetail->name;
-            $studentId = $studentDetail->id;
-            $flag = false;
-            foreach ($grades as $grade){
-                if($grade->grade_id == $studentDetail->grade_id) {
-                    $flag = true;
-                    break;
+        $students = array();
+        // for teacher point of view
+        if($user->role_id == 4) {
+            foreach ($studentDetails as $studentDetail) {
+                $studentName = $studentDetail->name;
+                $studentId = $studentDetail->id;
+                $flag = false;
+                foreach ($grades as $grade) {
+                    if ($grade->grade_id == $studentDetail->grade_id) {
+                        $flag = true;
+                        break;
+                    }
+                }
+                if ($flag) {
+                    $students[$i++] = array(
+                        'id' => $studentId,
+                        'name' => $studentName
+                    );
                 }
             }
-            if($flag) {
-                $students[$i++] = array(
-                    'id' => $studentId,
-                    'name' => $studentName
-                );
+        }
+        //TODO:: change it for now
+        // for admin point of view
+        else{
+            foreach ($studentDetails as $studentDetail) {
+                $studentName = $studentDetail->name;
+                $studentId = $studentDetail->id;
+
+                    $students[$i++] = array(
+                        'id' => $studentId,
+                        'name' => $studentName
+                    );
             }
         }
+
+
+
         return view('uploadImage.upload',compact('students'),$data);
     }
     //Store the image
