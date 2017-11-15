@@ -38,7 +38,10 @@ class UploadController extends Controller
         $categoryName = $categoryDetails->name;
         $gradeId = $contentGrade->grade_id;
         $grade = Grade::where('id',$gradeId)->first();
+        if($grade)
         $gradeName = $grade->grade_name;
+        else
+            $gradeName = "hello";
         $uploadedContentDetails=array(
             'contentId'=>$id,
             'categoryName'=>$categoryName,
@@ -66,7 +69,7 @@ class UploadController extends Controller
         $teacherName = $teacherDetails->name;
         $type = ContentType::where('name','Video')->first();
         $typeId = $type->id;
-        $contentDetails = Category::all()->where('teacherName',$teacherName)->where('type',$typeId);
+        $contentDetails = Category::all()->where('type',$typeId);
         $uploadedContentDetails = array();
         $i = 0;
         foreach ($contentDetails as $contentDetail){
