@@ -287,7 +287,7 @@ class UploadImageController extends Controller
             $typeName = $typeDetails->name;
            $image_details = null;
             if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "Image" ) {
-                if($is_broadcast){
+                if(!$is_broadcast){
                     $image_details= \DB::table('image_details')->where('image_student_id',$image_student_id)->first();
                 }
                 $filePath = $file->url;
@@ -304,6 +304,8 @@ class UploadImageController extends Controller
                     'typeName' => $typeName,
                     'created_at' => $createdAt,
                     'is_broadcast' => $is_broadcast,
+                    'image_student_id'  => $image_student_id,
+                    
                     'image_details' => $image_details,
                 );
             }
