@@ -240,6 +240,7 @@ class UploadImageController extends Controller
             $token = $request->get('token');
             $user = JWTAuth::toUser($token);
             $userId = $user->id;
+//            $chool_id = $user->School_id;
         }catch (TokenExpiredException $e){
             return Response::json (['Token expired'],498);
         }catch (TokenInvalidException $e){
@@ -267,6 +268,7 @@ class UploadImageController extends Controller
                 ->where('created_at','<',$createdAt)
                 ->get();
 
+
             $images = $this->getFiles($student_files);
             return Response::json([$images,HttpResponse::HTTP_OK]);
         }
@@ -276,12 +278,13 @@ class UploadImageController extends Controller
         $i = 0;
         $files = array();
         foreach ($student_files as $student_file) {
+            $is_broadcast = $student_file->is_broadcast;
             $fileId = $student_file->image_id;
             $file = Category::where('id', $fileId)->first();
             $type = $file->type;
             $typeDetails = ContentType::where('id',$type)->first();
             $typeName = $typeDetails->name;
-            if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "image" )
+            if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "Image" ) {
                 $filePath = $file->url;
                 $title = $file->name;
                 $description = $file->description;
@@ -292,9 +295,11 @@ class UploadImageController extends Controller
                     'title' => $title,
                     'description' => $description,
                     'type' => $type,
-                    'typeName'=>$typeName,
-                    'created_at' => $createdAt
+                    'typeName' => $typeName,
+                    'created_at' => $createdAt,
+                    'is_broadcast' => $is_broadcast,
                 );
+            }
         }
         return $files;
     }
