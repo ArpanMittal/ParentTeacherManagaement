@@ -22,6 +22,7 @@ import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Feed_Activity extends Fragment implements RemoteCallHandler {
     private static final int MAX_ITEMS_PER_REQUEST = 10;
@@ -163,8 +164,22 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler {
                     String date1 = response.getJSONArray(0).getJSONObject(i).getJSONObject("created_at").getString("date");
                     String date2 = DateUtils.getRelativeTimeSpanString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date1).getTime(), System.currentTimeMillis(), 86400000).toString();
                     String image_url = response.getJSONArray(0).getJSONObject(i).getString("filePath");
-                    ArrayList<EventModel_Feed> arrayList = itemsLocal1;
-                    arrayList.add(new EventModel_Feed(title1, date2, response.getJSONArray(0).getJSONObject(i).getString("description"), image_url, id));
+                    String is_broadcast = response.getJSONArray(0).getJSONObject(i).getString("is_broadcast");
+                    if(is_broadcast.equals("0")){
+                        JSONObject image_details = response.getJSONArray(0).getJSONObject(i).getJSONObject("image_details");
+                        String circle_time = image_details.getString("circle_time");
+                        String first_meal = image_details.getString("1st meal");
+                        String second_meal = image_details.getString("2nd meal");
+                        String thired_meal = image_details.getString("3rd meal");
+                        String activities = image_details.getString("activities");
+                        String evening_activities = image_details.getString("evening activities");
+                        String other = image_details.getString("others");
+                        ArrayList<EventModel_Feed> arrayList = itemsLocal1;
+                        arrayList.add(new EventModel_Feed(title1, date2, response.getJSONArray(0).getJSONObject(i).getString("description"), image_url, id, circle_time, first_meal, second_meal, thired_meal, other, activities, evening_activities));
+                    }else {
+                        ArrayList<EventModel_Feed> arrayList = itemsLocal1;
+                        arrayList.add(new EventModel_Feed(title1, date2, response.getJSONArray(0).getJSONObject(i).getString("description"), image_url, id));
+                    }
                 }
                 ArrayList<EventModel_Feed> oldItems = ((MyAdapter) this.recyclerView.getAdapter()).getItems();
                 this.ModelList.addAll(itemsLocal1);
