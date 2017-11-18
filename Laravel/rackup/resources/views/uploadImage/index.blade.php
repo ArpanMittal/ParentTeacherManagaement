@@ -41,7 +41,10 @@
                     <tr>
                         <td>{{$uploadedImage['studentName']}}</td>
                         <td>{{$uploadedImage['title']}}</td>
-                        <td><a href="{{ route('getFile', $uploadedImage['filePath']) }}" target="_blank">Show {{$uploadedImage['title']}}</a></td>
+                        <td>
+                            <a href="{{ url('http://web.rackupcambridge.com'. $uploadedFile['filePath']) }}" target="_blank">Show {{$uploadedFile['title']}}</a>
+
+                        </td>
                         <td>{{$uploadedImage['description']}}<td>
                         <td class="text-right">
                             <form action="{{ route('uploadImage.destroy', $uploadedImage['imageId']) }}" method="POST" style="display: inline;"

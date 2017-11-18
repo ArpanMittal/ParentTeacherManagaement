@@ -44,7 +44,7 @@ class UploadImageController extends Controller
             'imageId'=>$imageId,
             'studentName'=>$studentName,
             'title'=>$title,
-            'filePath'=>$file_token,
+            'filePath'=>$filePath,
             'description'=>$description,
         );
         return $uploadedImages;
