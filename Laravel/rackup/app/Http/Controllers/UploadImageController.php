@@ -368,8 +368,8 @@ class UploadImageController extends Controller
             'registration_ids' => $registration_ids,
             'data' => $message,
         );
-        if (!defined('GOOGLE_API_KEY'))
-            define("GOOGLE_API_KEY","AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI");
+        // Google Cloud Messaging GCM API Key
+        define("GOOGLE_API_KEY","AIzaSyA7L7TUfGzpFtIBGLvxA8YAB4gcSCeiJII");
 
         $headers = array(
             'Authorization: key=' . GOOGLE_API_KEY,
