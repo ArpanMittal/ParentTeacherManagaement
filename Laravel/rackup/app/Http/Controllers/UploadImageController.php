@@ -305,7 +305,6 @@ class UploadImageController extends Controller
                     'created_at' => $createdAt,
                     'is_broadcast' => $is_broadcast,
                     'image_student_id'  => $image_student_id,
-                    
                     'image_details' => $image_details,
                 );
             }

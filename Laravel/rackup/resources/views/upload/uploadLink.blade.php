@@ -167,17 +167,17 @@
 
                         <div class="col-md-12"></div>
 
-                        <div class="form-group {{$errors->has('description')?'has-error':''}}">
-                            <label for="description"  class="col-md-4 control-label">Description</label>
-                            <div class="col-md-6">
-                                <input type="text" name="description" id="description" value="{{ Input::old('description    ') }}" required autofocus>
-                                @if ($errors->has('description'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('description') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+                        {{--<div class="form-group {{$errors->has('description')?'has-error':''}}">--}}
+                            {{--<label for="description"  class="col-md-4 control-label">Description</label>--}}
+                            {{--<div class="col-md-6">--}}
+                                {{--<input type="text" name="description" id="description" value="{{ Input::old('description    ') }}" required autofocus>--}}
+                                {{--@if ($errors->has('description'))--}}
+                                    {{--<span class="help-block">--}}
+                                        {{--<strong>{{ $errors->first('description') }}</strong>--}}
+                                    {{--</span>--}}
+                                {{--@endif--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
 
                         <div class="col-md-12"></div>
 

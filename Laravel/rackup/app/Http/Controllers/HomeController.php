@@ -137,11 +137,24 @@ class HomeController extends Controller
                 $gradeId = $studentDetails->grade_id;
                 $gradeDetails = Grade::where('id',$gradeId)->first();
                 $grade = $gradeDetails->grade_name;
-                $gradeUser = GradeUser::where('grade_id',$gradeId)->where('is_class_teacher',1)->first();
-                $teacherId = $gradeUser->user_id;
-                $teacherDetails = UserDetails::where('user_id',$teacherId)->first();
-                $teacherName = $teacherDetails->name;
-                $teacherContact = $teacherDetails->contact;
+                $gradeUsers = GradeUser::where('grade_id',$gradeId)->where('is_class_teacher',1)->get();
+                foreach ($gradeUsers as $gradeUser){
+                    $flag = \DB::table('grade_school')->where('grad_id',$gradeId)->where('school_id',$user->school_id)->first();
+                    if($flag) {
+                        $teacherId = $gradeUser->user_id;
+                        break;
+                    }else{
+                        $teacherId = null;
+                    }
+                }
+                if($teacherId != null) {
+                    $teacherDetails = UserDetails::where('user_id', $teacherId)->first();
+                    $teacherName = $teacherDetails->name;
+                    $teacherContact = $teacherDetails->contact;
+                }else{
+                    $teacherName = "NA";
+                    $teacherContact = "NA";
+                }
                 $userdata = array(
                     'token' => $token,
                     'username' => $user->username,
@@ -154,7 +167,8 @@ class HomeController extends Controller
                     'dob' => $studentDetails->dob,
                     'grade'=>$grade,
                     'teacherName'=>$teacherName,
-                    'teacherContact'=>$teacherContact
+                    'teacherContact'=>$teacherContact,
+                    'school_id' => $user->school_id,
                 );
                 $STATUS_CODE = Response::json(HttpResponse::HTTP_OK);
                 //return Response::json(HttpResponse::HTTP_OK);

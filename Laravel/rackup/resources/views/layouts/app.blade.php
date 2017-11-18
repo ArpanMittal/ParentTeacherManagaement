@@ -122,6 +122,9 @@
                                 {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
                             </ul>
                         </div>
+                        <div class="btn-group" style="text-align: right; float: right;">
+                            <a class="btn btn-default" href="{{ route('logout') }}" style="float: right;">Logout</a>
+                        </div>
 
                     @endif
 

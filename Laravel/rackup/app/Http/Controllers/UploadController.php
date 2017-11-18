@@ -113,12 +113,9 @@ class UploadController extends Controller
         $userDetails = UserDetails::where('id', $user_id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
-
         $uploadedContentDetails=$this->getUploadedContentDetails($id);
 
-        if($user->role_id != 7){
-            return "permission denied";
-        }
+
 
         return view('upload.edit',compact('uploadedContentDetails'),$data);
     }
@@ -135,7 +132,7 @@ class UploadController extends Controller
 
             $contentName = $request->input("contentName");
             $url = $request->input("url");
-            $description = $request->input("description");
+            $description = "hello";
             if(str_contains($url,"youtu.be")||str_contains($url,"v=")){
                 DB::table('categories')
                     ->where('id', $id)
@@ -273,7 +270,6 @@ class UploadController extends Controller
                 'gradeId' =>'required',
                 'categoryName'=>'required',
                 'categoryUrl'=>'required|url',
-                'description'=>'required'
             );
 
             $this->validate($request,$rules);
@@ -282,7 +278,7 @@ class UploadController extends Controller
             $contentName = Input::get('contentName');
             $categoryName = Input::get('categoryName');
             $categoryUrl = Input::get('categoryUrl');
-            $description = Input::get('description');
+            $description = "hello";
 
             if(str_contains($categoryUrl,"youtu.be")||str_contains($categoryUrl,"v=")){
                 $content = Content::where ('name',$contentName)->first();

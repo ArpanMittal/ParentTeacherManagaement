@@ -38,10 +38,10 @@
                     <label for="url">URL</label>
                     <input type="url" id="url" name="url" class="form-control" value="{{$uploadedContentDetails['url']}}"/>
                 </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <input type="text" id="description" name="description" class="form-control" value="{{$uploadedContentDetails['description']}}"/>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="description">Description</label>--}}
+                    {{--<input type="text" id="description" name="description" class="form-control" value="{{$uploadedContentDetails['description']}}"/>--}}
+                {{--</div>--}}
                 <div class="form-group">
                     <label for="gradeName">Grade</label>
                     {{--<input type="time" id="end" name="end" class="form-control" value="{{$calendar_event['endTime']}}"/>--}}
