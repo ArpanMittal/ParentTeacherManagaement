@@ -175,9 +175,9 @@
 
         <input type="submit" id="upload" value="Upload" >
 
-        <button id="sendNotification" type="submit" class="btn btn-primary">
-            Send Notification
-        </button>
+        {{--<button id="sendNotification" type="submit" class="btn btn-primary">--}}
+            {{--Send Notification--}}
+        {{--</button>--}}
 
     </form>
 </div>
