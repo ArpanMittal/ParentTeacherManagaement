@@ -97,7 +97,7 @@ class UploadFileController extends Controller
         $uploadedFiles=array(
             'fileId'=>$fileId,
             'title'=>$title,
-            'filePath'=>$file_token,
+            'filePath'=>$filePath,
             'description'=>$description
         );
         return $uploadedFiles;
