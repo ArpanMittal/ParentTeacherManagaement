@@ -60,7 +60,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('registerParent.index')}}">Student's Registration</a></li>
-                            <li><a href="{{ route('registerTeacher.index')}}">Teacher's Registraion</a></li>
+                            <li><a href="{{ route('registerTeacher.index')}}">Teacher's Registration</a></li>
                             {{--<li><a href="{{ route('admin.create')}}">Add New Grade</a></li>--}}
                             <li><a href="{{ route('getAssignTeacher')}}">Assign Teachers</a></li>
                         </ul>
@@ -75,6 +75,18 @@
                         </ul>
                     </div>
 
+                    {{--<div class="btn-group">--}}
+                        {{--<button type="button" class="btn btn-default dropdown-toggle"--}}
+                                {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                            {{--Uploads<span class="caret"></span>--}}
+                        {{--</button>--}}
+                        {{--<ul class="dropdown-menu">--}}
+                            {{--<li><a href="{{ route('upload.index')}}">Video Links</a></li>--}}
+                            {{--<li><a href="{{ route('uploadImage.index')}}">Images</a></li>--}}
+                            {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
+                        {{--</ul>--}}
+                    {{--</div>--}}
+
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -82,8 +94,8 @@
                         </button>
                         <ul class="dropdown-menu">
                             {{--<li><a href="{{ route('upload.index')}}">Video Links</a></li>--}}
-                            <li><a href="{{ route('uploadImage.index')}}">Images</a></li>
-                            {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
+                            {{--<li><a href="{{ route('uploadImage.index')}}">Images</a></li>--}}
+                            <li><a href="{{ route('uploadPdf.index')}}">Images</a></li>
                         </ul>
                     </div>
 
