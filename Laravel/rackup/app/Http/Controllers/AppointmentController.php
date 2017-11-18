@@ -733,7 +733,7 @@ class AppointmentController extends Controller
             ->get();
 
         foreach ($calendarEvents as $calendarEvent) {
-            $calendarEventId = $calendarEvent->id;
+            $calendarEventId = $calendarEvent->calendarEventsId;
             $title = $calendarEvent->title;
             $start = $calendarEvent->start;
             $startDateTime = Carbon::parse($start);
