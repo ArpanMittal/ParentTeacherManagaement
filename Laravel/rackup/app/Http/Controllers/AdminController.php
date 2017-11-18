@@ -285,6 +285,7 @@ class AdminController extends Controller
                     'url_main' => $file_token_path,
                     'description' => $description,
                     'uploadedBy' => $uploadedBy,
+                    'time_stamp'=> $uploadedFileDetail->created_at,
                     'type' => $typeName
                 );
             }

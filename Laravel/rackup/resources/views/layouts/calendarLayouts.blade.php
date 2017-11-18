@@ -129,7 +129,7 @@
                         <ul class="dropdown-menu">
                             {{--<li><a href="{{ route('upload.index')}}">Video Links</a></li>--}}
                             <li><a href="{{ route('uploadImage.index')}}">Images</a></li>
-                            <li><a href="{{ route('uploadPdf.index')}}">Files</a></li>
+                            {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
                         </ul>
                     </div>
 

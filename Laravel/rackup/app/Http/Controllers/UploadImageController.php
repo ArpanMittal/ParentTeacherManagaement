@@ -115,10 +115,14 @@ class UploadImageController extends Controller
                     }
                 }
                 if ($flag) {
-                    $students[$i++] = array(
-                        'id' => $studentId,
-                        'name' => $studentName
-                    );
+
+                    $parent = \DB::table('users')->where('id',$studentDetail->parent_id)->first();
+                    if($parent->school_id==$user->school_id) {
+                        $students[$i++] = array(
+                            'id' => $studentId,
+                            'name' => $studentName
+                        );
+                    }
                 }
             }
         }

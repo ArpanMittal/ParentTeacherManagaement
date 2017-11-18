@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="form-group {{$errors->has('startDate')?'has-error':''}}">
-                    <label for="startDate">Date</label>
+                    <label for="startDate">Date(mm/dd//yyyy)</label>
                     <input type="date" name="startDate" class="form-control" value=""  required autofocus/>
                     @if ($errors->has('startDate'))
                         <span class="help-block">

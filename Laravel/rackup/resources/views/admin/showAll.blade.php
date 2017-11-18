@@ -31,6 +31,7 @@
                     <th>DESCRIPTION</th>
                     <th>UPLOADED BY</th>
                     <th>TYPE</th>
+                    <th>TIMESTAMP</th>
                     <th>DELETE</th>
                 </tr>
                 </thead>
@@ -41,10 +42,18 @@
                     <tr>
 
                         <td>{{$uploadedFile['title']}}</td>
+
+                        @if($uploadedFile['type']=="Image")
                         <td><a href="{{ url('http://web.rackupcambridge.com'. $uploadedFile['url_main']) }}" target="_blank">Show {{$uploadedFile['title']}}</a></td>
+                        @endif
+                        @if($uploadedFile['type']=="Video")
+                            <td><a href="{{ url($uploadedFile['url_main']) }}" target="_blank">Show {{$uploadedFile['title']}}</a></td>
+                        @endif
+
                         <td>{{$uploadedFile['description']}}</td>
                         <td>{{$uploadedFile['uploadedBy']}}</td>
                         <td>{{$uploadedFile['type']}}</td>
+                        <td>{{$uploadedFile['time_stamp']}}</td>
                         <td><a href="{{ url('/showAll/'.$uploadedFile['id']) }}">Delete</a></td>
                         {{--<td><a href="{{ route('showAll') }}">Delete</a></td>--}}
                         {{--<td><a href="{{ URL::to("showAll/".$uploadedFile['id'].")) }}"> Delete </a> </td>--}}

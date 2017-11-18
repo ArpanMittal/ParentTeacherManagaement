@@ -38,7 +38,10 @@
                 @foreach($uploadedFiles as $uploadedFile)
                     <tr>
                         <td>{{$uploadedFile['title']}}</td>
-                        <td><a href="{{ route('getFile', $uploadedFile['filePath']) }}" target="_blank">Show {{$uploadedFile['title']}}</a></td>
+                        <td>
+
+                            <a href="{{ url('http://web.rackupcambridge.com'. $uploadedFile['filePath']) }}" target="_blank">Show {{$uploadedFile['title']}}</a>
+                        </td>
                         <td>{{$uploadedFile['description']}}</td>
                         <td class="text-right">
                             <form action="{{ route('uploadPdf.destroy', $uploadedFile['fileId']) }}" method="POST" style="display: inline;"
