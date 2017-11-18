@@ -42,7 +42,7 @@
                         <td>{{$uploadedImage['studentName']}}</td>
                         <td>{{$uploadedImage['title']}}</td>
                         <td>
-                            <a href="{{ url('http://web.rackupcambridge.com'. $uploadedFile['filePath']) }}" target="_blank">Show {{$uploadedFile['title']}}</a>
+                            <a href="{{ url('http://web.rackupcambridge.com'. $uploadedImage['filePath']) }}" target="_blank">Show {{$uploadedImage['title']}}</a>
 
                         </td>
                         <td>{{$uploadedImage['description']}}<td>
