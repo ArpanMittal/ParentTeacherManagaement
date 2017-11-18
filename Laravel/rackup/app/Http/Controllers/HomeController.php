@@ -191,7 +191,7 @@ class HomeController extends Controller
         try{
             $filePath = 'public/profile';
             $fileName = $userId.".jpg";
-            $file = $this->base64_to_jpg($profile_pic,$filePath);
+//            $file = $this->base64_to_jpg($profile_pic,$filePath);
 //            Storage::putFileAs($filePath,$file,$fileName);
 //            $url = Storage::url('profile/'.$fileName);
 //
