@@ -192,15 +192,15 @@ class HomeController extends Controller
             $filePath = 'public/profile';
             $fileName = $userId.".jpg";
             $file = $this->base64_to_jpg($profile_pic,$filePath);
-            Storage::putFileAs($filePath,$file,$fileName);
-            $url = Storage::url('profile/'.$fileName);
-
-            \DB::beginTransaction();
-
-            \DB::table('userDetails')->where('id',$user->id)
-                ->update([
-                    'profilePhotoPath'=>  $url
-                ]);
+//            Storage::putFileAs($filePath,$file,$fileName);
+//            $url = Storage::url('profile/'.$fileName);
+//
+//            \DB::beginTransaction();
+//
+//            \DB::table('userDetails')->where('id',$user->id)
+//                ->update([
+//                    'profilePhotoPath'=>  $url
+//                ]);
 
             \DB::table('userDetails')
                 ->where('user_id',$userId)
