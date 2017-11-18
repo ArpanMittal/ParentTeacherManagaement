@@ -185,9 +185,9 @@ class HomeController extends Controller
         $address = $request->get('address');
         $profile_pic = $request->get("profile_pic");
 
-        if(is_null($primaryContact)||is_null($secondaryContact)||is_null($address)||is_null($profile_pic)){
-            return Response::json(["Incomplete data",HttpResponse::HTTP_PARTIAL_CONTENT]);
-        }
+//        if(is_null($primaryContact)||is_null($secondaryContact)||is_null($address)||is_null($profile_pic)){
+//            return Response::json(["Incomplete data",HttpResponse::HTTP_PARTIAL_CONTENT]);
+//        }
         try{
             $filePath = 'public/profile';
             $fileName = $userId.".jpg";
