@@ -41,11 +41,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Video name"
-            android:maxLines="1"
             android:textSize="14dp" />
 
         <TextView
             android:id="@+id/cur"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="creator"

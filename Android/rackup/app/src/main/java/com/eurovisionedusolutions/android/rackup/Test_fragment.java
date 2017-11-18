@@ -34,7 +34,7 @@ public class Test_fragment extends Fragment {
         fetchman(getArguments().getString("key"));
         for (int i = 0; i < this.b; i++) {
             HashMap<String, String> hm = new HashMap();
-            hm.put("txt", "Video Name : " + this.mtoken[i]);
+            hm.put("txt",  this.mtoken[i]);
             hm.put("cur", "creator : faculty1");
             hm.put("flag", this.mURL[i]);
             aList.add(hm);

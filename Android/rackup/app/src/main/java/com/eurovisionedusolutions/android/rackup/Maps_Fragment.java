@@ -65,6 +65,14 @@ public class Maps_Fragment extends Fragment implements OnMapReadyCallback {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
+        if(new SharedPrefrence().getSchoolId(getContext()).equals("1")){
+            latitude = 28.479877700000003;
+            longitude = 77.0967245;
+        }else{
+            latitude = 25.15106959999999;
+            longitude = 75.83976940000002;
+        }
+
         mDatabase.child("raw-locations").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

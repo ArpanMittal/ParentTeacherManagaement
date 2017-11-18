@@ -390,6 +390,8 @@ public class LoginActivity extends AppCompatActivity implements RemoteCallHandle
                 grade=response.getJSONObject(0).getString("grade");
                 teacherName=response.getJSONObject(0).getString("teacherName");
                 teacherContact=response.getJSONObject(0).getString("teacherContact");
+                String school_id = response.getJSONObject(0).getString("school_id");
+                new SharedPrefrence().saveSchoolID(getApplicationContext(), school_id);
                // Tab_fragment.pd.show();
 
                 if(status==200){

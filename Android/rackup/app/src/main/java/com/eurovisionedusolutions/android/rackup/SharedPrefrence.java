@@ -22,6 +22,20 @@ public class SharedPrefrence
     public static final String PREVIOUSLAYOUT = "PREVIOUS_LAYOUT";
     public static final String IS_PREVIOUS_CURRENT_DATE = "IS_PREVIOUS_CURRENT";
     public static final String GCMREGITRATION_ID = "GCM_ID";
+    public static final String SCHOOL_ID = "SCHOOL_ID";
+
+    public void saveSchoolID(Context context, String school_id){
+        SharedPreferences.Editor editor;
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        editor = settings.edit();
+        editor.putString(SCHOOL_ID,school_id);
+        editor.apply();
+    }
+
+    public String getSchoolId(Context context){
+        SharedPreferences  string =context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return string.getString(SCHOOL_ID, "1");
+    }
 
     public void savePreviousLayoutDetails(Context context, boolean is_Previous_Current, LinearLayout previousLayout) {
         SharedPreferences.Editor editor;

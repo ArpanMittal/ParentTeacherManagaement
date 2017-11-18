@@ -548,6 +548,7 @@
     <string name="item_5">Feed</string>
     <string name="FeedActivity">http://web.rackupcambridge.com/api/activityImages</string>
     <string name="NotficationActivity">http://web.rackupcambridge.com/api/getNotifications</string>
+    <string name="change_profile_info">http://web.rackupcambridge.com/api/editProfile</string>
     <string name="title_activity_web_view">WebView</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_webview">WebviewActivity</string>

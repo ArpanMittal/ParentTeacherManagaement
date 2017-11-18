@@ -221,15 +221,15 @@ public class RemoteHelper {
         params.put("grant_type", GlobalConstants.PASSWORD_GRANTTYPE);*/
         params.put("token", token);
         params.put("parentName",parentName);
-        params.put("contact",contact);
-        params.put("address",address);
-        params.put("secondryContact",secondryContact);
+        params.put("primaryContact",contact);
+        params.put("address",secondryContact);
+        params.put("secondaryContact",address);
         params.put("dob",dob);
         params.put("studentName",studentName);
         params.put("profile_pic",path);
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "application/x-www-form-urlencoded");
-        new JSONParserAsync(this.context.getResources().getString(R.string.Update_Event), params, header, caller, functionCalled);
+        new JSONParserAsync(this.context.getResources().getString(R.string.change_profile_info), params, header, caller, functionCalled);
 
     }
     public void FeedActivity(RemoteCallHandler caller, RemoteCalls functionCalled, String token,String lastID) {
