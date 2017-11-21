@@ -45,7 +45,10 @@ class HomeController extends Controller
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
         $userDetails = UserDetails::where('user_id', $id)->first();
-        $data['profilePath'] = $userDetails->profilePhotoPath;
+        if(Storage::url("public/default/rackupCambridge.png"))
+            $data['profilePath'] = $userDetails->profilePhotoPath;
+        else
+            $data['profilePath'] =  Storage::url("public/default/rackupCambridge.png");
         $data['name'] = $userDetails->name;
         $data['background'] = "/storage/profilePhotos/1.jpg";
         return view('home',$data);
