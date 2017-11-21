@@ -48,7 +48,7 @@ class HomeController extends Controller
         if($userDetails->profilePhotoPath!= null)
             $data['profilePath'] = $userDetails->profilePhotoPath;
         else
-            $data['profilePath'] =  Storage::url("public/default/rackupCambridge.png");
+            $data['profilePath'] =   "/storage/profilePhotos/1.jpg";
         $data['name'] = $userDetails->name;
         $data['background'] = "/storage/profilePhotos/1.jpg";
         return view('home',$data);
