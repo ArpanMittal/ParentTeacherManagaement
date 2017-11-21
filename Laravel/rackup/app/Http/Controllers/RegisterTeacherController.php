@@ -146,9 +146,9 @@ class RegisterTeacherController extends Controller
                 }
                 \DB::commit();
                 
-                $fileName = $id.'.'.$fileExtension;
+                $fileName = $userId.'.'.$fileExtension;
                 $filePath = Storage::putFileAs('public/profilePhotos',$file,$fileName);
-                $url = Storage::url('profilePhotos/'.$id.'.'.$fileExtension);
+                $url = Storage::url('profilePhotos/'.$userId.'.'.$fileExtension);
 
                 try{
                     \DB::beginTransaction();
