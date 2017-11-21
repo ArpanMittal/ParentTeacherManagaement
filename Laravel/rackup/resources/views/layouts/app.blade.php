@@ -48,141 +48,175 @@
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand">
-               Rackup Cambridge
+            <a class="navbar-brand" href="{{ route('home') }}">
+
+                <span>Rackup Cambridge</span>
+
+
             </a>
         </div>
 
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
-            <ul class="nav navbar-nav navbar-left">
+            <ul class="nav navbar-nav navbar-right">
                 @if(isset($user))
                     {{--Admin--}}
-                @if($user->role_id==1)
-                        <div class="btn-group" style="text-align:left; float: left;">
-                            <a  class="btn btn-default" href="{{ route('home') }}" style="float: right;">Home</a>
-                        </div>
-                        <div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Registration<span class="caret"></span>
-                            </button>
+                    @if($user->role_id==1)
+                        {{--<li><a href="#">Home</a></li>--}}
+                        {{--<li><a href="#">About</a></li>--}}
+                        {{--<li><a href="#">Services</a></li>--}}
+                        {{--<li><a href="#">Works</a></li>--}}
+                        {{--<li><a href="#">News</a></li>--}}
+                        {{--<li><a href="#">Contact</a></li>--}}
+                        {{--<li>--}}
+                        {{--<a class="btn btn-default btn-outline btn-circle"  data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1">Categories</a>--}}
+                        {{--</li>--}}
+
+                        <li> <a  href="{{ route('home') }}">Home</a></li>
+
+                        {{--<div>--}}
+                        {{--<button type="button" class="btn btn-default dropdown-toggle"--}}
+                        {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span>--}}
+                        {{--</button>--}}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Registration <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('registerParent.index')}}">Student's Registration</a></li>
                                 <li><a href="{{ route('registerTeacher.index')}}">Teacher's Registration</a></li>
                                 {{--<li><a href="{{ route('admin.create')}}">Add New Grade</a></li>--}}
                                 <li><a href="{{ route('getAssignTeacher')}}">Assign Teachers</a></li>
                             </ul>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Appointments<span class="caret"></span>
-                            </button>
+                        </li>
+                        {{--</div>--}}
+                        {{--<div class="btn-group">--}}
+                        {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                        {{--Appointments<span class="caret"></span>--}}
+                        {{--</button>--}}
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Appointments <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
                                 <li><a href="{{ route('appointments.index')}}">My Appointments</a></li>
                             </ul>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Uploads<span class="caret"></span>
-                            </button>
+                        </li>
+                        {{--</div>--}}
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle"--}}
+                                    {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--Uploads<span class="caret"></span>--}}
+                            {{--</button>--}}
+                        <li class = "dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Uploads <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 {{--<li><a href="{{ route('upload.index')}}">Video Links</a></li>--}}
                                 {{--<li><a href="{{ route('uploadImage.index')}}">Images</a></li>--}}
                                 <li><a href="{{ route('uploadPdf.index')}}">Images</a></li>
                             </ul>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Slots and School Events <span class="caret"></span>
-                            </button>
+                        </li>
+
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--Slots and School Events <span class="caret"></span>--}}
+                            {{--</button>--}}
+                        <li class = "dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Slots and School Events <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="/calendar_events">Free Slots</a></li>
                                 <li><a href="/school_events">School Events</a></li>
                                 <li><a href="{{ route('calendar')}}">Show Calendar</a></li>
                             </ul>
-                        </div>
-                        <div class="btn-group">
-                            <a class="btn btn-default" href="{{ route('showAll')}}">Show Uploads</a>
-                        </div>
-                        <div class="btn-group" style="text-align: right; float: right;">
-                            <a class="btn btn-default" href="{{ route('logout') }}" style="float: right;">Logout</a>
-                        </div>
+                        </li>
+                        {{--</div>--}}
+                        <li>
+                            <a  href="{{ route('showAll')}}">Show Uploads</a>
+                        </li>
+                        <li>
+                            <a  href="{{ route('logout') }}" style="float: right;">Logout</a>
+                        </li>
                     @endif
-                {{--Content Provider--}}
+                    {{--Content Provider--}}
                     @if($user->role_id == 7)
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Uploads<span class="caret"></span>
-                            </button>
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle"--}}
+                                    {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--Uploads<span class="caret"></span>--}}
+                            {{--</button>--}}
+                        <li class = "dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Upload <b class="caret"></b></a>
+
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('upload.index')}}">Video Links</a></li>
                                 {{--<li><a href="{{ route('uploadImage.index')}}">Images</a></li>--}}
                                 {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
                             </ul>
-                        </div>
-                        <div class="btn-group" style="text-align: right; float: right;">
-                            <a class="btn btn-default" href="{{ route('logout') }}" style="float: right;">Logout</a>
-                        </div>
+                        {{--</div>--}}
+                        <li>
+                            <a href="{{ route('logout') }}" >Logout</a>
+                        </li>
 
                     @endif
 
 
-                {{--Teacher--}}
-                @if($user->role_id==4)
-                        <div class="btn-group" style="text-align:left; float: left;">
-                            <a  class="btn btn-default" href="{{ route('home') }}" style="float: right;">Home</a>
-                        </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Uploads<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            {{--<li><a href="{{ route('upload.index')}}">Video Links</a></li>--}}
-                            <li><a href="{{ route('uploadImage.index')}}">Images</a></li>
-                            {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
-                        </ul>
-                    </div>
+                    {{--Teacher--}}
+                    @if($user->role_id==4)
+                        <li>
+                            <a  href="{{ route('home') }}" style="float: right;">Home</a>
+                        </li>
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle"--}}
+                                    {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--Uploads<span class="caret"></span>--}}
+                            {{--</button>--}}
+                        <li class = "dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Upload <b class="caret"></b></a>
 
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Appointments<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
-                            <li><a href="{{ route('appointments.index')}}">My Appointments</a></li>
-                            <li><a href="/teacherCalendar">Show Calendar</a></li>
-                        </ul>
-                    </div>
+                            <ul class="dropdown-menu">
+                                {{--<li><a href="{{ route('upload.index')}}">Video Links</a></li>--}}
+                                <li><a href="{{ route('uploadImage.index')}}">Images</a></li>
+                                {{--<li><a href="{{ route('uploadPdf.index')}}">Files</a></li>--}}
+                            </ul>
+                        </li>
 
-                    <div class="btn-group" style="text-align: right; float: right;">
-                        <a class="btn btn-default" href="{{ route('logout') }}" style="float: right;">Logout</a>
-                    </div>
-                    {{--<li><a href="{{route('teacherAppointments')}}">Show Appointments</a></li>--}}
-                @endif
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--Appointments<span class="caret"></span>--}}
+                            {{--</button>--}}
+                        <li class = "dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Appointments <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ route('appointments.create')}}">Request Appointment</a></li>
+                                <li><a href="{{ route('appointments.index')}}">My Appointments</a></li>
+                                <li><a href="/teacherCalendar">Show Calendar</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a  href="{{ route('logout') }}" >Logout</a>
+                        </li>
+                        {{--<li><a href="{{route('teacherAppointments')}}">Show Appointments</a></li>--}}
+                    @endif
                 @endif
             </ul>
             {{--<!-- Right Side Of Navbar -->--}}
             {{--<ul class="nav navbar-nav navbar-right">--}}
-                {{--<!-- Authentication Links -->--}}
-                {{--@if (!isset($user))--}}
+            {{--<!-- Authentication Links -->--}}
+            {{--@if (!isset($user))--}}
 
-                {{--@else--}}
-                    {{--<li><a href="{{ route('home') }}">Home</a></li>--}}
-                    {{--<li><a href="{{ route('logout') }}">Logout</a></li>--}}
+            {{--@else--}}
+            {{--<li><a href="{{ route('home') }}">Home</a></li>--}}
+            {{--<li><a href="{{ route('logout') }}">Logout</a></li>--}}
 
-                    {{--  <li class="dropdown">--}}
-                           {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">--}}
-                               {{--{{ $user->username }} <span class="caret"></span>--}}
-                           {{--</a>--}}
+            {{--  <li class="dropdown">--}}
+            {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">--}}
+            {{--{{ $user->username }} <span class="caret"></span>--}}
+            {{--</a>--}}
 
-                          {{--<ul class="dropdown-menu" role="menu">--}}
-                              {{--<li><a href="{{ route('logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>--}}
-                          {{--</ul>--}}
-                      {{--</li>--}}
-                {{--@endif--}}
+            {{--<ul class="dropdown-menu" role="menu">--}}
+            {{--<li><a href="{{ route('logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>--}}
+            {{--</ul>--}}
+            {{--</li>--}}
+            {{--@endif--}}
             {{--</ul>--}}
         </div>
     </div>
@@ -201,7 +235,7 @@
 
 
 
-        <!-- JavaScripts -->
+<!-- JavaScripts -->
 <script src="{!! asset('js/jquery.min.js') !!}" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

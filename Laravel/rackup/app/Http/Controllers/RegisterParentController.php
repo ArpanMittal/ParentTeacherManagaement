@@ -14,6 +14,7 @@ use App\Student;
 use Illuminate\Support\Facades\Session;
 use Mockery\CountValidator\Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterParentController extends Controller
 {
@@ -151,19 +152,52 @@ class RegisterParentController extends Controller
         $secondaryContact = Input::get('secondaryContact');
         $username = Input::get('username');
         $password = Input::get('password');
+        
 
-        try {
-            \DB::beginTransaction();
-            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2, 'school_id'=>$user->school_id]);
-            \DB::table('userDetails')->insert(['name' => $fatherName, 'motherName'=>$motherName, 'address' => $address,'contact'=>$contact,'secondaryContact'=>$secondaryContact,'user_id'=> $userId]);
+        if(Input::hasFile('profilePhoto')){
+            
+            $file = Input::file('profilePhoto');
+            $fileExtension = $file->getClientOriginalExtension();
+            if ($fileExtension != 'jpg') {
+                return redirect(route('editProfileDetails'))->with('failure', 'Invalid file format.Upload jpg files only')->withInput();
+            }
+            else {
 
-            \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
+                try {
+                    \DB::beginTransaction();
+                    $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2, 'school_id'=>$user->school_id]);
+                    \DB::table('userDetails')->insert(['name' => $fatherName, 'motherName'=>$motherName, 'address' => $address,'contact'=>$contact,'secondaryContact'=>$secondaryContact,'user_id'=> $userId]);
 
-        }catch (Exception $e){
-            \DB::rollBack();
-            return redirect(route('registerParent.create'))->with('failure', 'Cannot create User');
+                    \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
+
+                }catch (Exception $e){
+                    \DB::rollBack();
+                    return redirect(route('registerParent.create'))->with('failure', 'Cannot create User');
+                }
+                \DB::commit();
+                
+                $fileName = $id.'.'.$fileExtension;
+                $filePath = Storage::putFileAs('public/profilePhotos',$file,$fileName);
+                $url = Storage::url('profilePhotos/'.$id.'.'.$fileExtension);
+                try{
+                    \DB::beginTransaction();
+                    DB::table('userDetails')
+                        ->where('user_id', $userId)
+                        ->update([
+                            'profilePhotoPath'=>$url
+                        ]);
+                }catch (Exception $e){
+                    \DB::rollBack();
+                    $flag =1;
+
+                    return redirect(route('registerParent.create'))->with('failure', 'Cannot upload file')->withInput();
+                }
+                \DB::commit();
+//                return redirect(route('editProfileDetails'))->with('success','Profile Photo successfully uploaded');
+            }
         }
-        \DB::commit();
+
+       
 
         return redirect(route('registerParent.index'))->with('success', 'User created Successfully.');
     }

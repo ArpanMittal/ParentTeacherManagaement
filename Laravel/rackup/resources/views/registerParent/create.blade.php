@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <form action="{{ route('registerParent.store') }}" method="POST">
+            <form action="{{ route('registerParent.store') }}" enctype="multipart/form-data" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 
@@ -79,6 +79,18 @@
                     @endif
                 </div>
 
+
+                <div></div>
+
+                <div class="form-group{{$errors->has('profilePhoto')?'has-error':''}}">
+                    <label for="profilePhoto">Profile Photo</label>
+                    <input id="profilePhoto" type="file" name="profilePhoto">
+                    @if ($errors->has('profilePhoto'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('profilePhoto') }}</strong>
+                            </span>
+                    @endif
+                </div>
                 <div></div>
 
                 <label><h2>Parent Details</h2></label>

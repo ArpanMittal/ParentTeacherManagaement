@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <form action="{{ route('registerTeacher.store') }}" method="POST">
+            <form action="{{ route('registerTeacher.store') }}" enctype="multipart/form-data" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 <div class="form-group {{$errors->has('teacherName')?'has-error':''}}">
@@ -106,6 +106,7 @@
                         @endif
                     </div>
                 </div>
+
                 <div class="form-group {{$errors->has('adharcard')?'has-error':''}}">
                     <label for="adharcard">Adharcard</label>
                     <div>
@@ -117,6 +118,18 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="form-group{{$errors->has('profilePhoto')?'has-error':''}}">
+                    <label for="profilePhoto">Profile Photo</label>
+                    <input id="profilePhoto" type="file" name="profilePhoto">
+                    @if ($errors->has('profilePhoto'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('profilePhoto') }}</strong>
+                            </span>
+                    @endif
+                </div>
+                <div></div>
+
                 <a class="btn btn-default" href="{{ route('registerTeacher.index') }}">Back</a>
                 <button class="btn btn-primary" type="submit" >Register</button>
             </form>

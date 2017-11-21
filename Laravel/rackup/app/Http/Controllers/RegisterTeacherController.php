@@ -12,6 +12,7 @@ use App\UserDetails;
 use Illuminate\Support\Facades\Session;
 use Mockery\CountValidator\Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterTeacherController extends Controller
 {
@@ -118,17 +119,56 @@ class RegisterTeacherController extends Controller
         $password = Input::get('password');
         $adharcard = Input::get('adharcard');
         $pancard = Input::get('pancard');
+        $profile = Input::file('profilePhoto');
+        
+//        return Input::hasFile('profilePhoto')."bkgjs";
+        
+        if(Input::hasFile('profilePhoto')){
+            $file = Input::file('profilePhoto');
 
-        try {
-            \DB::beginTransaction();
-            $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => 4, 'school_id' => $user->school_id]);
-            \DB::table('userDetails')->insert(['name' => $teacherName, 'gender' => $teacherGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId, 'adharcard'=> $adharcard, 'pancard' => $pancard]);
-        }catch (Exception $e){
-            \DB::rollBack();
-            return redirect(route('registerTeacher.index'))->with('failure', 'Cannot create User');
+            $fileExtension = $file->getClientOriginalExtension();
 
+
+
+            if ($fileExtension != 'jpg') {
+                return redirect(route('editProfileDetails'))->with('failure', 'Invalid file format.Upload jpg files only')->withInput();
+            }
+            else {
+
+                try {
+                    \DB::beginTransaction();
+                    $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => 4, 'school_id' => $user->school_id]);
+                    \DB::table('userDetails')->insert(['name' => $teacherName, 'gender' => $teacherGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId, 'adharcard'=> $adharcard, 'pancard' => $pancard]);
+                }catch (Exception $e){
+                    \DB::rollBack();
+                    return redirect(route('registerTeacher.index'))->with('failure', 'Cannot create User');
+
+                }
+                \DB::commit();
+                
+                $fileName = $id.'.'.$fileExtension;
+                $filePath = Storage::putFileAs('public/profilePhotos',$file,$fileName);
+                $url = Storage::url('profilePhotos/'.$id.'.'.$fileExtension);
+
+                try{
+                    \DB::beginTransaction();
+                    DB::table('userDetails')
+                        ->where('user_id', $userId)
+                        ->update([
+                            'profilePhotoPath'=>$url
+                        ]);
+                }catch (Exception $e){
+                    \DB::rollBack();
+                    $flag =1;
+
+                    return redirect(route('registerTeacher.index'))->with('failure', 'Cannot upload file')->withInput();
+                }
+                \DB::commit();
+//                return redirect(route('editProfileDetails'))->with('success','Profile Photo successfully uploaded');
+            }
         }
-        \DB::commit();
+
+
         return redirect(route('registerTeacher.index'))->with('success', 'User created Successfully.');
     }
 
