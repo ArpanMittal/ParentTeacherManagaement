@@ -49,6 +49,19 @@
                             </div>
                         @endif
 
+                        @if($user->role_id==7)
+                            <div>
+                                <img src="{{$profilePath}}"  alt="{{$background}}" style="display: block; margin: auto; width: 40%;" align="middle">
+                            </div>
+                            <div style="text-align: center" >
+                                <p >
+                                <h2 >Welcome To Rackup Cambridge Teacher Portal, {{$name}}</h2>
+                                </p>
+                                {{--<a class="btn btn-primary btn-lg" href="{{ route('editProfileDetails')}}">Edit Profile</a>--}}
+                            </div>
+                        @endif
+
+
                         {{--@if($user->role_id==2)--}}
                         {{--<div class="container">--}}
                         {{--<ul class="nav nav-tabs" role="tablist">--}}
