@@ -308,8 +308,9 @@ class RegisterParentController extends Controller
             $parentDetails = UserDetails::where('user_id',$id)->first();
             $studentDetails = Student::where('parent_id',$id)->first();
             $user = User::where('id',$id);
-            DB::table('users')
-                ->where('id', $user)
+
+            \DB::table('users')
+                ->where('id', $id)
                 ->update(['active'=>0]);
 //            $parentDetails->delete();
 //            $studentDetails->delete();
