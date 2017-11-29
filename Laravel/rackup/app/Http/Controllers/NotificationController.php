@@ -44,7 +44,9 @@ class NotificationController extends Controller
         }
 //        $user_Id = 2;
         $notifictions = DB::table('notifications')
-            ->where('parent_id', $user_Id)->get();
+            ->where('parent_id', $user_Id)
+            ->orderBy('$id','desc')
+            ->get();
 
         return Response::json([$notifictions, HttpResponse::HTTP_OK]);
     }
