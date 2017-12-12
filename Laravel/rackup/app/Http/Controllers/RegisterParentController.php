@@ -165,7 +165,7 @@ class RegisterParentController extends Controller
 
                 try {
                     \DB::beginTransaction();
-                    $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2, 'school_id'=>$user->school_id]);
+                    $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2, 'school_id'=>$user->school_id, 'active'=>1 ]);
                     \DB::table('userDetails')->insert(['name' => $fatherName, 'motherName'=>$motherName, 'address' => $address,'contact'=>$contact,'secondaryContact'=>$secondaryContact,'user_id'=> $userId]);
 
                     \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
