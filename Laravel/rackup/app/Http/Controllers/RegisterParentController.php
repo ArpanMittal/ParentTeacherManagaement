@@ -54,9 +54,9 @@ class RegisterParentController extends Controller
         );
         return $parent_details;
     }
-    
-    
-    
+
+
+
     /**
      * Display a listing of the registered parents and students
      *
@@ -94,11 +94,11 @@ class RegisterParentController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-        
+
         $userDetails = UserDetails::where('id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
-        
+
         $grades = array();
         $i=0;
         $gradeDetails = Grade::all();
@@ -152,10 +152,10 @@ class RegisterParentController extends Controller
         $secondaryContact = Input::get('secondaryContact');
         $username = Input::get('username');
         $password = Input::get('password');
-        
+
 
         if(Input::hasFile('profilePhoto')){
-            
+
             $file = Input::file('profilePhoto');
             $fileExtension = $file->getClientOriginalExtension();
             if ($fileExtension != 'jpg') {
@@ -165,7 +165,7 @@ class RegisterParentController extends Controller
 
                 try {
                     \DB::beginTransaction();
-                    $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2, 'school_id'=>$user->school_id, 'active'=>1 ]);
+                    $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' =>$password, 'role_id' => 2, 'school_id'=>$user->school_id]);
                     \DB::table('userDetails')->insert(['name' => $fatherName, 'motherName'=>$motherName, 'address' => $address,'contact'=>$contact,'secondaryContact'=>$secondaryContact,'user_id'=> $userId]);
 
                     \DB::table('students')->insert(['name' => $studentName, 'dob' => $dob,'gender'=>$studentGender,'grade_id' => $gradeId, 'parent_id' => $userId]);
@@ -175,7 +175,7 @@ class RegisterParentController extends Controller
                     return redirect(route('registerParent.create'))->with('failure', 'Cannot create User');
                 }
                 \DB::commit();
-                
+
                 $fileName = $userId.'.'.$fileExtension;
                 $filePath = Storage::putFileAs('public/profilePhotos',$file,$fileName);
                 $url = Storage::url('profilePhotos/'.$userId.'.'.$fileExtension);
@@ -197,7 +197,7 @@ class RegisterParentController extends Controller
             }
         }
 
-       
+
 
         return redirect(route('registerParent.index'))->with('success', 'User created Successfully.');
     }
@@ -216,7 +216,7 @@ class RegisterParentController extends Controller
         $userDetails = UserDetails::where('id', $user_id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
-        
+
         $parent_details=$this->getParentDetails($id);
         return view('registerParent.show', compact('parent_details'),$data);
     }
@@ -235,11 +235,11 @@ class RegisterParentController extends Controller
         $userDetails = UserDetails::where('id', $user_id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
-        
-        
+
+
 
         $parent_details=$this->getParentDetails($id);
-        
+
         return view('registerParent.edit', compact('parent_details'),$data);
     }
 
@@ -257,7 +257,7 @@ class RegisterParentController extends Controller
             'contact'=>'digits:10'
         );
         $this->validate($request,$rules);
-        
+
         $fatherName = $request->input("fatherName");
         $motherName = $request->input("motherName");
         $parentAddress = $request->input("address");
