@@ -1,9 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class = "row">
     <div class="page-header">
-        <h1>Image Files</h1>
+
+            <div class="col-md-6">
+                <h1>Image Files</h1>
+            </div>
+
+
     </div>
+    <div class="pull-right">
+        <a class="btn btn-success" href="{{ route('uploadPdf.create') }}">Add New Image</a>
+    </div>
+        </div>
 
     <div>
         @if (session('success'))
@@ -65,7 +75,7 @@
                 </tbody>
             </table>
 
-            <a class="btn btn-success" href="{{ route('uploadPdf.create') }}">Add New Image</a>
+            {{--<a class="btn btn-success" href="{{ route('uploadPdf.create') }}">Add New Image</a>--}}
         </div>
     </div>
 

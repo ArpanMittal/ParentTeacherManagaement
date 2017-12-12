@@ -249,12 +249,12 @@ class UploadFileController extends Controller
                     } catch (Exception $e) {
                         \DB::rollBack();
 //                    return "Unable to upload files";
-                        return Response::json(redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput());
+                        return redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput();
                     }
                     \DB::commit();
 
 //                return $id;
-                    return Response::json(redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file'));
+                    return redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file');
                 } elseif ($studentId == "grade") {
                     $gradeId = Input::get('gradeId');
                     $grade = Grade::where('id', $gradeId)->first();
@@ -298,11 +298,11 @@ class UploadFileController extends Controller
                     } catch (Exception $e) {
                         \DB::rollBack();
 //                    return "Unable to upload files";
-                        return Response::json(redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput());
+                        return redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput();
                     }
                     \DB::commit();
 //                return $id;
-                    return Response::json(redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file'));
+                    return redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file');
                 }
             }
             // for others
@@ -340,11 +340,11 @@ class UploadFileController extends Controller
                     } catch (Exception $e) {
                         \DB::rollBack();
 //                    return "Unable to upload files";
-                        return Response::json(redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput());
+                        return redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput();
                     }
                     \DB::commit();
 //                return $id;
-                    return Response::json(redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file'));
+                    return redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file');
                 } elseif ($studentId == "grade") {
                     $gradeId = Input::get('gradeId');
                     $grade = Grade::where('id', $gradeId)->first();
@@ -382,11 +382,11 @@ class UploadFileController extends Controller
                     } catch (Exception $e) {
                         \DB::rollBack();
 //                    return "Unable to upload files";
-                        return Response::json(redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput());
+                        return redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput();
                     }
                     \DB::commit();
 //                return $id;
-                    return Response::json(redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file'));
+                    return redirect(route('uploadPdf.index'))->with('success', 'Successfully Uploaded file');
                 } else {
                     try {
                         \DB::beginTransaction();
@@ -417,13 +417,13 @@ class UploadFileController extends Controller
                     } catch (Exception $e) {
                         \DB::rollBack();
 //                    return "Unable to upload files";
-                        return Response::json(redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput());
+                        return redirect(route('uploadPdf.create'))->with('failure', 'Unable to upload file')->withInput();
                     }
                 }
             }
             \DB::commit();
 //                return $id;
-            return Response::json(redirect(route('uploadPdf.index'))->with('success','Successfully Uploaded file'));
+            return redirect(route('uploadPdf.index'))->with('success','Successfully Uploaded file');
 //            }
 
 
