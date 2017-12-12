@@ -24,7 +24,7 @@
                                 this.form['gradeId'].style.visibility='hidden'
                                 };" required autofocus>
                         <option value="school">School</option>
-                        <option value="grade">Grade</option>
+                        {{--<option value="grade">Grade</option>--}}
                         @foreach($students as $student)
                             <option value = "{{$student['id']}}" >{{$student['name']}}_{{$student['id']}}</option>
                         @endforeach
