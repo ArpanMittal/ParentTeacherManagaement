@@ -275,9 +275,9 @@ class UploadFileController extends Controller
                         }
 
                         $fileName = $fileId.'_'.$title.'.'.$fileExtension;
-                        $filePath = Storage::putFileAs('public/school/'.$user->school_id.'/'. $gradeName,$file,$fileName);
+                        $filePath = Storage::putFileAs('public/school/'.$user->school_id.'/'. $gradeName.'/',$file,$fileName);
                         $file_url = asset('storage/'.$studentId.'/'.$fileId.'_'.$title.'.'.$fileExtension);
-                        $url = Storage::url('school/'.$user->school_id.'/'. $gradeName.$fileName);
+                        $url = Storage::url('school/'.$user->school_id.'/'. $gradeName.'/'.$fileName);
                         
 //                        $fileName = $fileId . '_' . $title . '.html';
 //                        Storage::put('public/' . $gradeName . '/' . $fileName, $fileContents);
