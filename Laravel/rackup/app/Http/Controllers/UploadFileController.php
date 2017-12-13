@@ -273,9 +273,15 @@ class UploadFileController extends Controller
                                 \DB::table('image_students')->insert(['image_id' => $fileId, 'student_id' => $student_id]);
                             }
                         }
-                        $fileName = $fileId . '_' . $title . '.html';
-                        Storage::put('public/' . $gradeName . '/' . $fileName, $fileContents);
-                        $url = Storage::url('public/' . $gradeName . '/' . $fileName);
+
+                        $fileName = $fileId.'_'.$title.'.'.$fileExtension;
+                        $filePath = Storage::putFileAs('public/school/'.$user->school_id.'/'. $gradeName,$file,$fileName);
+                        $file_url = asset('storage/'.$studentId.'/'.$fileId.'_'.$title.'.'.$fileExtension);
+                        $url = Storage::url('school/'.$user->school_id.'/'. $gradeName.$fileName);
+                        
+//                        $fileName = $fileId . '_' . $title . '.html';
+//                        Storage::put('public/' . $gradeName . '/' . $fileName, $fileContents);
+//                        $url = Storage::url('public/' . $gradeName . '/' . $fileName);
                         DB::table('categories')
                             ->where('id', $fileId)
                             ->update([
