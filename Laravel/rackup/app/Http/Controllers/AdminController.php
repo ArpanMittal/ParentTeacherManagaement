@@ -315,8 +315,9 @@ class AdminController extends Controller
             $path = 'public/'.substr($fileUrl,9);
             Storage::delete($path);
             $imageDetails->delete();
-//            $studentImages = ImageStudent::where('image_id',$id)->first();
+//            $studentImages = ImageStudent::where('image_id',$id);
 //            $studentImages->delete();
+//            $image_student = \DB::table('image_students')->where('image_id',$id)->delete();
         }
         catch (Exception $e){
             \DB::rollback();
