@@ -506,6 +506,9 @@ class UploadFileController extends Controller
             $path = 'public/'.substr($fileUrl,9);
             Storage::delete($path);
             $fileDetails->delete();
+
+            $image_student = \DB::table('image_students')->where('image_id',$id)->delete();
+            
         }
         catch (Exception $e){
             \DB::rollback();
