@@ -80,7 +80,7 @@
         <div class="form-group {{$errors->has('circle_time')?'has-error':''}}">
             <label for="circle_time"  class="control-label">Circle time</label>
             <div>
-                <input type="text" name="circle_time" id="circle_time" value="{{ Input::old('circle_time') }}" required autofocus>
+                <input type="text" name="circle_time" id="circle_time" value="{{ "NA" }}" required autofocus>
                 @if ($errors->has('circle_time'))
                     <span class="help-block">
                         <strong>{{ $errors->first('circle_time') }}</strong>
@@ -92,7 +92,7 @@
         <div class="form-group {{$errors->has('activities')?'has-error':''}}">
             <label for="activities"  class="control-label">Activities</label>
             <div>
-                <input type="text" name="activities" id="activities" value="{{ Input::old('activities"') }}" required autofocus>
+                <input type="text" name="activities" id="activities" value="{{ "NA" }}" required autofocus>
                 @if ($errors->has('activities'))
                     <span class="help-block">
                         <strong>{{ $errors->first('activities"') }}</strong>
@@ -104,7 +104,7 @@
         <div class="form-group {{$errors->has('activities')?'has-error':''}}">
             <label for="first_meal"  class="control-label">First Meal</label>
             <div>
-                <input type="text" name="first_meal" id="first_meal" value="{{ Input::old('first_meal') }}" required autofocus>
+                <input type="text" name="first_meal" id="first_meal" value="{{ "NA" }}" required autofocus>
                 @if ($errors->has('first_meal'))
                     <span class="help-block">
                         <strong>{{ $errors->first('first_meal') }}</strong>
@@ -116,7 +116,7 @@
         <div class="form-group {{$errors->has('curriculum')?'has-error':''}}">
             <label for="curriculum"  class="control-label">curriculum</label>
             <div>
-                <input type="text" name="curriculum" id="curriculum" value="{{ Input::old('curriculum') }}" required autofocus>
+                <input type="text" name="curriculum" id="curriculum" value="{{ "NA" }}" required autofocus>
                 @if ($errors->has('curriculum'))
                     <span class="help-block">
                         <strong>{{ $errors->first('curriculum') }}</strong>
@@ -128,7 +128,7 @@
         <div class="form-group {{$errors->has('second_meal')?'has-error':''}}">
             <label for="second_meal"  class="control-label">Second Meal</label>
             <div>
-                <input type="text" name="second_meal" id="second_meal" value="{{ Input::old('curriculum') }}" required autofocus>
+                <input type="text" name="second_meal" id="second_meal" value="{{"NA" }}" required autofocus>
                 @if ($errors->has('second_meal'))
                     <span class="help-block">
                         <strong>{{ $errors->first('second_meal') }}</strong>
@@ -140,7 +140,7 @@
         <div class="form-group {{$errors->has('third_meal')?'has-error':''}}">
             <label for="third_meal"  class="control-label">Third Meal</label>
             <div>
-                <input type="text" name="third_meal" id="third_meal" value="{{ Input::old('third_meal') }}" required autofocus>
+                <input type="text" name="third_meal" id="third_meal" value="{{ "NA" }}" required autofocus>
                 @if ($errors->has('third_meal'))
                     <span class="help-block">
                         <strong>{{ $errors->first('third_meal') }}</strong>
@@ -152,7 +152,7 @@
         <div class="form-group {{$errors->has('evening_activity')?'has-error':''}}">
             <label for="evening_activity"  class="control-label">Evening Activity</label>
             <div>
-                <input type="text" name="evening_activity" id="evening_activity" value="{{ Input::old('evening_activity') }}" required autofocus>
+                <input type="text" name="evening_activity" id="evening_activity" value="{{ "NA" }}" required autofocus>
                 @if ($errors->has('evening_activity'))
                     <span class="help-block">
                         <strong>{{ $errors->first('evening_activity') }}</strong>
@@ -164,7 +164,7 @@
         <div class="form-group {{$errors->has('other')?'has-error':''}}">
             <label for="other"  class="other">Other</label>
             <div>
-                <input type="text" name="other" id="other" value="{{ Input::old('other') }}" required autofocus>
+                <input type="text" name="other" id="other" value="{{ "NA" }}" required autofocus>
                 @if ($errors->has('other'))
                     <span class="help-block">
                         <strong>{{ $errors->first('other') }}</strong>
