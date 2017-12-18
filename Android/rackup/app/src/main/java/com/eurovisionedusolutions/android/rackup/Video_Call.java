@@ -2,7 +2,9 @@ package com.eurovisionedusolutions.android.rackup;
 
 import android.app.Notification;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Movie;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +39,8 @@ public class Video_Call extends Fragment implements RemoteCallHandler {
     public static Video_Call newInstance() {
         return new Video_Call();
     }
+
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.video_call, container, false);

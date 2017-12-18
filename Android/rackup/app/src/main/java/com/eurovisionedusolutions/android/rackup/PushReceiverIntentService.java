@@ -62,18 +62,21 @@ public class PushReceiverIntentService extends IntentService implements RemoteCa
 
 
         }
-        if(d == 2)
+        if(api_event_int == 0)
         {
+            intent = new Intent(this, MainActivity.class);
+            //startActivity(intent);
             Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
             Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher);
             NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-
                     .setContentText(message)
                     .setSmallIcon(R.drawable.ic_notifications_black_24dp)
 //                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(icon)
                     .setAutoCancel(true)
                     .setContentTitle("Photo List Updated")
+                    .setContentIntent(pendingIntent)
 //                    .setContentIntent(pendingIntent)
                     .setColor(getResources().getColor(R.color.colorPrimary))
                     .setSound(sound);

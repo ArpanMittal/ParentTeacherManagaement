@@ -30,11 +30,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity{
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_itemdetail, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,4 +130,19 @@ public class MainActivity extends AppCompatActivity{
         //Used to select an item programmatically
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.notifivation_item) {
+            Fragment selectedFragment = Video_Call.newInstance();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.commit();
+            getSupportActionBar().setTitle("NotificationsList");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

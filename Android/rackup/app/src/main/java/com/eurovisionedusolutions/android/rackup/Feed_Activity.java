@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import com.eurovisionedusolutions.android.rackup.UserContract.UserDetailEntry;
 import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener;
 import java.text.SimpleDateFormat;
@@ -193,6 +195,10 @@ public class Feed_Activity extends Fragment implements RemoteCallHandler {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        else{
+            this.mSwipeRefreshLayout.setRefreshing(false);
+            Toast.makeText(getContext(),"Something Went Wrong!!",Toast.LENGTH_LONG).show();
         }
     }
 

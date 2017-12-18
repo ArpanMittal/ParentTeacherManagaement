@@ -1,20 +1,35 @@
 {
   "project_info": {
-    "project_number": "462369949440",
-    "project_id": "rackup-167204"
+    "project_number": "923528578463",
+    "firebase_url": "https://rackup-e3fc4.firebaseio.com",
+    "project_id": "rackup-e3fc4",
+    "storage_bucket": "rackup-e3fc4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:462369949440:android:b779c634901cb9c0",
+        "mobilesdk_app_id": "1:923528578463:android:b779c634901cb9c0",
         "android_client_info": {
           "package_name": "com.eurovisionedusolutions.android.rackup"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "923528578463-t2961uqoemh5k5blpj9cil1q1i4ft9r8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eurovisionedusolutions.android.rackup",
+            "certificate_hash": "4568e3a10eb9155d65f1d98d83ad5fe52d22468f"
+          }
+        },
+        {
+          "client_id": "923528578463-c9ksgt9572rch39daieu93b9altmqu6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBhekmES_sNi2T2YK2O7ovo9lyRor7UXJI"
+          "current_key": "AIzaSyCebqaWFJ57oqDk0TeR89pVRqPp2umKTV0"
         }
       ],
       "services": {
@@ -22,11 +37,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923528578463-c9ksgt9572rch39daieu93b9altmqu6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

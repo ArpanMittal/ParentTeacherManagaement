@@ -86,7 +86,7 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         View view= inflater.inflate(R.layout.calendar, container, false);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.black));
-        toolbar.setTitle("Calendar");
+        toolbar.setTitle("Appointments");
         myCalendar = (MyDynamicCalendar_Extended) view.findViewById(R.id.myCalendar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         myCalendar.showMonthView();
@@ -158,19 +158,23 @@ public class Calendar_fragment extends Fragment  implements RemoteCallHandler{
         switch (item.getItemId()) {
             case R.id.action_month_with_below_events:
                 showMonthViewWithBelowEvents();
+//                return super.onOptionsItemSelected(item);
                 return true;
 
             case R.id.action_agenda:
                 showAgendaView();
+//                return super.onOptionsItemSelected(item);
                 return true;
 
             case R.id.action_today:
                 myCalendar.goToCurrentDate();
+//                return super.onOptionsItemSelected(item);
                 return true;
             default:
                 myCalendar.showMonthViewWithBelowEvents();
+//                return super.onOptionsItemSelected(item);
                 return true;
-            //return super.onOptionsItemSelected(item);
+            //
         }
 
     }

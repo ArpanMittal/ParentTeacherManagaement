@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/action_item5"
-        android:icon="@drawable/ic_class_black_24dp"
-        android:title="@string/item_5"/>
+        android:icon="@drawable/ic_photo_album_black_24dp"
+        android:title="ImageFeeds"/>
     <item
         android:id="@+id/action_item1"
         android:icon="@drawable/ic_video_library_black_24dp"
@@ -16,13 +16,13 @@
         <!--android:title="notification"/>-->
     <item
         android:id="@+id/action_item6"
-        android:icon="@drawable/ic_message_black_24dp"
-        android:title="maps"/>
+        android:icon="@drawable/ic_place_black_24dp"
+        android:title="Location"/>
 
     <item
         android:id="@+id/action_item4"
         android:icon="@drawable/ic_date_range_black_24dp"
-        android:title="@string/item_4"/>
+        android:title="Appointments"/>
 
     <item
         android:id="@+id/action_item3"

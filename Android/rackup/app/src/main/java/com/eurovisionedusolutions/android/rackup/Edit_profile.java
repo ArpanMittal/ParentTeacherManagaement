@@ -143,19 +143,26 @@ public class Edit_profile extends Fragment implements RemoteCallHandler {
         address_layout=(TextInputLayout) view.findViewById(R.id.address_layout1);
         circularButton1 = (Button) view.findViewById(R.id.done);
         fatherName.setFocusable(false);
+        fatherName.setAlpha((float) 0.5);
         fatherName.setClickable(false);
         motherName.setFocusable(false);
         motherName.setClickable(false);
+        motherName.setAlpha((float) 0.5);
         studentName.setFocusable(false);
         studentName.setClickable(false);
+        studentName.setAlpha((float) 0.5);
         studentDOB.setFocusable(false);
         studentDOB.setClickable(false);
+        studentDOB.setAlpha((float) 0.5);
         studentGrade.setFocusable(false);
         studentGrade.setClickable(false);
+        studentGrade.setAlpha((float) 0.5);
         teacherContact.setFocusable(false);
         teacherContact.setClickable(false);
+        teacherContact.setAlpha((float) 0.5);
         teacherName.setFocusable(false);
         teacherName.setClickable(false);
+        teacherName.setAlpha((float) 0.5);
 
         imageView = (ImageView) view.findViewById(R.id.imageView);
         //loadImageFromStorage();

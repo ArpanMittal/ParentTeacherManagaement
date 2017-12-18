@@ -100,7 +100,7 @@ public class Maps_Fragment extends Fragment implements OnMapReadyCallback {
                         lat = jsonObject.getDouble("lat");
                         lng = jsonObject.getDouble("lng");
                         time = jsonObject.getDouble("time");
-                        toolbar.setTitle("Map updated");
+                        toolbar.setTitle("Location");
 //                    }
                 } catch (JSONException e) {
                     Log.d("come","error");

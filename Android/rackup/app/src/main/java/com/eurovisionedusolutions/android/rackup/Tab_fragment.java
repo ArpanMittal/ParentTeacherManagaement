@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +33,14 @@ public class Tab_fragment extends Fragment {
         return new Tab_fragment();
     }
 
+
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.activity_main_youtube, container, false);
         Toolbar toolbar = (Toolbar)rootview.findViewById(R.id.toolbar);
         toolbar.setTitle("Video");
         toolbar.setTitleTextColor(getResources().getColor(R.color.black));
+//        setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ImageView refreshIcon = (ImageView)rootview.findViewById(R.id.imageButton2);
@@ -85,6 +89,9 @@ public class Tab_fragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_settings) {
             return true;
+        }
+        else if( item.getItemId() == R.id.notifivation_item){
+
         }
         return super.onOptionsItemSelected(item);
     }
