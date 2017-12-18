@@ -59,7 +59,7 @@ class SchoolEventController extends Controller
         $userDetails = UserDetails::where('id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
-        $event_type = ["Both", "Teacher Function", "Parent Function"];
+        $event_type = ["Both", "Teacher Function", "Student Function"];
         $school_events = \DB::table('calendar_events')
             ->whereIn('eventType',$event_type)
             ->where('school_id',$user->school_id)
@@ -84,7 +84,7 @@ class SchoolEventController extends Controller
         $data['name'] = $userDetails->name;
 
         $eventTypes = array(
-            'Parent Function',
+            'Student Function',
             'Teacher Function',
             'Both'
         );
@@ -159,7 +159,7 @@ class SchoolEventController extends Controller
                             'imageUrl' => $imageUrl
                         ]);
                     
-                    if ($eventType == "Parent Function" || $eventType == "Both") {
+                    if ($eventType == "Student Function" || $eventType == "Both") {
                         $parents = User::all()->where('role_id', 2);
                         $i = 0;
                         $gcmRegistrationId = array();
@@ -301,7 +301,7 @@ class SchoolEventController extends Controller
             
             $eventType = $school_event->eventType;
             $title=$school_event->title;
-            if ($eventType == "Parent Function" || $eventType =="Both"){
+            if ($eventType == "Student Function" || $eventType =="Both"){
                 $eventId = $school_event->getId();
                 $parents = User::all()->where('role_id',2);
                 $i=0;

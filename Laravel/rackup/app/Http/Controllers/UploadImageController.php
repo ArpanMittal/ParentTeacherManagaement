@@ -238,6 +238,7 @@ class UploadImageController extends Controller
         $this->sendPushNotificationToGCM($gcmRegistrationId,$message);
         return 1;
     }
+
     //API to send daily activity images and files of a specified student
     public function sendActivity(Request $request){
         try {
@@ -251,7 +252,9 @@ class UploadImageController extends Controller
             return Response::json (['Token invalid']);
         }
         $lastImageId = $request->get('lastImageId');
+
         if (is_null($lastImageId)){
+
             $studentDetails = Student::where('parent_id', $userId)->first();
             $studentId = $studentDetails->id;
             $student_files = ImageStudent::orderBy('created_at', 'desc')
@@ -259,6 +262,7 @@ class UploadImageController extends Controller
                 ->where('student_id',$studentId)
                 ->get();
             $files = $this->getFiles($student_files);
+
             return Response::json([$files,HttpResponse::HTTP_OK]);
         }
         else{
@@ -281,6 +285,7 @@ class UploadImageController extends Controller
     public function getFiles($student_files){
         $i = 0;
         $files = array();
+
         foreach ($student_files as $student_file) {
             $is_broadcast = $student_file->is_broadcast;
             $image_student_id = $student_file->id;
@@ -289,16 +294,20 @@ class UploadImageController extends Controller
             $type = $file->type;
             $typeDetails = ContentType::where('id',$type)->first();
             $typeName = $typeDetails->name;
+
            $image_details = null;
             if ($typeName == 'html' || $typeName =="grade_html" || $typeName =="school_html" || $typeName == "Image" ) {
+
                 if(!$is_broadcast){
+
                     $image_details= \DB::table('image_details')->where('image_student_id',$image_student_id)->first();
                 }
+
                 $filePath = $file->url;
                 $title = $file->name;
                 $description = $file->description;
                 $createdAt = $file->created_at;
-                
+
                 $files[$i++] = array(
                     'id' => $fileId,
                     'filePath' => $filePath,
@@ -311,6 +320,7 @@ class UploadImageController extends Controller
                     'image_student_id'  => $image_student_id,
                     'image_details' => $image_details,
                 );
+
             }
         }
         return $files;

@@ -50,6 +50,10 @@
                     <label for="username">Username</label>
                     <p class="form-control-static">{{$parent_details['username']}}</p>
                 </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <p class="form-control-static">{{$parent_details['password']}}</p>
+                </div>
             </form>
 
 

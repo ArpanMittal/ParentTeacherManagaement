@@ -74,7 +74,13 @@ class HomeController extends Controller
 //        $token = JWTAuth::fromUser($user);
 //        $user = JWTAuth::toUser($token);
 //
+
         if ( !is_null($user) ){
+            if($user->role_id == 2){
+                return redirect('login')
+                    ->withErrors('email','Do not have permission.')
+                    ->withInput(Input::except('password'));
+            }
             $request->session()->put('id',$user->id);
             return redirect('home');
         }else{

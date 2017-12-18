@@ -64,8 +64,8 @@ class EventController extends Controller
             $start = $databaseEvent->getStart();
             $end = $databaseEvent->getEnd();
             $eventType = $databaseEvent->eventType;
-            if($eventType=="Parent Function" || $eventType=="Teacher Function" ||$eventType=="Both" ){
-                if ($eventType =="Parent Function")
+            if($eventType=="Student Function" || $eventType=="Teacher Function" ||$eventType=="Both" ){
+                if ($eventType =="Student Function")
                     $color="Magenta";
                 elseif ($eventType == "Teacher Function")
                     $color = "BlueViolet";
@@ -269,7 +269,7 @@ class EventController extends Controller
         }
 
         $schoolEvents = \DB::table('calendar_events')
-            ->where('eventType',"Parent Function")
+            ->where('eventType',"Student Function")
             ->orWhere('eventType',"Teacher Function")
             ->orWhere('eventType',"Both")
             ->get();
@@ -277,8 +277,8 @@ class EventController extends Controller
         $k=0;
         foreach ($schoolEvents as $schoolEvent){
             $eventType = $schoolEvent->eventType;
-            if($eventType=="Parent Function" || $eventType=="Teacher Function" ||$eventType=="Both" ) {
-                if ($eventType == "Parent Function")
+            if($eventType=="Student Function" || $eventType=="Teacher Function" ||$eventType=="Both" ) {
+                if ($eventType == "Student Function")
                     $color = "Magenta";
                 elseif ($eventType == "Teacher Function")
                     $color = "BlueViolet";

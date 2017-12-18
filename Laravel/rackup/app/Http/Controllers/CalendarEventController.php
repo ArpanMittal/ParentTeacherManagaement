@@ -119,7 +119,8 @@ class CalendarEventController extends Controller
         $dayCount = 0;
         $i = 0;
         $calendar_events = array();
-        while($dayCount!=6) {
+        while($dayCount!=6)
+        {
             $calendarEvents = \DB::table('calendar_events')
                 ->whereDATE('start',$weekday)
                 ->where(function($query){
@@ -175,9 +176,11 @@ class CalendarEventController extends Controller
                         'endTime' => $endTime
                     );
                 }
+
             }
             $weekday++;
             $dayCount++;
+
         }
         return view('calendar_events.index', compact('calendar_events'),$data);
     }
@@ -209,7 +212,7 @@ class CalendarEventController extends Controller
         $days = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
         return view('calendar_events.create',compact('teacherData','days'),$data);
     }
-    
+
     /**
      * Store a newly created free slot.
      *
@@ -548,10 +551,10 @@ class CalendarEventController extends Controller
         \DB::commit();
         return redirect(route('calendar_events.index'))->with('success', 'Slot deleted successfully.');
     }
-    
+
     //Show appointments of all the teachers
     public function showAppointments($id,Request $request){
-        
+
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
