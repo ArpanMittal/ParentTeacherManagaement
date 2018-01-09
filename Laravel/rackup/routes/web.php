@@ -61,6 +61,8 @@ Route::get('showFreeSlots{id}','AppointmentController@showFreeSlots')->name('sho
 Route::resource('appointments','AppointmentController');
 
 Route::resource('school_events','SchoolEventController');
+Route::get('privacyPolicy','PrivacyPolicyController@showPrivacyPolicy')->name('privacyPolicy');
+
 
 //Route::get('/{filename}', function ($filename)
 //{
