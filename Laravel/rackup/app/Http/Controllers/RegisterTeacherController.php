@@ -52,7 +52,7 @@ class RegisterTeacherController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $id)->first();
+        $userDetails = UserDetails::where('user_id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
         
@@ -79,7 +79,7 @@ class RegisterTeacherController extends Controller
         $id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $id)->first();
+        $userDetails = UserDetails::where('user_id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
 
@@ -166,6 +166,17 @@ class RegisterTeacherController extends Controller
                 \DB::commit();
 //                return redirect(route('editProfileDetails'))->with('success','Profile Photo successfully uploaded');
             }
+        }else{
+            try {
+                \DB::beginTransaction();
+                $userId = \DB::table('users')->insertgetId(['username' => $username, 'password' => $password, 'role_id' => 4, 'school_id' => $user->school_id]);
+                \DB::table('userDetails')->insert(['name' => $teacherName, 'gender' => $teacherGender, 'address' => $address,'contact'=>$contact,'user_id'=> $userId, 'adharcard'=> $adharcard, 'pancard' => $pancard]);
+            }catch (Exception $e){
+                \DB::rollBack();
+                return redirect(route('registerTeacher.index'))->with('failure', 'Cannot create User');
+
+            }
+            \DB::commit();
         }
 
 
@@ -183,7 +194,7 @@ class RegisterTeacherController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $id)->first();
+        $userDetails = UserDetails::where('user_id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
 
@@ -203,7 +214,7 @@ class RegisterTeacherController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $id)->first();
+        $userDetails = UserDetails::where('user_id', $id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
         

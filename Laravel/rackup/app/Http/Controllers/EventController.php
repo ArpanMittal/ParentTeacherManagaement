@@ -32,7 +32,7 @@ class EventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $user_id)->first();
+        $userDetails = UserDetails::where('user_id', $user_id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
         
@@ -167,7 +167,7 @@ class EventController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($user_id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $user_id)->first();
+        $userDetails = UserDetails::where('user_id', $user_id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
         

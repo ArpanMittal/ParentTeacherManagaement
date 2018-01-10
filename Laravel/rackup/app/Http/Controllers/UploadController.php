@@ -94,7 +94,7 @@ class UploadController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $user_id)->first();
+        $userDetails = UserDetails::where('user_id', $user_id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
 
@@ -111,7 +111,7 @@ class UploadController extends Controller
         $user_id = $request->session()->get('id');
         $user = \DB::table('users')->whereId($id)->first();
         $data['user'] = $user;
-        $userDetails = UserDetails::where('id', $user_id)->first();
+        $userDetails = UserDetails::where('user_id', $user_id)->first();
         $data['profilePath'] = $userDetails->profilePhotoPath;
         $data['name'] = $userDetails->name;
         $uploadedContentDetails=$this->getUploadedContentDetails($id);
